@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Jota Text Editor</string>
+    <string name="hint_message">Jota Text Editor</string>
+
+    <string name="selectAll" >"すべて選択"</string>
+    <string name="selectText" >"テキストを選択"</string>
+    <string name="stopSelectingText" >"テキストの選択を終了"</string>
+    <string name="cut" >"切り取り"</string>
+    <string name="cutAll" >"すべて切り取り"</string>
+    <string name="copy" >"コピー"</string>
+    <string name="copyAll" >"すべてコピー"</string>
+    <string name="paste" >"貼り付け"</string>
+    <string name="copyUrl" >"URLをコピー"</string>
+    <string name="inputMethod" >"入力方法"</string>
+    <string name="addToDictionary" >"辞書に「<xliff:g id="WORD">%s</xliff:g>」を追加"</string>
+    <string name="editTextMenuTitle" >"テキストを編集"</string>
+
+    <string name="label_yes">はい</string>
+    <string name="label_no">いいえ</string>
+    <string name="label_cancel">キャンセル</string>
+    <string name="label_ok">OK</string>
+    <string name="confirmation">保存確認</string>
+    <string name="confirmation_message">%s は更新されています。保存しますか?</string>
+
+</resources>
+
