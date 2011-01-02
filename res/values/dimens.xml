@@ -5,4 +5,5 @@
     <dimen name="fastscroll_thumb_width">64dp</dimen>
     <!-- Height of the fastscroll thumb -->
     <dimen name="fastscroll_thumb_height">52dp</dimen>
+    <dimen name="app_icon_size">32dip</dimen>
 </resources>

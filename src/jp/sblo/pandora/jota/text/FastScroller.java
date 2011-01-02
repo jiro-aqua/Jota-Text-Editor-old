@@ -17,23 +17,17 @@
 package jp.sblo.pandora.jota.text;
 
 import jp.sblo.pandora.jota.R;
-import jp.sblo.pandora.jota.R.dimen;
-import jp.sblo.pandora.jota.R.drawable;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.widget.SectionIndexer;
-import android.widget.AbsListView.OnScrollListener;
 
 /**
  * Helper class for AbsListView to draw and control the Fast Scroll thumb

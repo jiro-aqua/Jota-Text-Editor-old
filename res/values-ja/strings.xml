@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Jota Text Editor</string>
-    <string name="hint_message">Jota Text Editor</string>
+    <string name="app_name">Jota テキスト エディタ</string>
+    <string name="hint_message">Jotaテキストエディタ</string>
 
     <string name="selectAll" >"すべて選択"</string>
     <string name="selectText" >"テキストを選択"</string>
@@ -23,6 +23,50 @@
     <string name="label_ok">OK</string>
     <string name="confirmation">保存確認</string>
     <string name="confirmation_message">%s は更新されています。保存しますか?</string>
+    <string name="confirmation_message_null">この文書は更新されています。保存しますか?</string>
+
+    <string name="menu_file">ファイル</string>
+    <string name="menu_edit">編集</string>
+    <string name="menu_insert">挿入</string>
+    <string name="menu_search">検索</string>
+    <string name="menu_preferences">設定</string>
+    <string name="menu_help">ヘルプ</string>
+
+    <string name="menu_file_new" >新規</string>
+    <string name="menu_file_open" >開く...</string>
+    <string name="menu_file_history" >履歴から開く...</string>
+    <string name="menu_file_save" >上書き保存</string>
+    <string name="menu_file_saveas" >名前を付けて保存...</string>
+    <string name="menu_file_charcode" >文字コード...</string>
+    <string name="menu_file_lbcode" >改行コード...</string>
+    <string name="menu_file_quit" >終了</string>
+    <string name="menu_edit_undo" >やり直し</string>
+    <string name="menu_search_byintent" >外部アプリで検索</string>
+    <string name="menu_share" >共有</string>
+    <string name="menu_help_help" >ヘルプ...</string>
+    <string name="menu_help_about" >Jotaテキストエディタについて...</string>
+
+    <string name="fs_title_open" >ファイルを開く</string>
+    <string name="fs_title_save" >名前を付けて保存</string>
+    <string name="fs_title_dir" >ディレクトリ選択</string>
+    <string name="fs_access_denied" >アクセス出来ません</string>
+
+    <string name="history" >ファイル履歴</string>
+    <string name="charset" >文字コード</string>
+    <string name="linebreak" >改行コード</string>
+
+    <string name="search_word" >検索語</string>
+
+    <string name="activity_picker_label" >"操作の選択"</string>
+
+    <string name="button_replace">置換</string>
+    <string name="button_replace_all">全置換</string>
+    <string name="button_skip">スキップ</string>
+
+    <string name="about_url">file:///android_asset/about.html</string>
+    <string name="about_title">Jotaテキストエディタについて</string>
+
+    <string name="spinner_message">処理中...</string>
 
 </resources>
 

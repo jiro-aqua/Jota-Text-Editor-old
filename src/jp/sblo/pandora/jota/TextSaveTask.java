@@ -7,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 public     class TextSaveTask extends AsyncTask<String, Integer, String>{
 

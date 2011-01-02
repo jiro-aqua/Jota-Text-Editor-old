@@ -5603,7 +5603,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
                 if (duration > ANIMATED_SCROLL_GAP) {
                     mScroller.startScroll(mScrollX, mScrollY, dx, dy);
-//                    awakenScrollBars(mScroller.getDuration());
+                    //awakenScrollBars(mScroller.getDuration());
                     invalidate();
                 } else {
                     if (!mScroller.isFinished()) {
@@ -6571,10 +6571,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         if (mFastScroller != null) {
             boolean intercepted = mFastScroller.onInterceptTouchEvent(event);
             if (intercepted) {
+                mMovement.cancelFling(this, (Spannable)mText);
                 return true;
             }
             intercepted = mFastScroller.onTouchEvent(event);
             if (intercepted) {
+                mMovement.cancelFling(this, (Spannable)mText);
                 return true;
             }
         }
@@ -7060,32 +7062,24 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         super.onCreateContextMenu(menu);
         boolean added = false;
 
-        if (!isFocused()) {
-            if (isFocusable() && mInput != null) {
-                if (canCopy()) {
-                    MenuHandler handler = new MenuHandler();
-                    int name = R.string.copyAll;
-
-                    menu.add(0, ID_COPY, 0, name).
-                        setOnMenuItemClickListener(handler).
-                        setAlphabeticShortcut('c');
-                    menu.setHeaderTitle(R.string.
-                        editTextMenuTitle);
-                }
-            }
-
-            return;
-        }
+//        if (!isFocused()) {
+//            if (isFocusable() && mInput != null) {
+//                if (canCopy()) {
+//                    MenuHandler handler = new MenuHandler();
+//                    int name = R.string.copyAll;
+//
+//                    menu.add(0, ID_COPY, 0, name).
+//                        setOnMenuItemClickListener(handler).
+//                        setAlphabeticShortcut('c');
+//                    menu.setHeaderTitle(R.string.
+//                        editTextMenuTitle);
+//                }
+//            }
+//
+//            return;
+//        }
 
         MenuHandler handler = new MenuHandler();
-
-        if (canSelectAll()) {
-            menu.add(0, ID_SELECT_ALL, 0,
-                    R.string.selectAll).
-                setOnMenuItemClickListener(handler).
-                setAlphabeticShortcut('a');
-            added = true;
-        }
 
         boolean selection = getSelectionStart() != getSelectionEnd();
 
@@ -7107,28 +7101,28 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             int name;
             if (selection) {
                 name = R.string.cut;
-            } else {
-                name = R.string.cutAll;
-            }
-
-            menu.add(0, ID_CUT, 0, name).
+                menu.add(0, ID_CUT, 0, name).
                 setOnMenuItemClickListener(handler).
                 setAlphabeticShortcut('x');
-            added = true;
+                added = true;
+//            } else {
+//                name = R.string.cutAll;
+            }
+
         }
 
         if (canCopy()) {
             int name;
             if (selection) {
                 name = R.string.copy;
-            } else {
-                name = R.string.copyAll;
-            }
-
-            menu.add(0, ID_COPY, 0, name).
+                menu.add(0, ID_COPY, 0, name).
                 setOnMenuItemClickListener(handler).
                 setAlphabeticShortcut('c');
-            added = true;
+                added = true;
+//            } else {
+//                name = R.string.copyAll;
+            }
+
         }
 
         if (canPaste()) {
@@ -7138,21 +7132,29 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             added = true;
         }
 
-        if (mText instanceof Spanned) {
-            int selStart = getSelectionStart();
-            int selEnd = getSelectionEnd();
+//        if (mText instanceof Spanned) {
+//            int selStart = getSelectionStart();
+//            int selEnd = getSelectionEnd();
+//
+//            int min = Math.min(selStart, selEnd);
+//            int max = Math.max(selStart, selEnd);
+//
+//            URLSpan[] urls = ((Spanned) mText).getSpans(min, max,
+//                                                        URLSpan.class);
+//            if (urls.length == 1) {
+//                menu.add(0, ID_COPY_URL, 0,
+//                         R.string.copyUrl).
+//                            setOnMenuItemClickListener(handler);
+//                added = true;
+//            }
+//        }
 
-            int min = Math.min(selStart, selEnd);
-            int max = Math.max(selStart, selEnd);
-
-            URLSpan[] urls = ((Spanned) mText).getSpans(min, max,
-                                                        URLSpan.class);
-            if (urls.length == 1) {
-                menu.add(0, ID_COPY_URL, 0,
-                         R.string.copyUrl).
-                            setOnMenuItemClickListener(handler);
-                added = true;
-            }
+        if (canSelectAll()) {
+            menu.add(0, ID_SELECT_ALL, 0,
+                    R.string.selectAll).
+                setOnMenuItemClickListener(handler).
+                setAlphabeticShortcut('a');
+            added = true;
         }
 
         if (isInputMethodTarget()) {
@@ -7161,14 +7163,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             added = true;
         }
 
-        String word = getWordForDictionary();
-        if (word != null) {
-            menu.add(1, ID_ADD_TO_DICTIONARY, 0,
-                     getContext().getString(R.string.addToDictionary, word)).
-                    setOnMenuItemClickListener(handler);
-            added = true;
-
-        }
+//        String word = getWordForDictionary();
+//        if (word != null) {
+//            menu.add(1, ID_ADD_TO_DICTIONARY, 0,
+//                     getContext().getString(R.string.addToDictionary, word)).
+//                    setOnMenuItemClickListener(handler);
+//            added = true;
+//
+//        }
 
         if (added) {
             menu.setHeaderTitle(R.string.editTextMenuTitle);
@@ -7248,24 +7250,24 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             case ID_CUT:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
 
-                if (min == max) {
-                    min = 0;
-                    max = mText.length();
+                if (min != max) {
+                    clip.setText(mTransformed.subSequence(min, max));
+                    ((Editable) mText).delete(min, max);
+//                    min = 0;
+//                    max = mText.length();
                 }
 
-                clip.setText(mTransformed.subSequence(min, max));
-                ((Editable) mText).delete(min, max);
                 return true;
 
             case ID_COPY:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
 
-                if (min == max) {
-                    min = 0;
-                    max = mText.length();
+                if (min != max) {
+                    clip.setText(mTransformed.subSequence(min, max));
+//                    min = 0;
+//                    max = mText.length();
                 }
 
-                clip.setText(mTransformed.subSequence(min, max));
                 return true;
 
             case ID_PASTE:
@@ -7411,6 +7413,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     public boolean centerCursor() {
 
+        if ( mLayout == null ){
+            return false;
+        }
         int maxline = mLayout.getLineCount();
         if ( maxline <= 1 ){
             return true;

@@ -1,10 +1,12 @@
 package jp.sblo.pandora.jota.text;
 
+import java.lang.ref.WeakReference;
+
 import jp.sblo.pandora.jota.R;
 import android.content.Context;
 import android.text.Editable;
 import android.text.Spannable;
-import android.text.TextWatcher;
+import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -13,6 +15,7 @@ public class EditText extends TextView{
 
 
     private JotaTextWatcher mTextWatcher;
+    private WeakReference<ShortcutListener> mShortcutListener;
 
     public EditText(Context context) {
         this(context, null);
@@ -121,19 +124,42 @@ public class EditText extends TextView{
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
         Log.e( "dispatch=","keycode="+event.getKeyCode() );
 
+        Editable cs = getText();
+
         int keycode = event.getKeyCode();
         // ALT + KEYDOWN
-        if ( event.isAltPressed() && event.getAction() == KeyEvent.ACTION_DOWN ){
-            switch(keycode){
+        int altstate = TextKeyListener.getMetaState(cs,KeyEvent.META_ALT_ON);
+        boolean alt = event.isAltPressed() || (altstate!=0);
+
+        if ( alt && event.getAction() == KeyEvent.ACTION_DOWN ){
+            if (doShortcut(keycode, event)){
+                if ( altstate == 1 ){
+                    TextKeyListener.clearMetaKeyState(cs,KeyEvent.META_ALT_ON);
+                }
+                return true;
+            }
+
+        }
+        return super.dispatchKeyEventPreIme(event);
+    }
+
+    private boolean doShortcut(int keycode , KeyEvent event){
+        switch(keycode){
             case KeyEvent.KEYCODE_A:
             case KeyEvent.KEYCODE_X:
             case KeyEvent.KEYCODE_C:
             case KeyEvent.KEYCODE_V:
                 return onKeyShortcut( keycode , event );
+            case KeyEvent.KEYCODE_S:
+                ShortcutListener sl = mShortcutListener.get();
+                if ( sl!=null ){
+                    return sl.onCommand(keycode);
+                }
             }
-        }
-        return super.dispatchKeyEventPreIme(event);
+        return false;
     }
+
+
 
     public void setDocumentChangedListener( JotaDocumentWatcher watcher )
     {
@@ -153,6 +179,15 @@ public class EditText extends TextView{
         if ( mTextWatcher != null ){
             mTextWatcher.setChanged( changed );
         }
+    }
+
+    public void setShortcutListener( ShortcutListener sl )
+    {
+        mShortcutListener = new WeakReference<ShortcutListener>(sl);
+    }
+
+    public interface ShortcutListener {
+        boolean onCommand(int keycode);
     }
 
 }

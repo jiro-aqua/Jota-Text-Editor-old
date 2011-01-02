@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- These are the standard attributes that make up a complete theme. -->
+    <declare-styleable name="Theme">
+        <attr name="editTextStyle" format="reference" />
+    </declare-styleable>
+</resources>

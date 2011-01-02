@@ -3,30 +3,17 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Jota Text Editor</string>
     <string name="hint_message">Jota Text Editor</string>
-    <!-- Item on EditText context menu. This action is used to select all text in the edit field. -->
     <string name="selectAll">Select all</string>
-    <!-- Item on EditText context menu. This action is used to start selecting text in the edit field. -->
     <string name="selectText">Select text</string>
-    <!-- Item on EditText context menu. This action is used to start selecting text in the edit field. -->
     <string name="stopSelectingText">Stop selecting text</string>
-    <!-- Item on EditText context menu.  This action is used to cut selected the text into the clipboard.  -->
     <string name="cut">Cut</string>
-    <!-- Item on EditText context menu. This action is used to cut all the text into the clipboard. -->
     <string name="cutAll">Cut all</string>
-    <!-- Item on EditText context menu. This action is used to cut selected the text into the clipboard. -->
     <string name="copy">Copy</string>
-    <!-- Item on EditText context menu. This action is used to copy all the text into the clipboard. -->
     <string name="copyAll">Copy all</string>
-    <!-- Item on EditText context menu. This action is used t o paste from the clipboard into the eidt field -->
     <string name="paste">Paste</string>
-    <!-- Item on EditText context menu. This action is used to copy a URL from the edit field into the clipboard. -->
     <string name="copyUrl">Copy URL</string>
-    <!-- EditText context menu -->
     <string name="inputMethod">Input method</string>
-    <!-- Item on EditText context menu, used to add a word to the
-         input method dictionary. -->
     <string name="addToDictionary">"Add \"<xliff:g id="word" example="rickroll">%s</xliff:g>\" to dictionary</string>
-    <!-- Title for EditText context menu -->
     <string name="editTextMenuTitle">Edit text</string>
 
     <string name="label_yes">Yes</string>
@@ -35,5 +22,49 @@
     <string name="label_ok">OK</string>
     <string name="confirmation">Confirmation</string>
     <string name="confirmation_message">%s is updated. Do you want to save this file?</string>
+    <string name="confirmation_message_null">This text is updated. Do you want to save?</string>
+
+    <string name="menu_file">File</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_insert">Insert</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_preferences">Preferences</string>
+    <string name="menu_help">Help</string>
+
+    <string name="menu_file_new" >New</string>
+    <string name="menu_file_open" >Open...</string>
+    <string name="menu_file_history" >History</string>
+    <string name="menu_file_save" >Save</string>
+    <string name="menu_file_saveas" >Save As...</string>
+    <string name="menu_file_charcode" >Charcter Code...</string>
+    <string name="menu_file_lbcode" >LineBreak...</string>
+    <string name="menu_file_quit" >Quit</string>
+    <string name="menu_edit_undo" >Undo</string>
+    <string name="menu_search_byintent" >Search by Application</string>
+    <string name="menu_share" >Share</string>
+    <string name="menu_help_help" >Help...</string>
+    <string name="menu_help_about" >About Jota...</string>
+
+    <string name="fs_title_open" >Open</string>
+    <string name="fs_title_save" >Save as</string>
+    <string name="fs_title_dir" >Select Directory</string>
+    <string name="fs_access_denied" >Access denied...</string>
+
+    <string name="history" >Recent files...</string>
+    <string name="charset" >Charcter code</string>
+    <string name="linebreak" >Linebreak code</string>
+
+    <string name="search_word" >Search Word</string>
+
+    <string name="activity_picker_label">Select activity</string>
+
+    <string name="button_replace">Replace</string>
+    <string name="button_replace_all">All</string>
+    <string name="button_skip">Skip</string>
+
+    <string name="about_url">file:///android_asset/about.html</string>
+    <string name="about_title">About Jota Text Editor</string>
+
+    <string name="spinner_message">Wait a while...</string>
 
 </resources>

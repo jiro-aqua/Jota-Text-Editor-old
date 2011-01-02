@@ -395,7 +395,7 @@ implements MovementMethod
                 // to show it.
                 if ((initialScrollY >= 0 && initialScrollY != widget.getScrollY()) ||
                         (initialScrollX >= 0 && initialScrollX != widget.getScrollX())) {
-                    widget.moveCursorToVisibleOffset();
+//                    widget.moveCursorToVisibleOffset();
                     return true;
                 }
 
@@ -606,6 +606,11 @@ implements MovementMethod
         }
     }
 
+    public void cancelFling(TextView widget, Spannable buffer)
+    {
+        Touch.cancelFling(widget, buffer);
+    }
+
     public static MovementMethod getInstance() {
         if (sInstance == null)
             sInstance = new ArrowKeyMovementMethod();
@@ -619,6 +624,7 @@ implements MovementMethod
         }
         return sInstance;
     }
+
 
     private static Method sMethod;
     private static final Object LAST_TAP_DOWN = new Object();

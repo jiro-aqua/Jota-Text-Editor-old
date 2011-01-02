@@ -22,7 +22,25 @@
             </intent-filter>
 
 
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" android:mimeType="text/xml" />
+            </intent-filter>
+
         </activity>
+        <activity android:name="FileList">
+        </activity>
+
+        <activity android:name="ActivityPicker"
+                android:label="@string/activity_picker_label"
+                android:theme="@*android:style/Theme.Dialog.Alert"
+                android:finishOnCloseSystemDialogs="true">
+        </activity>
+
+        <activity android:name="AboutActivity">
+        </activity>
+
     </application>
     <uses-sdk android:minSdkVersion="4" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

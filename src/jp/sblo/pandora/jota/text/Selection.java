@@ -16,7 +16,6 @@
 
 package jp.sblo.pandora.jota.text;
 
-import android.text.NoCopySpan;
 import android.text.Spannable;
 import android.text.Spanned;
 

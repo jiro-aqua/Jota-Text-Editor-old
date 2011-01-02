@@ -47,4 +47,6 @@ public interface MovementMethod
      * if arbitrary selection is not allowed.
      */
     public boolean canSelectArbitrarily();
+
+    public void cancelFling(TextView widget, Spannable buffer);
 }

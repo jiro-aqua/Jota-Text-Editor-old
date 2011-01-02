@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>about aDice</title>
+    <style type="text/css">
+    <!--
+    BODY{
+	background-color: #3B5F7B;
+	color: #CEDBDF;
+	font-family: Helvetica, Arial, Verdana, sans-serif;
+	line-height: 125%;
+    }
+	A:link {
+	    color:#00FFFF;
+	    font-style:normal;
+	    text-decoration:underline;
+	}
+	a:visited {
+   		color:#F04CF0;
+   		text-decoration:underline;
+   	}
+    -->
+    </style>
+</head>
+
+<body>
+    <img alt="icon" src="icon.png" /><span style="font-size: 20pt">Jota Text Editor</span><br />
+    <p id='version' ></p>
+	Jota is a document-oriented text editor. It's pronouced as i-o-ta.<br />
+	
+    Copyright (C) 2011, Jiro and Aquamarine Networks.<br />
+    <a href="http://pandora.sblo.jp">http://pandora.sblo.jp/</a><br />
+    <hr />
+    This software is under the Apache License 2.0.<br />
+	<hr />
+    This software includes the parts of below projects ...<br />
+
+	<a href="http://source.android.com/">The Android Open Source Project</a><br />
+	<a href="NOTICE.html">read License</a><br /><br />
+
+	<a href="http://www.mozilla.org/projects/intl/UniversalCharsetDetection.html">UniversalChardet</a><br />
+	<a href="http://www.mozilla.org/MPL/">read License</a><br /><br />
+
+<!---	
+    <br />
+    Crash Report Library & Server by Adamrocker & benishouga.<br />
+    &nbsp; <a href="http://www.adamrocker.com/blog/288/bug-report-system-for-android.html">http://www.adamrocker.com/blog/288/bug-report-system-for-android.html</a><br />
+    &nbsp; <a href="http://http://aexceptions.appspot.com/">http://aexceptions.appspot.com/</a>
+    <br />
+    <br />
+    <hr />
+    Special thanks to ...<br />
+    &nbsp;qtotter/RZV/gou/いち/おーや/JIK/R'lyeh/saru_radio/Yoshi/ICHIRO<br />
+-->
+
+	<script type="text/javascript">
+	function setItem( key ){
+		document.getElementById( key ).appendChild(document.createTextNode( jscallback.getAboutStrings( key ) ));
+	}
+	function setTag( key ){
+		document.getElementById( key ).innerHTML =  jscallback.getAboutStrings( key ) ;
+	}
+		setItem('version');
+	</script>
+</body>
+</html>
