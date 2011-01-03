@@ -1,0 +1,14 @@
+cp Android.mk.release Android.mk
+grep debuggable AndroidManifest.xml
+touch AndroidManifest.xml
+. $MYDROID/build/envsetup.sh
+mm
+rm JotaTextEditor-unaligned.apk
+rm JotaTextEditor.apk
+
+cp $MYDROID/out/target/product/generic/obj/APPS/jota-text-editor_intermediates/package.apk.unsigned ./JotaTextEditor-unaligned.apk
+jarsigner -keystore ../sign/mysign  JotaTextEditor-unaligned.apk "aquamarine networks."
+$MYDROID/prebuilt/sdk/tools/linux/zipalign -v 4 JotaTextEditor-unaligned.apk JotaTextEditor.apk
+rm JotaTextEditor-unaligned.apk
+
+cp Android.mk.debug Android.mk

@@ -2,6 +2,8 @@ package jp.sblo.pandora.jota;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.ListActivity;
@@ -26,6 +28,7 @@ public class FileList extends ListActivity {
 	public static final String INTENT_FILENAME = "FILENAME";
 	public static final String INTENT_FILEPATH = "FILEPATH";
 	public static final String INTENT_MODE = "MODE";
+    final public static String INTENT_EXTENSION = "EXT";
 	public static final String MODE_OPEN = "OPEN";
     public static final String MODE_SAVE = "SAVE";
     public static final String MODE_DIR = "DIR";
@@ -37,6 +40,7 @@ public class FileList extends ListActivity {
 	private List<String> items = null;
     private Button mBtnOK;
     private EditText mEdtFileName;
+    private String[] mExtension = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +106,7 @@ public class FileList extends ListActivity {
         Bundle extras = intent.getExtras();
 		if (extras != null) {
 		    mMode = extras.getString(INTENT_MODE);
+            mExtension = (String[]) extras.get(INTENT_EXTENSION);
 		}
 
 		if ( mMode == null ){
@@ -235,11 +240,44 @@ public class FileList extends ListActivity {
 			if( file.isDirectory() ) {
 				items.add(file.getName() + "/" );
 			} else {
-				items.add(file.getName());
+                if (mExtension != null) {
+                    String name = file.getName();
+                    String smallname = name.toLowerCase();
+                    for (String ext : mExtension) {
+                        if (smallname.endsWith(ext)) {
+                            items.add(name);
+                        }
+                        break;
+                    }
+                } else {
+                    items.add(file.getName());
+                }
 			}
 		}
 
-		ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, R.layout.file_row, items);
+		Collections.sort( items , new Comparator<String>(){
+            public int compare(String object1, String object2) {
+
+                if ( "..".equals(object1) ){
+                    return -1;
+                }
+                if ( "..".equals(object2) ){
+                    return 1;
+                }
+
+                boolean p1 = object1.endsWith("/");
+                boolean p2 = object2.endsWith("/");
+
+                if ( p1 && !p2 ){
+                    return -1;
+                }
+                if ( !p1 && p2 ){
+                    return 1;
+                }
+                return object1.compareToIgnoreCase(object2);
+            }
+		});
+        ArrayAdapter<String> fileList = new ArrayAdapter<String>(this, R.layout.file_row, items);
 		setListAdapter(fileList);
 	}
 

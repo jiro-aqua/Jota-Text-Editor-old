@@ -11,6 +11,7 @@ import jp.sblo.pandora.jota.Search.OnSearchFinishedListener;
 import jp.sblo.pandora.jota.Search.Record;
 import jp.sblo.pandora.jota.TextLoadTask.OnFileLoadListener;
 import jp.sblo.pandora.jota.text.JotaDocumentWatcher;
+import jp.sblo.pandora.jota.text.SpannableStringBuilder;
 import jp.sblo.pandora.jota.text.EditText.ShortcutListener;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,10 +22,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -70,7 +71,7 @@ public class Main
     private EditText mEdtReplaceWord;
     private Button mBtnSkip;
     private Button mBtnReplaceAll;
-
+    private String mNewFilename;
 
     private TextLoadTask mTask;
 //    private String mSearchWord;
@@ -87,6 +88,7 @@ public class Main
     private ArrayList<Search.Record> mSearchResult;
     private boolean mSearchForward;
 
+    private SettingsActivity.Settings mSettings;
 
     class InstanceState {
         String  filename;
@@ -105,6 +107,8 @@ public class Main
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.textviewer);
+
+        mSettings = SettingsActivity.readSettings(this);
 
         mEditor = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.textedit);
         mEditor.setDocumentChangedListener(this);
@@ -203,7 +207,7 @@ public class Main
 //                    mLine = extra.getInt("line");
 //                }
 
-                mTask = new TextLoadTask( this );
+                mTask = new TextLoadTask( this , this );
                 mTask.execute(path);
             }
         }else{
@@ -223,14 +227,15 @@ public class Main
 
     public void onPreFileLoad() {
     }
-    public void onFileLoaded(String result , String filename, String charset, int linebreak) {
+    public void onFileLoaded(SpannableStringBuilder result , String filename, String charset, int linebreak) {
+        mTask = null;
         if ( result != null ){
             mInstanceState.filename = filename;
             mInstanceState.charset = charset;
             mInstanceState.linebreak = linebreak;
 
 
-            SpannableString ss = new SpannableString( result );
+            SpannableStringBuilder ss =  result ;
             mEditor.setText(ss);
             mEditor.setChanged(false);
 
@@ -266,14 +271,13 @@ public class Main
             }
             saveHistory();
 
-
-
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
+        Log.e(TAG,"onSaveInstanceState=========================================================>");
 //        mInstanceState.text = mEditor.getText().toString();
 //        mInstanceState.selstart = mEditor.getSelectionStart();
 //        mInstanceState.selend = mEditor.getSelectionEnd();
@@ -306,6 +310,29 @@ public class Main
         mEditor.setChanged(mInstanceState.changed);
 
     }
+
+    @Override
+    public void onLowMemory() {
+        Log.e(TAG,"onLowMemory()");
+        super.onLowMemory();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent!=null && Intent.ACTION_VIEW.equals(intent.getAction())){
+            Uri data = intent.getData();
+            mNewFilename = Uri.decode( data.getSchemeSpecificPart().substring(2) );      // skip "//"
+
+            if ( !mNewFilename.equals(mInstanceState.filename)){
+                confirmSave(mProcReopen);
+            }
+
+        }
+
+    }
+
 
     @Override
     protected void onPause() {
@@ -357,12 +384,18 @@ public class Main
             if ( confirmSave(mProcQuit) ){
                 return true;
             }
-        }else if ( keyCode == KeyEvent.KEYCODE_SEARCH ) {
-            mProcSearch.run();
-            return true;
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if ( keyCode == KeyEvent.KEYCODE_SEARCH ) {
+            mProcSearch.run();
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 
     private boolean confirmSave( Runnable procAfterSaveConfirm )
@@ -432,7 +465,7 @@ public class Main
                 lb = "\r\n";
             }
 
-            new TextSaveTask( null , new Runnable(){
+            new TextSaveTask( this ,  null , new Runnable(){
                 public void run()
                 {
                     saveHistory();
@@ -441,6 +474,7 @@ public class Main
                         mProcAfterSaveConfirm = null;
                     }
                     mEditor.setChanged(false);
+                    onChanged();
                 }
             })
             .execute(filename , charset , lb , text );
@@ -464,7 +498,7 @@ public class Main
                 case REQUESTCODE_OPEN:{
                     Bundle extras = data.getExtras();
                     String path = extras.getString(FileList.INTENT_FILEPATH);
-                    mTask = new TextLoadTask( this );
+                    mTask = new TextLoadTask( this , this );
                     mTask.execute(path);
                 }
                 break;
@@ -534,6 +568,8 @@ public class Main
             }
             return true;
             case R.id.menu_preferences: {
+                Intent intent = new Intent(this,SettingsActivity.class);
+                startActivity(intent);
             }
             return true;
             case R.id.menu_file_history:{
@@ -589,15 +625,6 @@ public class Main
             return true;
             case R.id.menu_share:{
                 mProcShare.run();
-            }
-            return true;
-            case R.id.menu_help_help:{
-            }
-            return true;
-
-            case R.id.menu_help_about:{
-                Intent intent = new Intent(Main.this,AboutActivity.class);
-                startActivity(intent);
             }
             return true;
 
@@ -668,6 +695,17 @@ public class Main
         }
     };
 
+    private Runnable mProcReopen =  new Runnable() {
+        public void run() {
+            mTask = new TextLoadTask( Main.this , Main.this );
+            mTask.execute(mNewFilename);
+            mNewFilename = null;
+        }
+    };
+
+
+
+
     abstract class PostProcess implements Runnable , DialogInterface.OnClickListener {
     }
 
@@ -715,17 +753,21 @@ public class Main
                 }
             });
 
-            CharSequence [] items = new CharSequence[fl.size()];
+            int historymax = fl.size();
+            if ( historymax > 20 ){
+                historymax = 20;
+            }
+            CharSequence [] items = new CharSequence[historymax];
             int max = fl.size();
             for( int i=0;i<max;i++){
-                if ( i< 20 ){
+                if ( i< historymax ){
                     File f = new File(fl.get(i).path);
                     items[i] = f.getName();
                 }else{
+                    // remove a record over 20 counts
                     sp.edit().remove(fl.get(i).path);
                 }
             }
-            // remove a record over 20 counts
             sp.edit().commit();
             new AlertDialog.Builder(Main.this).setTitle(R.string.history).setItems(items, this).show();
 
@@ -733,7 +775,7 @@ public class Main
 
         public void onClick(DialogInterface dialog, int which) {
             String path = fl.get(which).path;
-            mTask = new TextLoadTask( Main.this );
+            mTask = new TextLoadTask( Main.this,Main.this );
             mTask.execute(path);
         }
     };
@@ -920,7 +962,7 @@ public class Main
             mProcOnSearchResult.search();
             return;
         }
-        new Search(this, searchword, mEditor.getText(), true, true, mProcOnSearchResult);
+        new Search(this, searchword, mEditor.getText(), mSettings.re , mSettings.ignorecase, mProcOnSearchResult);
     }
 
     abstract class PostSearchProcess implements  OnSearchFinishedListener {
@@ -995,4 +1037,12 @@ public class Main
         }
 
     };
+
+
+    private OnSharedPreferenceChangeListener OnSharedPreferenceChangeListener =  new OnSharedPreferenceChangeListener(){
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            mSettings = SettingsActivity.readSettings(Main.this);
+        }
+    };
+
 }

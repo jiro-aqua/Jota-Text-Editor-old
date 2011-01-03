@@ -1,0 +1,5 @@
+-keep public class jp.sblo.pandora.jota.AboutActivity$JsCallbackObj {
+  public java.lang.String getAboutStrings(java.lang.String);
+  public void throwIntentByUrl(java.lang.String,int);
+}
+

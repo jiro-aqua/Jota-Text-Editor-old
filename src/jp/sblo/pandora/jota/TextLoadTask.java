@@ -10,12 +10,16 @@ import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+import jp.sblo.pandora.jota.text.SpannableStringBuilder;
+
 import org.mozilla.universalchardet.UniversalDetector;
 import org.mozilla.universalchardet.UniversalDetector.DetectorException;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-public     class TextLoadTask extends AsyncTask<String, Integer, String>{
+public     class TextLoadTask extends AsyncTask<String, Integer, SpannableStringBuilder>{
 
     OnFileLoadListener mFileLoadListener=null;
 //    private int mLineToChar=-1;
@@ -23,18 +27,20 @@ public     class TextLoadTask extends AsyncTask<String, Integer, String>{
     private String mFilename;
     private String mCharset;
     private int mLinebreak;
-
+    private ProgressDialog mProgressDialog;
+    private Activity mActivity;
 
     public interface OnFileLoadListener
     {
         void onPreFileLoad();
-        void onFileLoaded( String result , String filename , String charset , int linebreak );
+        void onFileLoaded( SpannableStringBuilder result , String filename , String charset , int linebreak );
     }
 
 
-    public TextLoadTask( OnFileLoadListener postProc)
+    public TextLoadTask( Activity activity , OnFileLoadListener postProc)
     {
         mFileLoadListener = postProc;
+        mActivity = activity;
     }
 
     @Override
@@ -44,11 +50,19 @@ public     class TextLoadTask extends AsyncTask<String, Integer, String>{
         if ( mFileLoadListener!= null ){
             mFileLoadListener.onPreFileLoad();
         }
+        mProgressDialog = new ProgressDialog(mActivity);
+//        mProgressDialog.setTitle(R.string.spinner_message);
+        mProgressDialog.setMessage(mActivity.getString(R.string.spinner_message));
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mActivity = null;
     }
     @Override
-    protected String doInBackground(String... params)
+    protected SpannableStringBuilder doInBackground(String... params)
     {
-        StringBuilder result=new StringBuilder();
+        SpannableStringBuilder result=new SpannableStringBuilder();
         File f = new File(params[0]);
 
         mFilename = params[0];
@@ -66,7 +80,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, String>{
                 nread = is.read(buff);
 
                 if ( nread == 0 ){
-                    return "";
+                    return new SpannableStringBuilder("");
                 }
 
                 // Detect charset
@@ -160,7 +174,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, String>{
                     }
                     br.close();
                     is.close();
-                    return result.toString();
+                    return result;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -172,8 +186,10 @@ public     class TextLoadTask extends AsyncTask<String, Integer, String>{
     }
 
     @Override
-    protected void onPostExecute(String result)
+    protected void onPostExecute(SpannableStringBuilder result)
     {
+        mProgressDialog.dismiss();
+        mProgressDialog = null;
         if ( mFileLoadListener!= null ){
             mFileLoadListener.onFileLoaded( result, mFilename, mCharset, mLinebreak);
         }

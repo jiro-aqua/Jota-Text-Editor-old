@@ -6,15 +6,20 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 public     class TextSaveTask extends AsyncTask<String, Integer, String>{
 
     Runnable mPreProc=null;
     Runnable mPostProc=null;
+    Activity mActivity;
+    private ProgressDialog mProgressDialog;
 
-    public TextSaveTask( Runnable preProc , Runnable postProc)
+    public TextSaveTask( Activity activity ,Runnable preProc , Runnable postProc)
     {
+        mActivity = activity;
         mPreProc = preProc;
         mPostProc = postProc;
     }
@@ -26,6 +31,14 @@ public     class TextSaveTask extends AsyncTask<String, Integer, String>{
         if ( mPreProc!= null ){
             mPreProc.run();
         }
+        mProgressDialog = new ProgressDialog(mActivity);
+        // mProgressDialog.setTitle(R.string.spinner_message);
+        mProgressDialog.setMessage(mActivity.getString(R.string.spinner_message));
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        mActivity = null;
     }
     @Override
     protected String doInBackground(String... params)
@@ -72,6 +85,8 @@ public     class TextSaveTask extends AsyncTask<String, Integer, String>{
     @Override
     protected void onPostExecute(String result)
     {
+        mProgressDialog.dismiss();
+        mProgressDialog = null;
         if ( mPostProc!= null ){
             mPostProc.run();
         }

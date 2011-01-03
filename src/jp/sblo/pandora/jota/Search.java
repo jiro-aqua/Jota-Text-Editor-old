@@ -1,30 +1,13 @@
 package jp.sblo.pandora.jota;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.mozilla.universalchardet.UniversalDetector;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
-import android.widget.Toast;
 
 
 
@@ -92,8 +75,6 @@ public class Search
     class SearchTask extends AsyncTask<String, Record, Boolean>
     {
         private ProgressDialog mProgressDialog;
-        private int mFileCount=0;
-        private int mFoundcount=0;
         private boolean mCancelled;
 
         @Override
@@ -114,6 +95,7 @@ public class Search
                 }
             });
             mProgressDialog.show();
+            mParent = null;
         }
 
         @Override

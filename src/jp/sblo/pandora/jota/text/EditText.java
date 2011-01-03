@@ -8,7 +8,7 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
-import android.util.Log;
+//import android.util.Log;
 import android.view.KeyEvent;
 
 public class EditText extends TextView{
@@ -107,7 +107,7 @@ public class EditText extends TextView{
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.e( "keycode=","keycode="+keyCode );
+//        Log.e( "keycode=","keycode="+keyCode );
 
         int keycode = event.getKeyCode();
 
@@ -122,7 +122,7 @@ public class EditText extends TextView{
     }
     @Override
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
-        Log.e( "dispatch=","keycode="+event.getKeyCode() );
+//        Log.e( "dispatch=","keycode="+event.getKeyCode() );
 
         Editable cs = getText();
 

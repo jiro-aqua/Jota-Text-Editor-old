@@ -54,7 +54,7 @@ public class AboutActivity extends Activity
 		webview.setFocusableInTouchMode(true);
 	}
 
-	class JsCallbackObj
+	public class JsCallbackObj
 	{
 
 		public JsCallbackObj()

@@ -15,13 +15,13 @@
 		android:title="@string/menu_file_save" 
 		android:alphabeticShortcut = "W"
 	/>
-        <item android:id="@+id/menu_file_open" 		
-		android:title="@string/menu_file_open" 
-		android:alphabeticShortcut = "O"
-	/>
         <item android:id="@+id/menu_file_saveas" 
 		android:title="@string/menu_file_saveas" 
 		android:alphabeticShortcut = "A"
+	/>
+        <item android:id="@+id/menu_file_open" 		
+		android:title="@string/menu_file_open" 
+		android:alphabeticShortcut = "O"
 	/>
         <item android:id="@+id/menu_file_new" 		
 		android:title="@string/menu_file_new"		
@@ -95,7 +95,7 @@
 >
 
 </item>
-
+<!---
 <item android:title="@string/menu_help" 
 		android:id="@+id/menu_help"
 		android:icon = "@drawable/ic_menu_help" >
@@ -109,5 +109,6 @@
     </menu>
 
 </item>
+-->
 
 </menu>

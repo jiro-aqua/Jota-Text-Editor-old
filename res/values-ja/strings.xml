@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Jota テキスト エディタ</string>
-    <string name="hint_message">Jotaテキストエディタ</string>
+    <string name="app_name">Jota Text Editor</string>
+    <string name="hint_message">Jota Text Editor</string>
 
     <string name="selectAll" >"すべて選択"</string>
     <string name="selectText" >"テキストを選択"</string>
@@ -43,8 +43,6 @@
     <string name="menu_edit_undo" >やり直し</string>
     <string name="menu_search_byintent" >外部アプリで検索</string>
     <string name="menu_share" >共有</string>
-    <string name="menu_help_help" >ヘルプ...</string>
-    <string name="menu_help_about" >Jotaテキストエディタについて...</string>
 
     <string name="fs_title_open" >ファイルを開く</string>
     <string name="fs_title_save" >名前を付けて保存</string>
@@ -64,9 +62,30 @@
     <string name="button_skip">スキップ</string>
 
     <string name="about_url">file:///android_asset/about.html</string>
-    <string name="about_title">Jotaテキストエディタについて</string>
+    <string name="about_title">Jota Text Editorについて</string>
 
     <string name="spinner_message">処理中...</string>
+
+    <string name="label_view">表示</string>
+    <string name="label_font">フォント</string>
+    <string name="label_font_size">フォントサイズ</string>
+    <string name="label_text_color">文字色</string>
+    <string name="label_highlight_color">選択色</string>
+    <string name="label_background">背景</string>
+    <string name="label_background_white">白</string>
+    <string name="label_background_black">黒</string>
+    <string name="label_search">検索</string>
+    <string name="label_re">正規表現</string>
+    <string name="label_ignore_case">大文字小文字を同一視</string>
+    <string name="label_init" >設定初期化</string>
+    <string name="label_help" >ヘルプ</string>
+    <string name="label_mail" >作者にメール</string>
+    <string name="label_mail_summary" >pandora@aquamarine.sakura.ne.jp</string>
+    <string name="label_tweet" >作者につぶやく</string>
+    <string name="label_tweet_summary" >\@jiro_aqua</string>
+    <string name="label_about" >Jota Text Editorについて</string>
+
+    <string name="msg_init_setting" >この操作は全ての設定値を初期化します。\n実行しますか?</string>
 
 </resources>
 

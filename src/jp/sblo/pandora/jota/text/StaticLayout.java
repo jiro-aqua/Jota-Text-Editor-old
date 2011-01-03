@@ -16,10 +16,7 @@
 
 package jp.sblo.pandora.jota.text;
 
-import jp.sblo.pandora.jota.text.style.LeadingMarginSpan;
 import jp.sblo.pandora.jota.text.style.LineHeightSpan;
-import jp.sblo.pandora.jota.text.style.MetricAffectingSpan;
-import jp.sblo.pandora.jota.text.style.ReplacementSpan;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.text.AndroidCharacter;
@@ -147,10 +144,10 @@ extends Layout
         float[] widths = mWidths;
 
         AlteredCharSequence alter = null;
-        Spanned spanned = null;
+//        Spanned spanned = null;
 
-        if (source instanceof Spanned)
-            spanned = (Spanned) source;
+//        if (source instanceof Spanned)
+//            spanned = (Spanned) source;
 
         int DEFAULT_DIR = DIR_LEFT_TO_RIGHT; // XXX
 
@@ -171,44 +168,44 @@ extends Layout
 
             LineHeightSpan[] chooseht = null;
 
-            if (spanned != null) {
-                LeadingMarginSpan[] sp;
-
-                sp = spanned.getSpans(start, end, LeadingMarginSpan.class);
-                for (int i = 0; i < sp.length; i++) {
-                    LeadingMarginSpan lms = sp[i];
-                    firstwidth -= sp[i].getLeadingMargin(true);
-                    restwidth -= sp[i].getLeadingMargin(false);
-                    if (lms instanceof LeadingMarginSpan.LeadingMarginSpan2) {
-                        firstWidthLineCount = ((LeadingMarginSpan.LeadingMarginSpan2)lms).getLeadingMarginLineCount();
-                    }
-                }
-
-                chooseht = spanned.getSpans(start, end, LineHeightSpan.class);
-
-                if (chooseht.length != 0) {
-                    if (choosehtv == null ||
-                        choosehtv.length < chooseht.length) {
-                        choosehtv = new int[ArrayUtils.idealIntArraySize(
-                                            chooseht.length)];
-                    }
-
-                    for (int i = 0; i < chooseht.length; i++) {
-                        int o = spanned.getSpanStart(chooseht[i]);
-
-                        if (o < start) {
-                            // starts in this layout, before the
-                            // current paragraph
-
-                            choosehtv[i] = getLineTop(getLineForOffset(o));
-                        } else {
-                            // starts in this paragraph
-
-                            choosehtv[i] = v;
-                        }
-                    }
-                }
-            }
+//            if (spanned != null) {
+//                LeadingMarginSpan[] sp;
+//
+//                sp = spanned.getSpans(start, end, LeadingMarginSpan.class);
+//                for (int i = 0; i < sp.length; i++) {
+//                    LeadingMarginSpan lms = sp[i];
+//                    firstwidth -= sp[i].getLeadingMargin(true);
+//                    restwidth -= sp[i].getLeadingMargin(false);
+//                    if (lms instanceof LeadingMarginSpan.LeadingMarginSpan2) {
+//                        firstWidthLineCount = ((LeadingMarginSpan.LeadingMarginSpan2)lms).getLeadingMarginLineCount();
+//                    }
+//                }
+//
+//                chooseht = spanned.getSpans(start, end, LineHeightSpan.class);
+//
+//                if (chooseht.length != 0) {
+//                    if (choosehtv == null ||
+//                        choosehtv.length < chooseht.length) {
+//                        choosehtv = new int[ArrayUtils.idealIntArraySize(
+//                                            chooseht.length)];
+//                    }
+//
+//                    for (int i = 0; i < chooseht.length; i++) {
+//                        int o = spanned.getSpanStart(chooseht[i]);
+//
+//                        if (o < start) {
+//                            // starts in this layout, before the
+//                            // current paragraph
+//
+//                            choosehtv[i] = getLineTop(getLineForOffset(o));
+//                        } else {
+//                            // starts in this paragraph
+//
+//                            choosehtv[i] = v;
+//                        }
+//                    }
+//                }
+//            }
 
             if (end - start > chdirs.length) {
                 chdirs = new byte[ArrayUtils.idealByteArraySize(end - start)];
@@ -241,19 +238,19 @@ extends Layout
             // as viable breakpoints, and that the entire run gets the
             // same bidi direction.
 
-            if (source instanceof Spanned) {
-                Spanned sp = (Spanned) source;
-                ReplacementSpan[] spans = sp.getSpans(start, end, ReplacementSpan.class);
-
-                for (int y = 0; y < spans.length; y++) {
-                    int a = sp.getSpanStart(spans[y]);
-                    int b = sp.getSpanEnd(spans[y]);
-
-                    for (int x = a; x < b; x++) {
-                        chs[x - start] = '\uFFFC';
-                    }
-                }
-            }
+//            if (source instanceof Spanned) {
+//                Spanned sp = (Spanned) source;
+//                ReplacementSpan[] spans = sp.getSpans(start, end, ReplacementSpan.class);
+//
+//                for (int y = 0; y < spans.length; y++) {
+//                    int a = sp.getSpanStart(spans[y]);
+//                    int b = sp.getSpanEnd(spans[y]);
+//
+//                    for (int x = a; x < b; x++) {
+//                        chs[x - start] = '\uFFFC';
+//                    }
+//                }
+//            }
 
             if (!easy) {
                 // XXX put override flags, etc. into chdirs
@@ -309,36 +306,36 @@ extends Layout
 
             int next;
             for (int i = start; i < end; i = next) {
-                if (spanned == null)
+//                if (spanned == null)
                     next = end;
-                else
-                    next = spanned.nextSpanTransition(i, end,
-                                                      MetricAffectingSpan.
-                                                      class);
+//                else
+//                    next = spanned.nextSpanTransition(i, end,
+//                                                      MetricAffectingSpan.
+//                                                      class);
 
-                if (spanned == null) {
+//                if (spanned == null) {
                     paint.getTextWidths(sub, i, next, widths);
                     System.arraycopy(widths, 0, widths,
                                      end - start + (i - start), next - i);
 
                     paint.getFontMetricsInt(fm);
-                } else {
-                    mWorkPaint.baselineShift = 0;
-
-                    Styled.getTextWidths(paint, mWorkPaint,
-                                         spanned, i, next,
-                                         widths, fm);
-                    System.arraycopy(widths, 0, widths,
-                                     end - start + (i - start), next - i);
-
-                    if (mWorkPaint.baselineShift < 0) {
-                        fm.ascent += mWorkPaint.baselineShift;
-                        fm.top += mWorkPaint.baselineShift;
-                    } else {
-                        fm.descent += mWorkPaint.baselineShift;
-                        fm.bottom += mWorkPaint.baselineShift;
-                    }
-                }
+//                } else {
+//                    mWorkPaint.baselineShift = 0;
+//
+//                    Styled.getTextWidths(paint, mWorkPaint,
+//                                         spanned, i, next,
+//                                         widths, fm);
+//                    System.arraycopy(widths, 0, widths,
+//                                     end - start + (i - start), next - i);
+//
+//                    if (mWorkPaint.baselineShift < 0) {
+//                        fm.ascent += mWorkPaint.baselineShift;
+//                        fm.top += mWorkPaint.baselineShift;
+//                    } else {
+//                        fm.descent += mWorkPaint.baselineShift;
+//                        fm.bottom += mWorkPaint.baselineShift;
+//                    }
+//                }
 
                 int fmtop = fm.top;
                 int fmbottom = fm.bottom;
@@ -374,11 +371,11 @@ extends Layout
                             if (bm != null) {
                                 Paint whichPaint;
 
-                                if (spanned == null) {
+//                                if (spanned == null) {
                                     whichPaint = paint;
-                                } else {
-                                    whichPaint = mWorkPaint;
-                                }
+//                                } else {
+//                                    whichPaint = mWorkPaint;
+//                                }
 
                                 float wid = (float) bm.getWidth() *
                                             -whichPaint.ascent() /

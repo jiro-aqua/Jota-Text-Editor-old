@@ -19,6 +19,9 @@ public class JotaEditableFactory extends Editable.Factory
      * a different kind of Spanned.
      */
     public Editable newEditable(CharSequence source) {
+        if ( source instanceof SpannableStringBuilder ){
+            return (Editable)source;
+        }
         return new SpannableStringBuilder(source);
     }
 

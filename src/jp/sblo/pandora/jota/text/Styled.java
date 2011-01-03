@@ -189,34 +189,34 @@ public class Styled
                                     TextPaint workPaint,
                                     Spanned text, int start, int end,
                                     float[] widths, Paint.FontMetricsInt fmi) {
-        MetricAffectingSpan[] spans =
-            text.getSpans(start, end, MetricAffectingSpan.class);
-
-		ReplacementSpan replacement = null;
+//        MetricAffectingSpan[] spans =
+//            text.getSpans(start, end, MetricAffectingSpan.class);
+//
+//		ReplacementSpan replacement = null;
         workPaint.set(paint);
-
-		for (int i = 0; i < spans.length; i++) {
-			MetricAffectingSpan span = spans[i];
-			if (span instanceof ReplacementSpan) {
-				replacement = (ReplacementSpan)span;
-			}
-			else {
-				span.updateMeasureState(workPaint);
-			}
-		}
-
-        if (replacement == null) {
+//
+//		for (int i = 0; i < spans.length; i++) {
+//			MetricAffectingSpan span = spans[i];
+//			if (span instanceof ReplacementSpan) {
+//				replacement = (ReplacementSpan)span;
+//			}
+//			else {
+//				span.updateMeasureState(workPaint);
+//			}
+//		}
+//
+//        if (replacement == null) {
             workPaint.getFontMetricsInt(fmi);
             workPaint.getTextWidths(text, start, end, widths);
-        } else {
-            int wid = replacement.getSize(workPaint, text, start, end, fmi);
-
-            if (end > start) {
-                widths[0] = wid;
-                for (int i = start + 1; i < end; i++)
-                    widths[i - start] = 0;
-            }
-        }
+//        } else {
+//            int wid = replacement.getSize(workPaint, text, start, end, fmi);
+//
+//            if (end > start) {
+//                widths[0] = wid;
+//                for (int i = start + 1; i < end; i++)
+//                    widths[i - start] = 0;
+//            }
+//        }
         return end - start;
     }
 
