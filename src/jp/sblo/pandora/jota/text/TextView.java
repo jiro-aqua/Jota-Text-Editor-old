@@ -16,11 +16,12 @@
 
 package jp.sblo.pandora.jota.text;
 
-import java.lang.ref.WeakReference;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import jp.sblo.pandora.jota.R;
+import jp.sblo.pandora.jota.text.UndoBuffer.TextChange;
 import jp.sblo.pandora.jota.text.style.ParagraphStyle;
 import jp.sblo.pandora.jota.text.style.URLSpan;
 import jp.sblo.pandora.jota.text.style.UpdateAppearance;
@@ -921,6 +922,33 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         setFocusable(focusable);
         setClickable(clickable);
         setLongClickable(longClickable);
+
+        mUndoBuffer.removeAll();
+
+        addTextChangedListener(new TextWatcher() {
+            TextChange lastChange;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if ( lastChange !=null ){
+                    lastChange.newtext = s.subSequence(start, start + count);
+                    if ( start == lastChange.start &&
+                         (lastChange.oldtext.length() > 0 || lastChange.newtext.length() > 0 ) &&
+                         !lastChange.newtext.toString().equals(lastChange.oldtext.toString()) )
+                     {
+                        mUndoBuffer.push(lastChange);
+//                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
+                    }
+                    lastChange = null;
+                }
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                lastChange = new TextChange();
+                lastChange.start = start;
+                lastChange.oldtext = s.subSequence(start, start + count);
+            }
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
     }
 
     private void setTypefaceByIndex(int typefaceIndex, int styleIndex) {
@@ -2301,6 +2329,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         CharSequence text;
         boolean frozenWithFocus;
         CharSequence error;
+        UndoBuffer undoBuffer;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -2320,6 +2349,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 out.writeInt(1);
                 TextUtils.writeToParcel(error, out, flags);
             }
+            out.writeParcelable(undoBuffer, 0);
         }
 
         @Override
@@ -2354,6 +2384,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             if (in.readInt() != 0) {
                 error = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
             }
+            undoBuffer = in.readParcelable(UndoBuffer.class.getClassLoader());
         }
     }
 
@@ -2407,7 +2438,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
 
             ss.error = mError;
-
+            ss.undoBuffer = mUndoBuffer;
             return ss;
         }
 
@@ -2463,6 +2494,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 }
             });
         }
+        mUndoBuffer = ss.undoBuffer;
+
     }
 
     /**
@@ -6881,6 +6914,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
 
             break;
+
+        case KeyEvent.KEYCODE_Z:
+            if (canUndo()) {
+                return onTextContextMenuItem(ID_UNDO);
+            }
+
+            break;
         }
 
         return super.onKeyShortcut(keyCode, event);
@@ -6902,6 +6942,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
 
         return false;
+    }
+
+
+    private boolean canUndo() {
+        return  mUndoBuffer.canUndo();
     }
 
     private boolean canCut() {
@@ -7103,6 +7148,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
         }
 
+        if (canUndo()) {
+            int name;
+            name = R.string.menu_edit_undo;
+            menu.add(0, ID_UNDO, 0, name).
+            setOnMenuItemClickListener(handler).
+            setAlphabeticShortcut('x');
+            added = true;
+
+        }
+
         if (canCut()) {
             int name;
             if (selection) {
@@ -7199,6 +7254,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_COPY = android.R.id.copy;
     private static final int ID_PASTE = android.R.id.paste;
     private static final int ID_COPY_URL = android.R.id.copyUrl;
+    private static final int ID_UNDO = R.id.undo;
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
     private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;
 
@@ -7253,6 +7309,21 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 Selection.setSelection((Spannable) mText, getSelectionEnd());
                 return true;
 
+            case ID_UNDO:
+                MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
+
+                // UNDO
+                {
+                    TextChange textchange = mUndoBuffer.pop();
+                    if ( textchange != null ){
+                        Editable text = (Editable)getText();
+                        text.replace( textchange.start , textchange.start + textchange.newtext.length() , textchange.oldtext );
+                        Selection.setSelection( text, textchange.start + textchange.oldtext.length());
+                        mUndoBuffer.pop(); // discard newest record
+                    }
+                }
+
+                return true;
             case ID_CUT:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
 
@@ -7445,6 +7516,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return true;
     }
 
+    public void setChanged( boolean changed ){
+        if ( changed == false ){
+            mUndoBuffer.removeAll();
+        }
+    }
+
 
     @ViewDebug.ExportedProperty
     private CharSequence            mText;
@@ -7529,4 +7606,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private FastScroller mFastScroller;
     boolean mFastScrollEnabled;
 
+    private UndoBuffer mUndoBuffer = new UndoBuffer();
 }

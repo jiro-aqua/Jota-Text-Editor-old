@@ -149,9 +149,9 @@ public class EditText extends TextView{
             case KeyEvent.KEYCODE_X:
             case KeyEvent.KEYCODE_C:
             case KeyEvent.KEYCODE_V:
+            case KeyEvent.KEYCODE_Z:
                 return onKeyShortcut( keycode , event );
             case KeyEvent.KEYCODE_S:
-            case KeyEvent.KEYCODE_Z:
                 ShortcutListener sl = mShortcutListener.get();
                 if ( sl!=null ){
                     return sl.onCommand(keycode);
@@ -181,6 +181,7 @@ public class EditText extends TextView{
         if ( mTextWatcher != null ){
             mTextWatcher.setChanged( changed );
         }
+        super.setChanged( changed );
     }
 
     public void setShortcutListener( ShortcutListener sl )

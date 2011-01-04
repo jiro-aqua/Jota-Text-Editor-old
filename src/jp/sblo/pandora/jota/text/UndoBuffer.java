@@ -1,4 +1,4 @@
-package jp.sblo.pandora.jota;
+package jp.sblo.pandora.jota.text;
 
 import java.util.ArrayList;
 
@@ -75,5 +75,9 @@ public class UndoBuffer implements Parcelable {
     public void removeAll()
     {
         mBuffer.removeAll(mBuffer);
+    }
+    public boolean canUndo()
+    {
+        return mBuffer.size()>0;
     }
 }
