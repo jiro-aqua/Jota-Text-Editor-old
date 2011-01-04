@@ -4496,6 +4496,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 outAttrs.initialSelStart = Selection.getSelectionStart(mText);
                 outAttrs.initialSelEnd = Selection.getSelectionEnd(mText);
                 outAttrs.initialCapsMode = ic.getCursorCapsMode(mInputType);
+
+                InputMethodManager imm = InputMethodManager.peekInstance();
+                if (imm != null){
+                    imm.showSoftInput(this, 0);
+                }
+
                 return ic;
             }
         }
@@ -6479,7 +6485,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             onEndBatchEdit();
         }
 
-        startStopMarquee(focused);
+//        startStopMarquee(focused);
 
         if (mTransformation != null) {
             mTransformation.onFocusChanged(this, mText, focused, direction,

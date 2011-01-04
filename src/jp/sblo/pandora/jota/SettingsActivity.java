@@ -148,6 +148,12 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     private OnPreferenceClickListener mProcHelp = new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent( Intent.ACTION_VIEW , Uri.parse( getString( R.string.help_url) ));
+            try{
+                startActivity(intent);
+            }catch(Exception e){}
+            finish();
+
             return false;
         }
 

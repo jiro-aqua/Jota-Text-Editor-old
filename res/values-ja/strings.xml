@@ -63,6 +63,7 @@
 
     <string name="about_url">file:///android_asset/about.html</string>
     <string name="about_title">Jota Text Editorについて</string>
+    <string name="help_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor</string>
 
     <string name="spinner_message">処理中...</string>
 

@@ -4,12 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EmptyStackException;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import jp.sblo.pandora.jota.Search.OnSearchFinishedListener;
 import jp.sblo.pandora.jota.Search.Record;
 import jp.sblo.pandora.jota.TextLoadTask.OnFileLoadListener;
+import jp.sblo.pandora.jota.UndoBuffer.TextChange;
 import jp.sblo.pandora.jota.text.JotaDocumentWatcher;
 import jp.sblo.pandora.jota.text.SpannableStringBuilder;
 import jp.sblo.pandora.jota.text.EditText.ShortcutListener;
@@ -25,6 +27,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -101,6 +104,8 @@ public class Main
     };
 
 
+    private UndoBuffer mUndoBuffer = new UndoBuffer();
+    private boolean ignoreUndo = false;
 
     /** Called when the activity is first created. */
     @Override
@@ -108,12 +113,15 @@ public class Main
         super.onCreate(savedInstanceState);
         setContentView(R.layout.textviewer);
 
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+
         mSettings = SettingsActivity.readSettings(this);
 
         mEditor = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.textedit);
         mEditor.setDocumentChangedListener(this);
         mEditor.setShortcutListener(this);
         mEditor.setChanged(false);
+        mUndoBuffer.removeAll();
 
         mLlSearch = (LinearLayout )  findViewById(R.id.search);
         mLlReplace = (LinearLayout ) findViewById(R.id.replace);
@@ -127,8 +135,35 @@ public class Main
         mBtnSkip = (Button )     findViewById(R.id.btnSkip);
         mBtnReplaceAll = (Button )   findViewById(R.id.btnReplaceAll);
 
-        mEdtSearchWord.addTextChangedListener(new TextWatcher() {
+        mEditor.addTextChangedListener(new TextWatcher() {
+            TextChange lastChange;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if ( lastChange !=null ){
+                    lastChange.newtext = s.subSequence(start, start + count);
+                    if ( start == lastChange.start &&
+                         (lastChange.oldtext.length() > 0 || lastChange.newtext.length() > 0 ) &&
+                         !lastChange.newtext.toString().equals(lastChange.oldtext.toString()) )
+                     {
+                        mUndoBuffer.push(lastChange);
+//                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
+                    }
+                    lastChange = null;
+                }
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if ( !ignoreUndo ){
+                    lastChange = new TextChange();
+                    lastChange.start = start;
+                    lastChange.oldtext = s.subSequence(start, start + count);
+                }
+                ignoreUndo = false;
+            }
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
+
+        mEdtSearchWord.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean enabled = ( s.length() > 0 );
                 mBtnForward.setEnabled(enabled);
@@ -209,7 +244,14 @@ public class Main
 
                 mTask = new TextLoadTask( this , this );
                 mTask.execute(path);
+            }else if (it!=null && Intent.ACTION_SEND.equals(it.getAction())){
+                Bundle extras = it.getExtras();
+                String text = extras.getString(Intent.EXTRA_TEXT);
+                if ( text != null ){
+                    mEditor.setText(text);
+                }
             }
+
         }else{
             mInstanceState.filename = savedInstanceState.getString("filename" );
             mInstanceState.charset = savedInstanceState.getString("charset"  );
@@ -222,7 +264,15 @@ public class Main
 //            mEditor.setText(mInstanceState.text);
 //            mEditor.setSelection(mInstanceState.selstart, mInstanceState.selend);
             mEditor.setChanged(mInstanceState.changed);
+            mUndoBuffer = savedInstanceState.getParcelable("undo");
+            ignoreUndo = true;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
     public void onPreFileLoad() {
@@ -238,6 +288,7 @@ public class Main
             SpannableStringBuilder ss =  result ;
             mEditor.setText(ss);
             mEditor.setChanged(false);
+            mUndoBuffer.removeAll();
 
             SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
             String sel = sp.getString(filename, "-1,-1");
@@ -289,6 +340,7 @@ public class Main
 //        outState.putInt("selstart" , mInstanceState.selstart );
 //        outState.putInt("selend" , mInstanceState.selend );
         outState.putBoolean("changed" , mEditor.isChanged() );
+        outState.putParcelable("undo", mUndoBuffer );
 
         super.onSaveInstanceState(outState);
     }
@@ -308,6 +360,7 @@ public class Main
 //        mEditor.setText(mInstanceState.text);
 //        mEditor.setSelection(mInstanceState.selstart, mInstanceState.selend);
         mEditor.setChanged(mInstanceState.changed);
+        mUndoBuffer = savedInstanceState.getParcelable("undo");
 
     }
 
@@ -329,6 +382,20 @@ public class Main
                 confirmSave(mProcReopen);
             }
 
+        }else if (intent!=null && Intent.ACTION_SEND.equals(intent.getAction())){
+            Bundle extras = intent.getExtras();
+            String inserttext = extras.getString(Intent.EXTRA_TEXT);
+            if ( inserttext != null ){
+                Editable text = mEditor.getText();
+                int startsel = mEditor.getSelectionStart();
+                int endsel = mEditor.getSelectionEnd();
+                if ( endsel < startsel ){
+                    int temp = startsel ;
+                    startsel = endsel;
+                    endsel = temp;
+                }
+                text.replace(startsel, endsel, inserttext);
+            }
         }
 
     }
@@ -474,6 +541,7 @@ public class Main
                         mProcAfterSaveConfirm = null;
                     }
                     mEditor.setChanged(false);
+                    mUndoBuffer.removeAll();
                     onChanged();
                 }
             })
@@ -605,6 +673,7 @@ public class Main
             }
             return true;
             case R.id.menu_edit_undo:{
+                mProcUndo.run();
             }
             return true;
             case R.id.menu_edit_cut:{
@@ -652,6 +721,10 @@ public class Main
             case KeyEvent.KEYCODE_S:
                 save();
                 return true;
+
+            case KeyEvent.KEYCODE_Z:
+                mProcUndo.run();
+                return true;
         }
         return false;
     }
@@ -678,6 +751,7 @@ public class Main
             mInstanceState.linebreak = DEF_LINEBREAK;
             mEditor.setText("");
             mEditor.setChanged(false);
+            mUndoBuffer.removeAll();
             mEditor.setSelection(0,0);
 
             mLlSearch.setVisibility(View.GONE);
@@ -957,6 +1031,22 @@ public class Main
        }
     };
 
+    private Runnable mProcUndo =  new Runnable() {
+        public void run() {
+            try{
+                TextChange textchange = mUndoBuffer.pop();
+                if ( textchange != null ){
+                    Editable text = mEditor.getText();
+                    text.replace( textchange.start , textchange.start + textchange.newtext.length() , textchange.oldtext );
+                    mEditor.setSelection( textchange.start + textchange.oldtext.length() );
+                    mUndoBuffer.pop(); // discard newest record
+                }
+            }
+            catch( EmptyStackException e ){}
+        }
+    };
+
+
     private void doSearch( String searchword ) {
         if ( mSearchResult != null ){
             mProcOnSearchResult.search();
@@ -1027,7 +1117,7 @@ public class Main
 
         private void highlight( int pos )
         {
-            Editable text = mEditor.getText();
+//            Editable text = mEditor.getText();
             Record r = mSearchResult.get(pos);
             mEditor.setSelection(r.start , r.end);
             mEditor.requestFocus();
@@ -1038,8 +1128,7 @@ public class Main
 
     };
 
-
-    private OnSharedPreferenceChangeListener OnSharedPreferenceChangeListener =  new OnSharedPreferenceChangeListener(){
+    private OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =  new OnSharedPreferenceChangeListener(){
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             mSettings = SettingsActivity.readSettings(Main.this);
         }

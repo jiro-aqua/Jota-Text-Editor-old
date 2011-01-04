@@ -62,6 +62,7 @@
 
     <string name="about_url">file:///android_asset/about.html</string>
     <string name="about_title">About Jota Text Editor</string>
+    <string name="help_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor</string>
 
     <string name="spinner_message">Wait a while...</string>
 

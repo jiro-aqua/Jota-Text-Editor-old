@@ -76,6 +76,7 @@ public class AboutActivity extends Activity
 				} catch (NameNotFoundException e) {
 				}
 				return "Ver. " + String.format("%s (%d)", versionName, versionCode);
+
 			} else {
 				return "";
 			}
