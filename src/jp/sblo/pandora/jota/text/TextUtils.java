@@ -19,7 +19,6 @@ package jp.sblo.pandora.jota.text;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-import jp.sblo.pandora.jota.text.style.AbsoluteSizeSpan;
 import jp.sblo.pandora.jota.text.style.AlignmentSpan;
 import jp.sblo.pandora.jota.text.style.BackgroundColorSpan;
 import jp.sblo.pandora.jota.text.style.BulletSpan;
@@ -707,9 +706,9 @@ public class TextUtils {
                     readSpan(p, sp, new SubscriptSpan(p));
                     break;
 
-                case ABSOLUTE_SIZE_SPAN:
-                    readSpan(p, sp, new AbsoluteSizeSpan(p));
-                    break;
+//                case ABSOLUTE_SIZE_SPAN:
+//                    readSpan(p, sp, new AbsoluteSizeSpan(p));
+//                    break;
 
                 case TEXT_APPEARANCE_SPAN:
                     readSpan(p, sp, new TextAppearanceSpan(p));

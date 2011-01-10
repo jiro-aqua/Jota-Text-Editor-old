@@ -327,17 +327,17 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mText = "";
 
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.density = getResources().getDisplayMetrics().density;
-        mTextPaint.setCompatibilityScaling(
-                getResources().getCompatibilityInfo().applicationScale);
+//        mTextPaint.density = getResources().getDisplayMetrics().density;
+//        mTextPaint.setCompatibilityScaling(
+//                getResources().getCompatibilityInfo().applicationScale);
 
         // If we get the paint from the skin, we should set it to left, since
         // the layout always wants it to be left.
         // mTextPaint.setTextAlign(Paint.Align.LEFT);
 
         mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mHighlightPaint.setCompatibilityScaling(
-                getResources().getCompatibilityInfo().applicationScale);
+//        mHighlightPaint.setCompatibilityScaling(
+//                getResources().getCompatibilityInfo().applicationScale);
 
         mMovement = getDefaultMovementMethod();
         mTransformation = null;
@@ -948,6 +948,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             public void afterTextChanged(Editable s) {
             }
         });
+        mUnderLinePaint.setColor(0xFFFF0000);
 
     }
 
@@ -4078,7 +4079,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
         }
 
-        layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText);
+        int selLine = layout.getLineForOffset(selEnd);
+
+        layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText,selLine , mUnderLinePaint );
 
 //        if (mMarquee != null && mMarquee.shouldDrawGhost()) {
 //            canvas.translate((int) mMarquee.getGhostOffset(), 0.0f);
@@ -4090,21 +4093,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             mTextPaint.setLinearTextOn(isLinearTextOn);
         }
         */
-
-
-        /**
-         * underline
-         */
-        if ( mLayout instanceof DynamicLayout )
-        {
-            DynamicLayout dynamiclayout = (DynamicLayout)mLayout;
-            Paint paint = new Paint();
-            paint.setColor(0xFFFF0000);
-            Path path = new Path();
-            int udly = dynamiclayout.getUnderlineYpos(selEnd, mText);
-            canvas.drawLine(0 , udly, getWidth() , udly, paint);
-
-        }
 
         canvas.restore();
 
@@ -7218,6 +7206,18 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             added = true;
         }
 
+        if (canCopy()) {
+            int name;
+            if (selection) {
+                name = R.string.menu_search_byintent;
+                menu.add(0, ID_SEARCHBYINTENT, 0, name).
+                setOnMenuItemClickListener(handler).
+                setAlphabeticShortcut('r');
+                added = true;
+            }
+
+        }
+
         if (isInputMethodTarget()) {
             menu.add(1, ID_SWITCH_INPUT_METHOD, 0, R.string.inputMethod).
                     setOnMenuItemClickListener(handler);
@@ -7253,6 +7253,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_CUT = android.R.id.cut;
     private static final int ID_COPY = android.R.id.copy;
     private static final int ID_PASTE = android.R.id.paste;
+    private static final int ID_SEARCHBYINTENT = R.id.searchbyintent;
     private static final int ID_COPY_URL = android.R.id.copyUrl;
     private static final int ID_UNDO = R.id.undo;
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
@@ -7388,7 +7389,17 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 }
 
                 return true;
-            }
+
+            case ID_SEARCHBYINTENT:
+                MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
+
+                if (min != max) {
+                    ((EditText)this).doShortcut(KeyEvent.KEYCODE_R, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R) );
+                }
+
+                return true;
+
+        }
 
         return false;
     }
@@ -7607,4 +7618,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     boolean mFastScrollEnabled;
 
     private UndoBuffer mUndoBuffer = new UndoBuffer();
+    private Paint mUnderLinePaint = new Paint();
 }

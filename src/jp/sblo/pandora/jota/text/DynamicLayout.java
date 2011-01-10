@@ -473,14 +473,6 @@ extends Layout
         return mInts.getValue(line, ELLIPSIS_COUNT);
     }
 
-    public int getUnderlineYpos(int point, CharSequence editingBuffer) {
-
-        int line = getLineForOffset(point);
-        int bottom = getLineTop(line + 1);
-//        int bottom = getLineBaseline(line);
-
-        return bottom-1;
-    }
 
 
     private CharSequence mBase;

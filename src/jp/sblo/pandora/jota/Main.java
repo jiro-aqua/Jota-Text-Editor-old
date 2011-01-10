@@ -684,6 +684,9 @@ public class Main
             case KeyEvent.KEYCODE_S:
                 save();
                 return true;
+            case KeyEvent.KEYCODE_R:
+                mProcSearchByIntent.run();
+                return true;
         }
         return false;
     }

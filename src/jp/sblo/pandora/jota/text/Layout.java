@@ -18,7 +18,6 @@ package jp.sblo.pandora.jota.text;
 
 import jp.sblo.pandora.jota.text.style.AlignmentSpan;
 import jp.sblo.pandora.jota.text.style.LeadingMarginSpan;
-import jp.sblo.pandora.jota.text.style.LineBackgroundSpan;
 import jp.sblo.pandora.jota.text.style.ParagraphStyle;
 import jp.sblo.pandora.jota.text.style.ReplacementSpan;
 import jp.sblo.pandora.jota.text.style.TabStopSpan;
@@ -158,7 +157,12 @@ public abstract class Layout {
      * Draw this Layout on the specified Canvas.
      */
     public void draw(Canvas c) {
-        draw(c, null, null, 0);
+        draw(c, null, null, 0 , -1, null);
+    }
+
+    public void draw(Canvas c, Path highlight, Paint highlightPaint,
+            int cursorOffsetVertical  ) {
+        draw(c, highlight, highlightPaint, cursorOffsetVertical , -1 , null);
     }
 
     /**
@@ -172,7 +176,7 @@ public abstract class Layout {
      *        canvas while rendering the highlight
      */
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
-                     int cursorOffsetVertical) {
+                     int cursorOffsetVertical , int selLine, Paint underlinePaint ) {
         int dtop, dbottom;
 
         synchronized (sTempRect) {
@@ -203,7 +207,7 @@ public abstract class Layout {
 
         TextPaint paint = mPaint;
         CharSequence buf = mText;
-        int width = mWidth;
+//        int width = mWidth;
         boolean spannedText = mSpannedText;
 
         ParagraphStyle[] spans = NO_PARA_SPANS;
@@ -213,41 +217,41 @@ public abstract class Layout {
         // First, draw LineBackgroundSpans.
         // LineBackgroundSpans know nothing about the alignment or direction of
         // the layout or line.  XXX: Should they?
-        if (spannedText) {
-            textLength = buf.length();
-            for (int i = first; i <= last; i++) {
-                int start = previousLineEnd;
-                int end = getLineStart(i+1);
-                previousLineEnd = end;
-
-                int ltop = previousLineBottom;
-                int lbottom = getLineTop(i+1);
-                previousLineBottom = lbottom;
-                int lbaseline = lbottom - getLineDescent(i);
-
-                if (start >= spanend) {
-                   Spanned sp = (Spanned) buf;
-                   spanend = sp.nextSpanTransition(start, textLength,
-                                                   LineBackgroundSpan.class);
-                   spans = sp.getSpans(start, spanend,
-                                       LineBackgroundSpan.class);
-                }
-
-                for (int n = 0; n < spans.length; n++) {
-                    LineBackgroundSpan back = (LineBackgroundSpan) spans[n];
-
-                    back.drawBackground(c, paint, 0, width,
-                                       ltop, lbaseline, lbottom,
-                                       buf, start, end,
-                                       i);
-                }
-            }
-            // reset to their original values
-            spanend = 0;
-            previousLineBottom = getLineTop(first);
-            previousLineEnd = getLineStart(first);
-            spans = NO_PARA_SPANS;
-        }
+//        if (spannedText) {
+//            textLength = buf.length();
+//            for (int i = first; i <= last; i++) {
+//                int start = previousLineEnd;
+//                int end = getLineStart(i+1);
+//                previousLineEnd = end;
+//
+//                int ltop = previousLineBottom;
+//                int lbottom = getLineTop(i+1);
+//                previousLineBottom = lbottom;
+//                int lbaseline = lbottom - getLineDescent(i);
+//
+//                if (start >= spanend) {
+//                   Spanned sp = (Spanned) buf;
+//                   spanend = sp.nextSpanTransition(start, textLength,
+//                                                   LineBackgroundSpan.class);
+//                   spans = sp.getSpans(start, spanend,
+//                                       LineBackgroundSpan.class);
+//                }
+//
+//                for (int n = 0; n < spans.length; n++) {
+//                    LineBackgroundSpan back = (LineBackgroundSpan) spans[n];
+//
+//                    back.drawBackground(c, paint, 0, width,
+//                                       ltop, lbaseline, lbottom,
+//                                       buf, start, end,
+//                                       i);
+//                }
+//            }
+//            // reset to their original values
+//            spanend = 0;
+//            previousLineBottom = getLineTop(first);
+//            previousLineEnd = getLineStart(first);
+//            spans = NO_PARA_SPANS;
+//        }
 
         // There can be a highlight even without spans if we are drawing
         // a non-spanned transformation of a spanned editing buffer.
@@ -262,6 +266,7 @@ public abstract class Layout {
                 c.translate(0, -cursorOffsetVertical);
             }
         }
+
 
         Alignment align = mAlignment;
 
@@ -280,61 +285,61 @@ public abstract class Layout {
             int lbaseline = lbottom - getLineDescent(i);
 
             boolean isFirstParaLine = false;
-            if (spannedText) {
-                if (start == 0 || buf.charAt(start - 1) == '\n') {
-                    isFirstParaLine = true;
-                }
-                // New batch of paragraph styles, compute the alignment.
-                // Last alignment style wins.
-                if (start >= spanend) {
-                    Spanned sp = (Spanned) buf;
-                    spanend = sp.nextSpanTransition(start, textLength,
-                                                    ParagraphStyle.class);
-                    spans = sp.getSpans(start, spanend, ParagraphStyle.class);
-
-                    align = mAlignment;
-                    for (int n = spans.length-1; n >= 0; n--) {
-                        if (spans[n] instanceof AlignmentSpan) {
-                            align = ((AlignmentSpan) spans[n]).getAlignment();
-                            break;
-                        }
-                    }
-                }
-            }
+//            if (spannedText) {
+//                if (start == 0 || buf.charAt(start - 1) == '\n') {
+//                    isFirstParaLine = true;
+//                }
+//                // New batch of paragraph styles, compute the alignment.
+//                // Last alignment style wins.
+//                if (start >= spanend) {
+//                    Spanned sp = (Spanned) buf;
+//                    spanend = sp.nextSpanTransition(start, textLength,
+//                                                    ParagraphStyle.class);
+//                    spans = sp.getSpans(start, spanend, ParagraphStyle.class);
+//
+//                    align = mAlignment;
+//                    for (int n = spans.length-1; n >= 0; n--) {
+//                        if (spans[n] instanceof AlignmentSpan) {
+//                            align = ((AlignmentSpan) spans[n]).getAlignment();
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
 
             int dir = getParagraphDirection(i);
             int left = 0;
             int right = mWidth;
 
-            // Draw all leading margin spans.  Adjust left or right according
-            // to the paragraph direction of the line.
-            if (spannedText) {
-                final int length = spans.length;
-                for (int n = 0; n < length; n++) {
-                    if (spans[n] instanceof LeadingMarginSpan) {
-                        LeadingMarginSpan margin = (LeadingMarginSpan) spans[n];
-
-                        if (dir == DIR_RIGHT_TO_LEFT) {
-                            margin.drawLeadingMargin(c, paint, right, dir, ltop,
-                                                     lbaseline, lbottom, buf,
-                                                     start, end, isFirstParaLine, this);
-
-                            right -= margin.getLeadingMargin(isFirstParaLine);
-                        } else {
-                            margin.drawLeadingMargin(c, paint, left, dir, ltop,
-                                                     lbaseline, lbottom, buf,
-                                                     start, end, isFirstParaLine, this);
-
-                            boolean useMargin = isFirstParaLine;
-                            if (margin instanceof LeadingMarginSpan.LeadingMarginSpan2) {
-                                int count = ((LeadingMarginSpan.LeadingMarginSpan2)margin).getLeadingMarginLineCount();
-                                useMargin = count > i;
-                            }
-                            left += margin.getLeadingMargin(useMargin);
-                        }
-                    }
-                }
-            }
+//            // Draw all leading margin spans.  Adjust left or right according
+//            // to the paragraph direction of the line.
+//            if (spannedText) {
+//                final int length = spans.length;
+//                for (int n = 0; n < length; n++) {
+//                    if (spans[n] instanceof LeadingMarginSpan) {
+//                        LeadingMarginSpan margin = (LeadingMarginSpan) spans[n];
+//
+//                        if (dir == DIR_RIGHT_TO_LEFT) {
+//                            margin.drawLeadingMargin(c, paint, right, dir, ltop,
+//                                                     lbaseline, lbottom, buf,
+//                                                     start, end, isFirstParaLine, this);
+//
+//                            right -= margin.getLeadingMargin(isFirstParaLine);
+//                        } else {
+//                            margin.drawLeadingMargin(c, paint, left, dir, ltop,
+//                                                     lbaseline, lbottom, buf,
+//                                                     start, end, isFirstParaLine, this);
+//
+//                            boolean useMargin = isFirstParaLine;
+//                            if (margin instanceof LeadingMarginSpan.LeadingMarginSpan2) {
+//                                int count = ((LeadingMarginSpan.LeadingMarginSpan2)margin).getLeadingMarginLineCount();
+//                                useMargin = count > i;
+//                            }
+//                            left += margin.getLeadingMargin(useMargin);
+//                        }
+//                    }
+//                }
+//            }
 
             // Adjust the point at which to start rendering depending on the
             // alignment of the paragraph.
@@ -363,6 +368,14 @@ public abstract class Layout {
                         x = left + half;
                     }
                 }
+            }
+
+            /**
+             * underline
+             */
+            if ( selLine == i && underlinePaint != null){
+                int underlinepos = getLineBaseline(i) + 1;
+                c.drawLine(0 , underlinepos, getWidth() , underlinepos, underlinePaint );
             }
 
             Directions directions = getLineDirections(i);
@@ -1833,6 +1846,7 @@ public abstract class Layout {
             mDirections = dirs;
         }
     }
+
 
     /**
      * Return the offset of the first character to be ellipsized away,

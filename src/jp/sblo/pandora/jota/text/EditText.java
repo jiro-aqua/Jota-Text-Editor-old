@@ -143,7 +143,7 @@ public class EditText extends TextView{
         return super.dispatchKeyEventPreIme(event);
     }
 
-    private boolean doShortcut(int keycode , KeyEvent event){
+    public boolean doShortcut(int keycode , KeyEvent event){
         switch(keycode){
             case KeyEvent.KEYCODE_A:
             case KeyEvent.KEYCODE_X:
@@ -152,6 +152,7 @@ public class EditText extends TextView{
             case KeyEvent.KEYCODE_Z:
                 return onKeyShortcut( keycode , event );
             case KeyEvent.KEYCODE_S:
+            case KeyEvent.KEYCODE_R:
                 ShortcutListener sl = mShortcutListener.get();
                 if ( sl!=null ){
                     return sl.onCommand(keycode);
