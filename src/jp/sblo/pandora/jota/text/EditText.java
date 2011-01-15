@@ -152,7 +152,7 @@ public class EditText extends TextView{
             case KeyEvent.KEYCODE_Z:
                 return onKeyShortcut( keycode , event );
             case KeyEvent.KEYCODE_S:
-            case KeyEvent.KEYCODE_R:
+            case KeyEvent.KEYCODE_D:
                 ShortcutListener sl = mShortcutListener.get();
                 if ( sl!=null ){
                     return sl.onCommand(keycode);

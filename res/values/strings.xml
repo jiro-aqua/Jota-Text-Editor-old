@@ -30,6 +30,7 @@
     <string name="menu_search">Search</string>
     <string name="menu_preferences">Preferences</string>
     <string name="menu_help">Help</string>
+    <string name="menu_direct">Direct Intent</string>
 
     <string name="menu_file_new" >New</string>
     <string name="menu_file_open" >Open...</string>
@@ -86,5 +87,12 @@
     <string name="label_about" >About Jota Text Editor</string>
 
     <string name="msg_init_setting" >This will initialize all of the preferences.\nAre you sure?</string>
+
+    <string name="label_direct_intent" >Direct Intent</string>
+    <string name="label_select_direct_intent" >Select Reciever</string>
+    <string name="label_select_kind" >Select a kind of intent</string>
+    <string name="label_di_share" >Share</string>
+    <string name="label_di_search" >Search</string>
+    <string name="label_di_mushroom" >Mushroom</string>
 
 </resources>

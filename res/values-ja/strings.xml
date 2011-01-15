@@ -31,6 +31,7 @@
     <string name="menu_search">検索</string>
     <string name="menu_preferences">設定</string>
     <string name="menu_help">ヘルプ</string>
+    <string name="menu_direct">ダイレクト インテント</string>
 
     <string name="menu_file_new" >新規</string>
     <string name="menu_file_open" >開く...</string>
@@ -87,6 +88,13 @@
     <string name="label_about" >Jota Text Editorについて</string>
 
     <string name="msg_init_setting" >この操作は全ての設定値を初期化します。\n実行しますか?</string>
+
+    <string name="label_direct_intent" >ダイレクトインテント</string>
+    <string name="label_select_direct_intent" >送信先アプリ設定</string>
+    <string name="label_select_kind" >インテント種別選択</string>
+    <string name="label_di_share" >共有</string>
+    <string name="label_di_search" >検索</string>
+    <string name="label_di_mushroom" >マッシュルーム</string>
 
 </resources>
 

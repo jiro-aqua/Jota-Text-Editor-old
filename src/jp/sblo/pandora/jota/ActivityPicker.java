@@ -58,6 +58,7 @@ import com.android.internal.app.AlertController;
 public class ActivityPicker extends AlertActivity implements
         DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
 
+    public final static String EXTRA_APPNAME = "jota_text_editor_extra_appname";
     /**
      * Adapter of items that are displayed in this dialog.
      */
@@ -260,6 +261,7 @@ public class ActivityPicker extends AlertActivity implements
                     intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
                     intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, label);
                 }
+                intent.putExtra( EXTRA_APPNAME ,label  );
                 return intent;
             }
         }

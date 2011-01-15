@@ -5675,9 +5675,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
         int start = Selection.getSelectionStart(mText);
         int end = Selection.getSelectionEnd(mText);
-        if (start != end) {
-            return false;
-        }
+//        if (start != end) {
+//            return false;
+//        }
 
         // First: make sure the line is visible on screen:
 
@@ -7208,11 +7208,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         if (canCopy()) {
             int name;
-            if (selection) {
-                name = R.string.menu_search_byintent;
-                menu.add(0, ID_SEARCHBYINTENT, 0, name).
+            if (selection && mNameDirectIntent!=null ) {
+                menu.add(0, ID_DIRECTINTENT, 0, mNameDirectIntent).
                 setOnMenuItemClickListener(handler).
-                setAlphabeticShortcut('r');
+                setAlphabeticShortcut('d');
                 added = true;
             }
 
@@ -7253,7 +7252,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_CUT = android.R.id.cut;
     private static final int ID_COPY = android.R.id.copy;
     private static final int ID_PASTE = android.R.id.paste;
-    private static final int ID_SEARCHBYINTENT = R.id.searchbyintent;
+    private static final int ID_DIRECTINTENT = R.id.directintent;
     private static final int ID_COPY_URL = android.R.id.copyUrl;
     private static final int ID_UNDO = R.id.undo;
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
@@ -7390,11 +7389,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
                 return true;
 
-            case ID_SEARCHBYINTENT:
+            case ID_DIRECTINTENT:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
 
                 if (min != max) {
-                    ((EditText)this).doShortcut(KeyEvent.KEYCODE_R, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_R) );
+                    ((EditText)this).doShortcut(KeyEvent.KEYCODE_D, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_D) );
                 }
 
                 return true;
@@ -7533,6 +7532,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+    public void setNameDirectIntent(String name)
+    {
+        mNameDirectIntent = name;
+    }
+
 
     @ViewDebug.ExportedProperty
     private CharSequence            mText;
@@ -7619,4 +7623,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     private UndoBuffer mUndoBuffer = new UndoBuffer();
     private Paint mUnderLinePaint = new Paint();
+    private String mNameDirectIntent = null;
+
 }

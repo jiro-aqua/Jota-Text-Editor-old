@@ -75,6 +75,13 @@
 
 </item>
 
+<item android:title="@string/menu_direct"
+		android:id="@+id/menu_direct"
+		android:icon = "@drawable/ic_menu_direct"
+		android:alphabeticShortcut = "d">
+
+</item>
+
 <item android:title="@string/menu_insert"
 		android:id="@+id/menu_insert"
 		android:icon = "@drawable/ic_menu_compose"

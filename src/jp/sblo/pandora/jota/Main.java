@@ -117,6 +117,7 @@ public class Main
         mEditor.setDocumentChangedListener(this);
         mEditor.setShortcutListener(this);
         mEditor.setChanged(false);
+        mEditor.setNameDirectIntent(mSettings.intentname);
 
         mLlSearch = (LinearLayout )  findViewById(R.id.search);
         mLlReplace = (LinearLayout ) findViewById(R.id.replace);
@@ -584,6 +585,21 @@ public class Main
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem menuitem = menu.findItem(R.id.menu_direct);
+        String name = mSettings.intentname;
+        if ( name != null && name.length()>0 ){
+            menuitem.setTitle( name );
+            menuitem.setEnabled(true);
+        }else{
+            menuitem.setTitle( R.string.menu_direct );
+            menuitem.setEnabled(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item)
@@ -660,6 +676,11 @@ public class Main
             }
             return true;
 
+            case R.id.menu_direct:{
+                mProcDirect.run();
+            }
+            return true;
+
         }
 ////            Intent intent = new Intent();
 ////            intent.setClassName("jp.sblo.pandora.adice", "jp.sblo.pandora.adice.SettingsActivity");
@@ -684,8 +705,8 @@ public class Main
             case KeyEvent.KEYCODE_S:
                 save();
                 return true;
-            case KeyEvent.KEYCODE_R:
-                mProcSearchByIntent.run();
+            case KeyEvent.KEYCODE_D:
+                mProcDirect.run();
                 return true;
         }
         return false;
@@ -984,6 +1005,59 @@ public class Main
         }
     };
 
+    private Runnable mProcDirect =  new Runnable() {
+        public void run() {
+            if ( mSettings.directintent == null ){
+                return;
+            }else{
+
+                Intent intent = new Intent( mSettings.directintent );
+                String substr =null;
+
+                Editable text = mEditor.getText();
+                int startsel = mEditor.getSelectionStart();
+                int endsel = mEditor.getSelectionEnd();
+                if ( startsel != endsel ){
+                    if ( endsel < startsel ){
+                        int temp = startsel ;
+                        startsel = endsel;
+                        endsel = temp;
+                    }
+                    substr = text.subSequence(startsel, endsel).toString();
+                }
+
+                if ( intent.getAction().equals( Intent.ACTION_SEND )){
+                    if ( substr != null){
+                        intent.putExtra(Intent.EXTRA_TEXT, substr );
+                    }else{
+                        intent.putExtra(Intent.EXTRA_TEXT, text.toString() );
+                    }
+                    try{
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                    }
+                }else if ( intent.getAction().equals( Intent.ACTION_SEARCH )){
+                    if ( substr != null){
+                        intent.putExtra(SearchManager.QUERY, substr);
+                    }else{
+                        return;
+                    }
+                    try{
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                    }
+                }else if ( intent.getAction().equals( "com.adamrocker.android.simeji.ACTION_INTERCEPT" )){
+                    if ( substr != null){
+                        intent.putExtra("replace_key", substr);
+                    }else{
+                        intent.putExtra("replace_key", "");
+                    }
+                    startActivityForResult(intent,REQUESTCODE_MUSHROOM);
+                }
+            }
+        }
+    };
+
     private Runnable mProcSearch =  new Runnable() {
         public void run() {
             mLlSearch.setVisibility(View.VISIBLE);
@@ -1084,6 +1158,7 @@ public class Main
     private OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =  new OnSharedPreferenceChangeListener(){
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             mSettings = SettingsActivity.readSettings(Main.this);
+            mEditor.setNameDirectIntent(mSettings.intentname);
         }
     };
 

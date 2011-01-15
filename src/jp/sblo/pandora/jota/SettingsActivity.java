@@ -1,5 +1,7 @@
 package jp.sblo.pandora.jota;
 
+import java.net.URISyntaxException;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +12,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
@@ -17,7 +20,6 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.text.Editable;
 
 public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener {
 
@@ -30,9 +32,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_BACKGROUND_BLACK        = "BACKGROUND_BLACK";
     private static final String KEY_RE                      = "RE";
     private static final String KEY_IGNORE_CASE             = "IGNORE_CASE";
+    private static final String KEY_DIRECT_INTENT           = "DIRECT_INTENT";
+    private static final String KEY_DIRECT_INTENT_INTENT    = "DIRECT_INTENT_INTENT";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
+	public static final String  DI_SHARE = "share";
+	public static final String  DI_SEARCH = "search";
+	public static final String  DI_MUSHROOM = "mushroom";
+
+    private static final int REQUEST_CODE_PICK_SHARE = 1;
+    private static final int REQUEST_CODE_PICK_SEARCH = 2;
+    private static final int REQUEST_CODE_PICK_MUSHROOM = 3;
 
 	private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
@@ -71,6 +82,36 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_IGNORE_CASE);
                     pr.setTitle(R.string.label_ignore_case);
+                    category.addPreference(pr);
+                }
+            }
+
+            {
+                // Direct Intent Category
+                final PreferenceCategory category = new PreferenceCategory(this);
+                category.setTitle(R.string.label_direct_intent);
+
+                mPs.addPreference(category);
+                {
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setDialogTitle(R.string.label_select_kind);
+                    pr.setKey(KEY_DIRECT_INTENT);
+                    pr.setTitle(R.string.label_select_direct_intent);
+
+                    pr.setEntries(new String[] {
+                            getResources().getString(R.string.label_di_share),
+                            getResources().getString(R.string.label_di_search),
+                            getResources().getString(R.string.label_di_mushroom),
+                    });
+
+                    final String[] values = new String[] {
+                            DI_SHARE,
+                            DI_SEARCH,
+                            DI_MUSHROOM,
+                    };
+                    pr.setEntryValues(values);
+
+                    pr.setOnPreferenceChangeListener( mProcDirectIntent );
                     category.addPreference(pr);
                 }
             }
@@ -117,6 +158,26 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
         setPreferenceScreen(mPs);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if ( resultCode ==  RESULT_OK ){
+            switch( requestCode )
+            {
+                case REQUEST_CODE_PICK_SHARE:
+                case REQUEST_CODE_PICK_SEARCH:
+                case REQUEST_CODE_PICK_MUSHROOM:
+                    final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                    Editor editor = sp.edit();
+                    editor.putString(KEY_DIRECT_INTENT_INTENT, data.toUri(0) );
+                    editor.commit();
+                    break;
+            }
+        }
+    }
+
 
     private OnPreferenceClickListener mProcInit = new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
@@ -197,7 +258,38 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
-	public boolean onPreferenceChange(Preference preference, Object newValue) {
+    private OnPreferenceChangeListener mProcDirectIntent = new OnPreferenceChangeListener() {
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            // lets launch app picker if the user selected to launch an app on gesture
+            Intent mainIntent=null;
+            int req = 0;
+            if (newValue.equals( DI_SHARE ))
+            {
+                mainIntent = new Intent(Intent.ACTION_SEND, null);
+                mainIntent.setType("text/plain");
+                mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+                req = REQUEST_CODE_PICK_SHARE;
+            } else if (newValue.equals( DI_SEARCH )) {
+                mainIntent = new Intent(Intent.ACTION_SEARCH, null);
+
+                req = REQUEST_CODE_PICK_SEARCH;
+            } else if (newValue.equals( DI_MUSHROOM )) {
+                mainIntent = new Intent( "com.adamrocker.android.simeji.ACTION_INTERCEPT" );
+                mainIntent.addCategory("com.adamrocker.android.simeji.REPLACE");
+
+                req = REQUEST_CODE_PICK_MUSHROOM;
+            }
+            if ( mainIntent != null ){
+                Intent pickIntent = new Intent(SettingsActivity.this,ActivityPicker.class);
+                pickIntent.putExtra(Intent.EXTRA_INTENT, mainIntent);
+                startActivityForResult(pickIntent,req);
+            }
+            return true;
+        }
+    };
+
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
 		return false;
 	}
 
@@ -205,6 +297,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	public static class Settings {
 		boolean re;
 		boolean ignorecase;
+		Intent directintent;
+		String intentname;
 	}
 
 	public	static Settings readSettings(Context ctx)
@@ -214,6 +308,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 		ret.re = sp.getBoolean(KEY_RE, false);
 		ret.ignorecase = sp.getBoolean(KEY_IGNORE_CASE, true);
+		String di = sp.getString(KEY_DIRECT_INTENT_INTENT, "");
+        ret.directintent = null;
+        ret.intentname=null;
+	    try {
+	        if ( di.length() > 0 ){
+	            ret.directintent  = Intent.parseUri( di, 0);
+	            ret.intentname = ret.directintent.getExtras().getString( ActivityPicker.EXTRA_APPNAME );
+	            ret.directintent.removeExtra(ActivityPicker.EXTRA_APPNAME);
+
+	        }
+        } catch (URISyntaxException e) {
+        }
 		return ret;
 	}
 
@@ -236,6 +342,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				if ( lastversion < 1 ){
 				    editor.putBoolean(KEY_RE, false);
                     editor.putBoolean(KEY_IGNORE_CASE, true);
+                    editor.putString(KEY_DIRECT_INTENT, "");
+                    editor.putString(KEY_DIRECT_INTENT_INTENT, "");
 				}
 				editor.commit();
 			}
