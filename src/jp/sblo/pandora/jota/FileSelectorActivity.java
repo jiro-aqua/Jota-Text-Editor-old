@@ -6,15 +6,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,13 +24,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FileList extends ListActivity {
+public class FileSelectorActivity extends ListActivity {
 
 	public static final String INTENT_DIRPATH = "DIRPATH";
 	public static final String INTENT_FILENAME = "FILENAME";
 	public static final String INTENT_FILEPATH = "FILEPATH";
 	public static final String INTENT_MODE = "MODE";
     final public static String INTENT_EXTENSION = "EXT";
+    final public static String INTENT_INIT_PATH = "INIPATH";
 	public static final String MODE_OPEN = "OPEN";
     public static final String MODE_SAVE = "SAVE";
     public static final String MODE_DIR = "DIR";
@@ -36,11 +39,15 @@ public class FileList extends ListActivity {
 
 
 	private String mMode=null;
-	private String m_strDirPath;
+    private String m_strDirPath;
+    private String m_strFileName;
 	private List<String> items = null;
     private Button mBtnOK;
+    private TextView mTxtFilePath;
     private EditText mEdtFileName;
     private String[] mExtension = null;
+
+    private static String sDefaultDirectory = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +55,59 @@ public class FileList extends ListActivity {
 		setContentView(R.layout.filelist);
 
         mBtnOK = (Button)findViewById(R.id.btnOK);
+        mTxtFilePath = (TextView)findViewById(R.id.txtFilePath);
         mEdtFileName = (EditText)findViewById(R.id.edtFileName);
+
+        Intent intent = getIntent();
+        setResult(RESULT_CANCELED, intent);
+
+        Bundle extras = intent.getExtras();
+
+        if (extras != null) {
+            mMode = extras.getString(INTENT_MODE);
+            mExtension = (String[]) extras.get(INTENT_EXTENSION);
+            m_strDirPath = extras.getString(INTENT_INIT_PATH);
+        }
+        if (m_strDirPath==null || m_strDirPath.length()==0 ){
+            m_strDirPath = sDefaultDirectory;
+            m_strFileName = "untitled.txt";
+        }
+        File file = new File ( m_strDirPath );
+        if ( !file.isDirectory() ){
+            m_strDirPath = file.getParent();
+            m_strFileName = file.getName();
+        }
+
+        if ( mMode == null ){
+            Log.e("JotaFileSelector", "No MODE parameter specified");
+            finish();
+            return;
+        }
+
+        if( MODE_SAVE.equals(mMode) ) {
+
+            setTitle(R.string.fs_title_save);
+            mEdtFileName.setEnabled(true);
+            mEdtFileName.setText(m_strFileName);
+        } else if ( MODE_OPEN.equals(mMode)  ){
+
+            setTitle(R.string.fs_title_open);
+            mBtnOK.setVisibility(View.GONE);
+            mEdtFileName.setVisibility(View.GONE);
+            mEdtFileName.setEnabled(false);
+
+        } else if ( MODE_DIR.equals(mMode)){
+
+            setTitle(R.string.fs_title_dir);
+            mEdtFileName.setEnabled(false);
+            mEdtFileName.setVisibility(View.GONE);
+
+        }else{
+            Log.e("JotaFileSelector", "MODE parameter must be OPEN , SAVE or DIR.");
+            finish();
+            return;
+        }
+
 
         mEdtFileName.addTextChangedListener(new TextWatcher() {
 
@@ -88,83 +147,84 @@ public class FileList extends ListActivity {
                 return false;
             }
         });
-        mEdtFileName.setOnFocusChangeListener(new OnFocusChangeListener() {
-
-            public void onFocusChange(View v, boolean hasFocus) {
-                if ( hasFocus && mEdtFileName.isEnabled() ){
-                    String strFileName = mEdtFileName.getText().toString();
-                    if ( strFileName.indexOf('/') >= 0 ){
-                        mEdtFileName.setText("");
-                    }
-                }
-            }
-        });
-
-        Intent intent = getIntent();
-        setResult(RESULT_CANCELED, intent);
-
-        Bundle extras = intent.getExtras();
-		if (extras != null) {
-		    mMode = extras.getString(INTENT_MODE);
-            mExtension = (String[]) extras.get(INTENT_EXTENSION);
-		}
-
-		if ( mMode == null ){
-		    Log.e("JotaFileSelector", "No MODE parameter specified");
-		    finish();
-		    return;
-		}
-
-        if( MODE_SAVE.equals(mMode) ) {
-
-            setTitle(R.string.fs_title_save);
-            mEdtFileName.setEnabled(true);
-
-        } else if ( MODE_OPEN.equals(mMode)  ){
-
-            setTitle(R.string.fs_title_open);
-            mBtnOK.setVisibility(View.GONE);
-            mEdtFileName.setEnabled(false);
-
-        } else if ( MODE_DIR.equals(mMode)){
-
-            setTitle(R.string.fs_title_dir);
-            mEdtFileName.setEnabled(false);
-
-        }else{
-            Log.e("JotaFileSelector", "MODE parameter must be OPEN , SAVE or DIR.");
-            finish();
-            return;
-        }
+//        mEdtFileName.setOnFocusChangeListener(new OnFocusChangeListener() {
+//
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if ( hasFocus && mEdtFileName.isEnabled() ){
+//                    String strFileName = mEdtFileName.getText().toString();
+//                    if ( strFileName.indexOf('/') >= 0 ){
+//                        mEdtFileName.setText("");
+//                    }
+//                }
+//            }
+//        });
 
         mBtnOK.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                Intent intent = new Intent();
 
-                String strFileName = mEdtFileName.getText().toString();
-                intent.putExtra(INTENT_FILENAME, strFileName );
-                intent.putExtra(INTENT_DIRPATH, m_strDirPath );
+                if( MODE_SAVE.equals(mMode) ) {
+                    String strFileName = mEdtFileName.getText().toString();
+                    String strFilePath;
+                    if( m_strDirPath.equals("/")) {
+                        strFilePath = "/" + strFileName;
+                    } else {
+                        strFilePath = m_strDirPath + "/" + strFileName;
+                    }
 
-                String strFilePath;
-                if( m_strDirPath.equals("/")) {
-                    strFilePath = "/" + strFileName;
-                } else {
-                    strFilePath = m_strDirPath + "/" + strFileName;
+                    if ( new File(strFilePath).exists() ){
+                        new AlertDialog.Builder(FileSelectorActivity.this)
+                        .setTitle(R.string.confirmation)
+                        .setPositiveButton(R.string.label_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                returnSaveFilepath();
+                            }
+                        })
+                        .setNegativeButton(R.string.label_cancel, null)
+                        .setCancelable(true)
+                        .setMessage( getString(R.string.confirm_overwrite))
+                        .show();
+                    }else{
+                        returnSaveFilepath();
+                    }
+                }else{
+                    returnDirectory();
                 }
-                intent.putExtra(INTENT_FILEPATH, strFilePath );
-                setResult(RESULT_OK, intent);
-                finish();
             }
 
         });
 
-        m_strDirPath = "/sdcard";
-        fillList();
 
+        fillList();
 	}
 
-	@Override
+	private void returnSaveFilepath(){
+        Intent intent = new Intent();
+
+        String strFileName = mEdtFileName.getText().toString();
+        intent.putExtra(INTENT_FILENAME, strFileName );
+        intent.putExtra(INTENT_DIRPATH, m_strDirPath );
+
+        String strFilePath;
+        if( m_strDirPath.equals("/")) {
+            strFilePath = "/" + strFileName;
+        } else {
+            strFilePath = m_strDirPath + "/" + strFileName;
+        }
+        intent.putExtra(INTENT_FILEPATH, strFilePath );
+        setResult(RESULT_OK, intent);
+        finish();
+	}
+
+    private void returnDirectory(){
+        Intent intent = new Intent();
+
+        intent.putExtra(INTENT_DIRPATH, m_strDirPath );
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
 	protected void onListItemClick(ListView l, View v, int position, long id)
 	{
 		super.onListItemClick(l, v, position, id);
@@ -206,7 +266,7 @@ public class FileList extends ListActivity {
                 setResult(RESULT_OK, intent);
                 finish();
 		    }else if ( MODE_SAVE.equals(mMode)){
-    			mEdtFileName.setText(strItem);
+//    			mEdtFileName.setText(strItem);
 		    }else if ( MODE_DIR.equals(mMode)){
 		        // nop
 		    }
@@ -218,13 +278,12 @@ public class FileList extends ListActivity {
 	{
 		File[] files = new File(m_strDirPath).listFiles();
 		if( files == null ) {
-			Toast.makeText(FileList.this, getString(R.string.fs_access_denied),
+			Toast.makeText(FileSelectorActivity.this, getString(R.string.fs_access_denied),
 				       Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		TextView txtDirName = (TextView)findViewById(R.id.edtFileName);
-		txtDirName.setText(m_strDirPath);
+		mTxtFilePath.setText(m_strDirPath);
 
 
 		if( items != null ) {
@@ -300,6 +359,10 @@ public class FileList extends ListActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public static void setsDefaultDirectory(String defaultDirectory) {
+        FileSelectorActivity.sDefaultDirectory = defaultDirectory;
     }
 
 

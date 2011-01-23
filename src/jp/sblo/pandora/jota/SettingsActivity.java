@@ -1,5 +1,6 @@
 package jp.sblo.pandora.jota;
 
+import java.io.File;
 import java.net.URISyntaxException;
 
 import android.app.AlertDialog;
@@ -9,8 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -34,6 +37,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_IGNORE_CASE             = "IGNORE_CASE";
     private static final String KEY_DIRECT_INTENT           = "DIRECT_INTENT";
     private static final String KEY_DIRECT_INTENT_INTENT    = "DIRECT_INTENT_INTENT";
+    private static final String KEY_DEFAULT_FOLDER          = "DEFAULT_FOLDER";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -44,6 +48,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final int REQUEST_CODE_PICK_SHARE = 1;
     private static final int REQUEST_CODE_PICK_SEARCH = 2;
     private static final int REQUEST_CODE_PICK_MUSHROOM = 3;
+    private static final int REQUEST_CODE_DEFAULT_DIR = 4;
 
 	private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
@@ -83,6 +88,46 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setKey(KEY_IGNORE_CASE);
                     pr.setTitle(R.string.label_ignore_case);
                     category.addPreference(pr);
+                }
+            }
+
+            {
+                // Font Category
+                final PreferenceCategory catfont = new PreferenceCategory(this);
+                catfont.setTitle(R.string.label_font);
+                mPs.addPreference(catfont);
+                {
+                    // Font Typeface
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_FONT);
+                    pr.setTitle(R.string.label_font_type);
+                    pr.setEntries(new String[]{ getString(R.string.label_font_type_normal) , getString(R.string.label_font_type_monospace) } );
+                    pr.setEntryValues( new CharSequence[] { "NORMAL" , "MONOSPACE" } );
+//                    pr.setSummary(sp.getString(pr.getKey(), ""));
+                    catfont.addPreference(pr);
+                }
+                {
+                    // FontSize
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_FONT_SIZE);
+//                    pr.setSummary(sp.getString(pr.getKey(), ""));
+                    pr.setTitle(R.string.label_font_size);
+                    pr.setEntries(new String[] { "10", "14", "16", "18", "20", "24", "30", "36",  });
+                    pr.setEntryValues(new String[] { "10", "14", "16", "18", "20", "24", "30", "36",  });
+                    catfont.addPreference(pr);
+                }
+            }
+            {
+                // File Category
+                final PreferenceCategory cat = new PreferenceCategory(this);
+                cat.setTitle(R.string.label_file);
+                mPs.addPreference(cat);
+                {
+                    // default directory
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_default_new_file);
+                    pr.setOnPreferenceClickListener(mProcDefaultDirectory);
+                    cat.addPreference(pr);
                 }
             }
 
@@ -168,12 +213,23 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             {
                 case REQUEST_CODE_PICK_SHARE:
                 case REQUEST_CODE_PICK_SEARCH:
-                case REQUEST_CODE_PICK_MUSHROOM:
+                case REQUEST_CODE_PICK_MUSHROOM:{
                     final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
                     Editor editor = sp.edit();
                     editor.putString(KEY_DIRECT_INTENT_INTENT, data.toUri(0) );
                     editor.commit();
                     break;
+                }
+                case REQUEST_CODE_DEFAULT_DIR:{
+                    final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                    Editor editor = sp.edit();
+                    Bundle extras = data.getExtras();
+                    String path = extras.getString(FileSelectorActivity.INTENT_DIRPATH);
+                    editor.putString(KEY_DEFAULT_FOLDER, path );
+                    editor.commit();
+                    FileSelectorActivity.setsDefaultDirectory(path);
+                    break;
+                }
             }
         }
     }
@@ -289,6 +345,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
+    private OnPreferenceClickListener mProcDefaultDirectory = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent( SettingsActivity.this , FileSelectorActivity.class );
+            intent.putExtra(FileSelectorActivity.INTENT_MODE, FileSelectorActivity.MODE_DIR);
+
+            startActivityForResult(intent, REQUEST_CODE_DEFAULT_DIR);
+
+            return true;
+        }
+
+    };
+
     public boolean onPreferenceChange(Preference preference, Object newValue) {
 		return false;
 	}
@@ -299,6 +367,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		boolean ignorecase;
 		Intent directintent;
 		String intentname;
+		Typeface fontface;
+		int fontsize;
+		String defaultdirectory;
 	}
 
 	public	static Settings readSettings(Context ctx)
@@ -316,11 +387,20 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	            ret.directintent  = Intent.parseUri( di, 0);
 	            ret.intentname = ret.directintent.getExtras().getString( ActivityPicker.EXTRA_APPNAME );
 	            ret.directintent.removeExtra(ActivityPicker.EXTRA_APPNAME);
-
 	        }
         } catch (URISyntaxException e) {
         }
-		return ret;
+        ret.fontsize = Integer.parseInt( sp.getString( KEY_FONT_SIZE , "16") );
+        CharSequence font = sp.getString(KEY_FONT, "NORMAL");
+        if ( "NORMAL".equals(font) ){
+            ret.fontface = Typeface.DEFAULT;
+        }else if ("MONOSPACE".equals(font)) {
+            ret.fontface = Typeface.MONOSPACE;
+        }else{
+            ret.fontface = Typeface.DEFAULT;
+        }
+        ret.defaultdirectory = sp.getString( KEY_DEFAULT_FOLDER , Environment.getExternalStorageDirectory().getPath() );
+        return ret;
 	}
 
 	public static boolean isVersionUp(Context ctx)
@@ -344,6 +424,11 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putBoolean(KEY_IGNORE_CASE, true);
                     editor.putString(KEY_DIRECT_INTENT, "");
                     editor.putString(KEY_DIRECT_INTENT_INTENT, "");
+				}
+                if ( lastversion < 2 ){
+                    editor.putString(KEY_FONT, "NORMAL");
+                    editor.putString(KEY_FONT_SIZE, "16");
+                    editor.putString(KEY_DEFAULT_FOLDER, Environment.getExternalStorageDirectory().getPath());
 				}
 				editor.commit();
 			}

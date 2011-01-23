@@ -1,0 +1,194 @@
+Jota Text Editor
+
+Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
+
+
+「イオタ」と読んでください。
+
+★現在αテスト中です。以下の条件で構わない人だけダウンロードしてください。
+　・落ちても泣かない
+　・バグっぽい挙動を見つけたら、作者に連絡する
+　・欲しい機能があったら、作者に連絡する
+
+
+機能
+・文字コード自動判定（以下の文字コードを自動判定）
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+・文字コードの変更
+・改行コード自動判定、保存、変更
+・カーソル位置の保存
+・ファイル履歴
+・ファイル内検索(正規表現対応)
+
+・外部アプリ連携
+  マッシュルーム
+  テキストの共有
+  外部アプリによる検索
+
+  ★任意のアプリを直接呼び出すダイレクトインテント機能を搭載
+
+・サムをドラッグすることによるファイル内移動
+・フリックによる高速スクロール
+・アンドゥ
+・Altキー同時押しによるショートカットキー
+
+・Android1.6～で動作確認
+  (IS01,HTC Desireで動作確認済み）
+
+・今後も含め、有料化および広告付与は行いません。
+・安定したらオープンソースとして配布する予定です。
+
+
+
+★作者からの返事が必要な方は、メールまたはTwitter(@jiro_aqua)にてご連絡ください。
+　レビューコメントには、基本的に返事できません。
+
+
+
+Jota Text Editor
+
+Jota is a text editor which oriented to edit long big file.
+
+It's pronouced as "i-o-ta".
+
+★Jota is currently Ain lpha-test phase. 
+  Only in the case you can agreed below statement, you can use this.
+  - Don't cry when Jota crashed and lost your text.
+  - Mail me when you found a bug.
+  - Mail me new feature you want.
+
+Functions
+・Auto-Detect multiple character codes.
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+
+・Change character codes.
+・Auto-Detect linebreak code.
+・Change linebreak code.
+・Keep linebreak code until saving a file.
+・Save cursor position with file.
+・Save history of opend files.
+
+・Search a word in a file. (Support Regular Expression)
+
+・Text sharing with external application.
+  Mushroom
+  Share (ACTION_SEND)
+  Search (ACTION_SEARCH)
+
+  ★Direct Intent : You can launch any one application on menu item.
+
+・Scroll with Thumb-drag.
+・Scroll with Flick.
+・Undo
+・Support a Shortcut key with ALT Key.
+
+・Support Android OS 1.6 or later.
+
+・Forever FREE and NO-AD.
+・In the future , source code will be opend unde Apache License.
+
+
+
+★If you need a reply from me , DONT put it in Market's Review .
+  But please mail me or tweet me (@jiro_aqua)
+  You can send a message to me from Jota's Preferences Screen.
+
+
+[2011/01/23 v.0.0.1α]
+
+変更
+・新規ファイルセーブ時のデフォルトフォルダを設定可能に変更
+・名前を変えて保存時に元ファイル名を表示するように変更
+・オープン時の履歴の一番目のファイルのフォルダを開くように変更
+・ファイル選択画面でディレクトリとファイル名を両方表示するように変更
+・フォントプロポーショナル、モノスペースフォントを選択可能に変更
+・フォントサイズを変更できるように変更
+・サムの横幅を少し縮める
+・メモリ使用量を削減
+
+バグ修正
+・履歴０件の時に履歴を開くとクラッシュするバグを修正
+・０バイトのファイルを開くとクラッシュするバグを修正
+・文字コード未確定の時に保存で失敗するバグを修正
+・ドラッグ選択を画面外まで続けると、キャンセルされるバグを修正
+・英語のミススペルを修正
+
+Change
+・add the option to set the default folder when save a new file.
+・show original filename when Save As screen.
+・show the directory which 1st record of history when Open screen.
+・show both directory and filename in File Select Screen.
+・add the option to select the kind of font.(Normal/Monospace)
+・add the option to select the font size.
+・Scroll thumb shorten a little smaller. ( In future it can be selected. )
+・Reduced memory usage.
+
+BUG fix
+・fixed the bug that crashed when open the History in the case no history is recorded.
+・fixed the bug that crashed when open 0 bytes file.
+・fixed the bug that failed save file.
+・fixed the bug that selection is canceld when drag to the edge of the screen.
+・fixed miss-spell of English resources.
+
+
+注意
+　近い将来のバージョンアップでRTL言語への対応を廃止する予定です。
+
+CAUTION
+  At near future version, RTL-Language and bi-directional text won't be supported.
+
+

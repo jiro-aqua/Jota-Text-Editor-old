@@ -21,6 +21,15 @@
 		android:clickable="true"
 		android:focusableInTouchMode="true"
 	/>
+	<TextView
+	    android:id="@+id/txtFilePath"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:singleLine="false"
+		android:focusable="false"
+		android:textSize="14sp"
+		android:background="#F444"
+	/>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:orientation="horizontal"
 	    android:layout_gravity="center_horizontal"

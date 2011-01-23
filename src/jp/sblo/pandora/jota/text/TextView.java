@@ -5681,14 +5681,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         // First: make sure the line is visible on screen:
 
-        int line = mLayout.getLineForOffset(start);
+        int line = mLayout.getLineForOffset(end);
+//        int line = mLayout.getLineForOffset(start);
 
         final int top = mLayout.getLineTop(line);
         final int bottom = mLayout.getLineTop(line+1);
         final int vspace = mBottom - mTop - getExtendedPaddingTop() - getExtendedPaddingBottom();
-        int vslack = (bottom - top) / 2;
-        if (vslack > vspace / 4)
-            vslack = vspace / 4;
+//        int vslack = (bottom - top) / 2;
+//        if (vslack > vspace / 4)
+//            vslack = vspace / 4;
+        int vslack = 0;
         final int vs = mScrollY;
 
         if (top < (vs+vslack)) {
@@ -5704,15 +5706,15 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         final int leftChar = mLayout.getOffsetForHorizontal(line, hs);
         final int rightChar = mLayout.getOffsetForHorizontal(line, hspace+hs);
 
-        int newStart = start;
-        if (newStart < leftChar) {
-            newStart = leftChar;
-        } else if (newStart > rightChar) {
-            newStart = rightChar;
+        int newEnd = end;
+        if (newEnd < leftChar) {
+            newEnd = leftChar;
+        } else if (newEnd > rightChar) {
+            newEnd = rightChar;
         }
 
-        if (newStart != start) {
-            Selection.setSelection((Spannable)mText, newStart);
+        if (newEnd != end) {
+            Selection.setSelection((Spannable)mText, newEnd);
             return true;
         }
 

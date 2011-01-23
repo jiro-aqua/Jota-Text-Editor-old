@@ -71,6 +71,10 @@
     <string name="label_view">表示</string>
     <string name="label_font">フォント</string>
     <string name="label_font_size">フォントサイズ</string>
+    <string name="label_font_type">フォント種類</string>
+    <string name="label_font_type_normal">通常</string>
+    <string name="label_font_type_monospace">固定幅</string>
+    <string name="label_font_type_external">外部フォント</string>
     <string name="label_text_color">文字色</string>
     <string name="label_highlight_color">選択色</string>
     <string name="label_background">背景</string>
@@ -95,6 +99,10 @@
     <string name="label_di_share" >共有</string>
     <string name="label_di_search" >検索</string>
     <string name="label_di_mushroom" >マッシュルーム</string>
+
+    <string name="confirm_overwrite" >そのファイルは既に存在します。\n上書きしますか？</string>
+    <string name="label_file" >ファイル</string>
+    <string name="label_default_new_file" >デフォルトディレクトリ</string>
 
 </resources>
 

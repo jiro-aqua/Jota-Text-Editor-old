@@ -77,23 +77,23 @@ extends Layout
          * This will break if the superclass constructor ever actually
          * cares about the content instead of just holding the reference.
          */
-        if (ellipsize != null) {
-            Ellipsizer e = (Ellipsizer) getText();
-
-            e.mLayout = this;
-            e.mWidth = ellipsizedWidth;
-            e.mMethod = ellipsize;
-            mEllipsizedWidth = ellipsizedWidth;
-
-            mColumns = COLUMNS_ELLIPSIZE;
-        } else {
-            mColumns = COLUMNS_NORMAL;
+//        if (ellipsize != null) {
+//            Ellipsizer e = (Ellipsizer) getText();
+//
+//            e.mLayout = this;
+//            e.mWidth = ellipsizedWidth;
+//            e.mMethod = ellipsize;
+//            mEllipsizedWidth = ellipsizedWidth;
+//
+//            mColumns = COLUMNS_ELLIPSIZE;
+//        } else {
+//            mColumns = COLUMNS_NORMAL;
             mEllipsizedWidth = outerwidth;
-        }
+//        }
 
-        mLines = new int[ArrayUtils.idealIntArraySize(2 * mColumns)];
+        mLines = new int[ArrayUtils.idealIntArraySize(2 * 1)];
         mLineDirections = new Directions[
-                             ArrayUtils.idealIntArraySize(2 * mColumns)];
+                             ArrayUtils.idealIntArraySize(2 /** mColumns*/)];
 
         generate(source, bufstart, bufend, paint, outerwidth, align,
                  spacingmult, spacingadd, includepad, includepad,
@@ -108,10 +108,9 @@ extends Layout
     /* package */ StaticLayout(boolean ellipsize) {
         super(null, null, 0, null, 0, 0);
 
-        mColumns = COLUMNS_ELLIPSIZE;
-        mLines = new int[ArrayUtils.idealIntArraySize(2 * mColumns)];
+        mLines = new int[ArrayUtils.idealIntArraySize(2 )];
         mLineDirections = new Directions[
-                             ArrayUtils.idealIntArraySize(2 * mColumns)];
+                             ArrayUtils.idealIntArraySize(2 /* * mColumns*/)];
     }
 
     /* package */ void generate(CharSequence source, int bufstart, int bufend,
@@ -979,8 +978,9 @@ extends Layout
                       TextUtils.TruncateAt ellipsize, float ellipsiswidth,
                       float textwidth, TextPaint paint) {
         int j = mLineCount;
-        int off = j * mColumns;
-        int want = off + mColumns + TOP;
+        int off = j * 1;
+        int want = off + 1 + TOP;
+        int want2 = j + TOP;
         int[] lines = mLines;
 
         // Log.e("text", "line " + start + " to " + end + (last ? "===" : ""));
@@ -991,8 +991,10 @@ extends Layout
             System.arraycopy(lines, 0, grow, 0, lines.length);
             mLines = grow;
             lines = grow;
-
-            Directions[] grow2 = new Directions[nlen];
+        }
+        if (want2 >= mLineDirections.length ){
+            int nlen2 = ArrayUtils.idealIntArraySize(want2 + 1);
+            Directions[] grow2 = new Directions[nlen2];
             System.arraycopy(mLineDirections, 0, grow2, 0,
                              mLineDirections.length);
             mLineDirections = grow2;
@@ -1053,12 +1055,15 @@ extends Layout
         }
 
         lines[off + START] = start;
-        lines[off + TOP] = v;
-        lines[off + DESCENT] = below + extra;
+//        lines[off + TOP] = v;
+//        lines[off + DESCENT] = below + extra;
 
-        v += (below - above) + extra;
-        lines[off + mColumns + START] = end;
-        lines[off + mColumns + TOP] = v;
+//        v += (below - above) + extra;
+//        lines[off + mColumns + START] = end;
+//        lines[off + mColumns + TOP] = v;
+
+        mHeight = (below - above) + extra;
+        mDescent = below + extra;
 
         if (tab)
             lines[off + TAB] |= TAB_MASK;
@@ -1111,98 +1116,98 @@ extends Layout
             mLineDirections[j] = linedirs;
 
             // If ellipsize is in marquee mode, do not apply ellipsis on the first line
-            if (ellipsize != null && (ellipsize != TextUtils.TruncateAt.MARQUEE || j != 0)) {
-                calculateEllipsis(start, end, widths, widstart, widoff,
-                                  ellipsiswidth, ellipsize, j,
-                                  textwidth, paint);
-            }
+//            if (ellipsize != null && (ellipsize != TextUtils.TruncateAt.MARQUEE || j != 0)) {
+//                calculateEllipsis(start, end, widths, widstart, widoff,
+//                                  ellipsiswidth, ellipsize, j,
+//                                  textwidth, paint);
+//            }
         }
 
         mLineCount++;
         return v;
     }
 
-    private void calculateEllipsis(int linestart, int lineend,
-                                   float[] widths, int widstart, int widoff,
-                                   float avail, TextUtils.TruncateAt where,
-                                   int line, float textwidth, TextPaint paint) {
-        int len = lineend - linestart;
-
-        if (textwidth <= avail) {
-            // Everything fits!
-            mLines[mColumns * line + ELLIPSIS_START] = 0;
-            mLines[mColumns * line + ELLIPSIS_COUNT] = 0;
-            return;
-        }
-
-        float ellipsiswid = paint.measureText("\u2026");
-        int ellipsisStart, ellipsisCount;
-
-        if (where == TextUtils.TruncateAt.START) {
-            float sum = 0;
-            int i;
-
-            for (i = len; i >= 0; i--) {
-                float w = widths[i - 1 + linestart - widstart + widoff];
-
-                if (w + sum + ellipsiswid > avail) {
-                    break;
-                }
-
-                sum += w;
-            }
-
-            ellipsisStart = 0;
-            ellipsisCount = i;
-        } else if (where == TextUtils.TruncateAt.END || where == TextUtils.TruncateAt.MARQUEE) {
-            float sum = 0;
-            int i;
-
-            for (i = 0; i < len; i++) {
-                float w = widths[i + linestart - widstart + widoff];
-
-                if (w + sum + ellipsiswid > avail) {
-                    break;
-                }
-
-                sum += w;
-            }
-
-            ellipsisStart = i;
-            ellipsisCount = len - i;
-        } else /* where = TextUtils.TruncateAt.MIDDLE */ {
-            float lsum = 0, rsum = 0;
-            int left = 0, right = len;
-
-            float ravail = (avail - ellipsiswid) / 2;
-            for (right = len; right >= 0; right--) {
-                float w = widths[right - 1 + linestart - widstart + widoff];
-
-                if (w + rsum > ravail) {
-                    break;
-                }
-
-                rsum += w;
-            }
-
-            float lavail = avail - ellipsiswid - rsum;
-            for (left = 0; left < right; left++) {
-                float w = widths[left + linestart - widstart + widoff];
-
-                if (w + lsum > lavail) {
-                    break;
-                }
-
-                lsum += w;
-            }
-
-            ellipsisStart = left;
-            ellipsisCount = right - left;
-        }
-
-        mLines[mColumns * line + ELLIPSIS_START] = ellipsisStart;
-        mLines[mColumns * line + ELLIPSIS_COUNT] = ellipsisCount;
-    }
+//    private void calculateEllipsis(int linestart, int lineend,
+//                                   float[] widths, int widstart, int widoff,
+//                                   float avail, TextUtils.TruncateAt where,
+//                                   int line, float textwidth, TextPaint paint) {
+//        int len = lineend - linestart;
+//
+//        if (textwidth <= avail) {
+//            // Everything fits!
+//            mLines[mColumns * line + ELLIPSIS_START] = 0;
+//            mLines[mColumns * line + ELLIPSIS_COUNT] = 0;
+//            return;
+//        }
+//
+//        float ellipsiswid = paint.measureText("\u2026");
+//        int ellipsisStart, ellipsisCount;
+//
+//        if (where == TextUtils.TruncateAt.START) {
+//            float sum = 0;
+//            int i;
+//
+//            for (i = len; i >= 0; i--) {
+//                float w = widths[i - 1 + linestart - widstart + widoff];
+//
+//                if (w + sum + ellipsiswid > avail) {
+//                    break;
+//                }
+//
+//                sum += w;
+//            }
+//
+//            ellipsisStart = 0;
+//            ellipsisCount = i;
+//        } else if (where == TextUtils.TruncateAt.END || where == TextUtils.TruncateAt.MARQUEE) {
+//            float sum = 0;
+//            int i;
+//
+//            for (i = 0; i < len; i++) {
+//                float w = widths[i + linestart - widstart + widoff];
+//
+//                if (w + sum + ellipsiswid > avail) {
+//                    break;
+//                }
+//
+//                sum += w;
+//            }
+//
+//            ellipsisStart = i;
+//            ellipsisCount = len - i;
+//        } else /* where = TextUtils.TruncateAt.MIDDLE */ {
+//            float lsum = 0, rsum = 0;
+//            int left = 0, right = len;
+//
+//            float ravail = (avail - ellipsiswid) / 2;
+//            for (right = len; right >= 0; right--) {
+//                float w = widths[right - 1 + linestart - widstart + widoff];
+//
+//                if (w + rsum > ravail) {
+//                    break;
+//                }
+//
+//                rsum += w;
+//            }
+//
+//            float lavail = avail - ellipsiswid - rsum;
+//            for (left = 0; left < right; left++) {
+//                float w = widths[left + linestart - widstart + widoff];
+//
+//                if (w + lsum > lavail) {
+//                    break;
+//                }
+//
+//                lsum += w;
+//            }
+//
+//            ellipsisStart = left;
+//            ellipsisCount = right - left;
+//        }
+//
+//        mLines[mColumns * line + ELLIPSIS_START] = ellipsisStart;
+//        mLines[mColumns * line + ELLIPSIS_COUNT] = ellipsisCount;
+//    }
 
     // Override the baseclass so we can directly access our members,
     // rather than relying on member functions.
@@ -1215,7 +1220,7 @@ extends Layout
         int[] lines = mLines;
         while (high - low > 1) {
             guess = (high + low) >> 1;
-            if (lines[mColumns * guess + TOP] > vertical){
+            if ( guess * mHeight > vertical){
                 high = guess;
             } else {
                 low = guess;
@@ -1233,23 +1238,25 @@ extends Layout
     }
 
     public int getLineTop(int line) {
-        return mLines[mColumns * line + TOP];
+        return mHeight * line ;
+        //return mLines[mColumns * line + TOP];
     }
 
     public int getLineDescent(int line) {
-        return mLines[mColumns * line + DESCENT];
+        return mDescent;
+//        return mLines[mColumns * line + DESCENT];
     }
 
     public int getLineStart(int line) {
-        return mLines[mColumns * line + START] & START_MASK;
+        return mLines[ line + START] & START_MASK;
     }
 
     public int getParagraphDirection(int line) {
-        return mLines[mColumns * line + DIR] >> DIR_SHIFT;
+        return mLines[ line + DIR] >> DIR_SHIFT;
     }
 
     public boolean getLineContainsTab(int line) {
-        return (mLines[mColumns * line + TAB] & TAB_MASK) != 0;
+        return (mLines[ line + TAB] & TAB_MASK) != 0;
     }
 
     public final Directions getLineDirections(int line) {
@@ -1266,20 +1273,20 @@ extends Layout
 
     @Override
     public int getEllipsisCount(int line) {
-        if (mColumns < COLUMNS_ELLIPSIZE) {
+//        if (mColumns < COLUMNS_ELLIPSIZE) {
             return 0;
-        }
-
-        return mLines[mColumns * line + ELLIPSIS_COUNT];
+//        }
+//
+//        return mLines[mColumns * line + ELLIPSIS_COUNT];
     }
 
     @Override
     public int getEllipsisStart(int line) {
-        if (mColumns < COLUMNS_ELLIPSIZE) {
+//        if (mColumns < COLUMNS_ELLIPSIZE) {
             return 0;
-        }
-
-        return mLines[mColumns * line + ELLIPSIS_START];
+//        }
+//
+//        return mLines[mColumns * line + ELLIPSIS_START];
     }
 
     @Override
@@ -1289,7 +1296,7 @@ extends Layout
 
     private int mLineCount;
     private int mTopPadding, mBottomPadding;
-    private int mColumns;
+//    private int mColumns;
     private int mEllipsizedWidth;
 
     private static final int COLUMNS_NORMAL = 3;
@@ -1319,4 +1326,8 @@ extends Layout
     private char[] mChs;
     private float[] mWidths;
     private Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
+
+    private int mHeight;
+    private int mDescent;
+
 }

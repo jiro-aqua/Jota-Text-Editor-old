@@ -79,7 +79,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
                 byte[] buff = new byte[64*1024];
                 nread = is.read(buff);
 
-                if ( nread == 0 ){
+                if ( nread <= 0 ){
                     return new SpannableStringBuilder("");
                 }
 
@@ -151,16 +151,15 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
 //                }else{
 //                    Log.e( TAG , "CharSet="+"--"+"Linebreak=" + new String[]{"CR","LF","CRLF"}[linebreak]);
 //                }
+                if ( encode == null ){
+                    encode = "utf-8";
+                }
                 mCharset = encode;
                 mLinebreak = linebreak;
 
                 BufferedReader br=null;
                 try {
-                    if ( encode != null ){
-                        br = new BufferedReader( new InputStreamReader( is , encode ) , 8192 );
-                    }else{
-                        br = new BufferedReader( new InputStreamReader( is ) , 8192 );
-                    }
+                    br = new BufferedReader( new InputStreamReader( is , encode ) , 8192 );
 
                     int line=0;
                     String text;

@@ -111,14 +111,13 @@ public class Main
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
 
-        mSettings = SettingsActivity.readSettings(this);
 
         mEditor = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.textedit);
+        applySetting();
+
         mEditor.setDocumentChangedListener(this);
         mEditor.setShortcutListener(this);
         mEditor.setChanged(false);
-        mEditor.setNameDirectIntent(mSettings.intentname);
-
         mLlSearch = (LinearLayout )  findViewById(R.id.search);
         mLlReplace = (LinearLayout ) findViewById(R.id.replace);
 
@@ -518,8 +517,9 @@ public class Main
 
     private void saveAs()
     {
-        Intent intent = new Intent( this , FileList.class );
-        intent.putExtra(FileList.INTENT_MODE, FileList.MODE_SAVE);
+        Intent intent = new Intent( this , FileSelectorActivity.class );
+        intent.putExtra(FileSelectorActivity.INTENT_MODE, FileSelectorActivity.MODE_SAVE);
+        intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH, mInstanceState.filename);
         startActivityForResult(intent, REQUESTCODE_SAVEAS);
     }
 
@@ -529,14 +529,14 @@ public class Main
             switch( requestCode ){
                 case REQUESTCODE_OPEN:{
                     Bundle extras = data.getExtras();
-                    String path = extras.getString(FileList.INTENT_FILEPATH);
+                    String path = extras.getString(FileSelectorActivity.INTENT_FILEPATH);
                     mTask = new TextLoadTask( this , this );
                     mTask.execute(path);
                 }
                 break;
                 case REQUESTCODE_SAVEAS:{
                     Bundle extras = data.getExtras();
-                    mInstanceState.filename = extras.getString(FileList.INTENT_FILEPATH);
+                    mInstanceState.filename = extras.getString(FileSelectorActivity.INTENT_FILEPATH);
                     mInstanceState.charset = DEF_CHARSET;
                     mInstanceState.linebreak =DEF_LINEBREAK;;
                     save();
@@ -721,8 +721,13 @@ public class Main
 
     private Runnable mProcOpen =  new Runnable() {
         public void run() {
-            Intent intent = new Intent( Main.this , FileList.class );
-            intent.putExtra(FileList.INTENT_MODE, FileList.MODE_OPEN);
+            Intent intent = new Intent( Main.this , FileSelectorActivity.class );
+            intent.putExtra(FileSelectorActivity.INTENT_MODE, FileSelectorActivity.MODE_OPEN);
+            File[] fl = getHistory();
+            if ( fl!=null ){
+                intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH , fl[0].getPath() );
+            }
+
             startActivityForResult(intent, REQUESTCODE_OPEN);
         }
     };
@@ -766,76 +771,92 @@ public class Main
     }
 
     private PostProcess mProcHistory =  new PostProcess() {
+
+        File[] fl = null;
+
+        public void run() {
+            fl = getHistory();
+            if ( fl!=null ){
+                CharSequence[] items = new CharSequence[fl.length];
+                int max  = fl.length;
+                for( int i=0;i<max;i++ ){
+                    items[i] = fl[i].getName();
+                }
+                new AlertDialog.Builder(Main.this).setTitle(R.string.history).setItems(items, this).show();
+            }
+        }
+
+        public void onClick(DialogInterface dialog, int which) {
+            CharSequence path = fl[which].getPath();
+            mTask = new TextLoadTask( Main.this,Main.this );
+            mTask.execute(path.toString());
+        }
+
+
+
+    };
+
+
+    public File [] getHistory()
+    {
         // get history
         class FileInfo{
             String path;
             long lastaccess;
         }
 
+        SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
         ArrayList<FileInfo> fl = new ArrayList<FileInfo>();
+        fl.removeAll(fl);
+        Map<String,?> map = sp.getAll();
 
-        public void run() {
-            SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
-
-            fl.removeAll(fl);
-            Map<String,?> map = sp.getAll();
-
-            // enumerate all of history
-            for( Entry<String,?> entry : map.entrySet() ){
-                Object val = entry.getValue();
-                if ( val instanceof String){
-                    String[] vals = ((String)val).split(",");
-                    if ( vals.length>=3 ){
-                        try{
-                            FileInfo fi = new FileInfo();
-                            fi.path = entry.getKey();
-                            fi.lastaccess = Long.parseLong(vals[2]);
-                            fl.add(fi);
-                        }
-                        catch(Exception e)
-                        {
-                        }
+        // enumerate all of history
+        for( Entry<String,?> entry : map.entrySet() ){
+            Object val = entry.getValue();
+            if ( val instanceof String){
+                String[] vals = ((String)val).split(",");
+                if ( vals.length>=3 ){
+                    try{
+                        FileInfo fi = new FileInfo();
+                        fi.path = entry.getKey();
+                        fi.lastaccess = Long.parseLong(vals[2]);
+                        fl.add(fi);
+                    }
+                    catch(Exception e)
+                    {
                     }
                 }
             }
-
-            if ( fl.size() == 0 ){
-                return;
-            }
-
-            Collections.sort(fl, new Comparator<FileInfo>(){
-                public int compare(FileInfo object1, FileInfo object2) {
-                    return (int)(object2.lastaccess - object1.lastaccess);
-                }
-            });
-
-            int historymax = fl.size();
-            if ( historymax > 20 ){
-                historymax = 20;
-            }
-            CharSequence [] items = new CharSequence[historymax];
-            int max = fl.size();
-            for( int i=0;i<max;i++){
-                if ( i< historymax ){
-                    File f = new File(fl.get(i).path);
-                    items[i] = f.getName();
-                }else{
-                    // remove a record over 20 counts
-                    sp.edit().remove(fl.get(i).path);
-                }
-            }
-            sp.edit().commit();
-            new AlertDialog.Builder(Main.this).setTitle(R.string.history).setItems(items, this).show();
-
         }
 
-        public void onClick(DialogInterface dialog, int which) {
-            String path = fl.get(which).path;
-            mTask = new TextLoadTask( Main.this,Main.this );
-            mTask.execute(path);
+        if ( fl.size() == 0 ){
+            return null;
         }
-    };
 
+        Collections.sort(fl, new Comparator<FileInfo>(){
+            public int compare(FileInfo object1, FileInfo object2) {
+                return (int)(object2.lastaccess - object1.lastaccess);
+            }
+        });
+
+        int historymax = fl.size();
+        if ( historymax > 20 ){
+            historymax = 20;
+        }
+        File [] items = new File[historymax];
+        int max = fl.size();
+        for( int i=0;i<max;i++){
+            if ( i< historymax ){
+                File f = new File(fl.get(i).path);
+                items[i] = f;
+            }else{
+                // remove a record over 20 counts
+                sp.edit().remove(fl.get(i).path);
+            }
+        }
+        sp.edit().commit();
+        return items;
+    }
 
     private PostProcess mProcCharSet =  new PostProcess() {
         String[] items;
@@ -1157,9 +1178,19 @@ public class Main
 
     private OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =  new OnSharedPreferenceChangeListener(){
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            mSettings = SettingsActivity.readSettings(Main.this);
-            mEditor.setNameDirectIntent(mSettings.intentname);
+            applySetting();
         }
     };
+
+    void applySetting()
+    {
+        mSettings = SettingsActivity.readSettings(Main.this);
+        mEditor.setNameDirectIntent(mSettings.intentname);
+
+        mEditor.setTypeface(mSettings.fontface);
+        mEditor.setTextSize(mSettings.fontsize);
+
+        FileSelectorActivity.setsDefaultDirectory(mSettings.defaultdirectory);
+    }
 
 }
