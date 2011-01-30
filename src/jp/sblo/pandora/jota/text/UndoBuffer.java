@@ -69,6 +69,12 @@ public class UndoBuffer implements Parcelable {
 
     public void push( TextChange item )
     {
+        if ( item.newtext == null ){
+            item.newtext = "";
+        }
+        if ( item.oldtext == null ){
+            item.oldtext = "";
+        }
         mBuffer.add(item);
     }
 
