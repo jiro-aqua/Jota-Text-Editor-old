@@ -16,6 +16,7 @@ public class EditText extends TextView{
 
     private JotaTextWatcher mTextWatcher;
     private WeakReference<ShortcutListener> mShortcutListener;
+    private int mShortcutMetaKey = 0;
 
     public EditText(Context context) {
         this(context, null);
@@ -128,14 +129,15 @@ public class EditText extends TextView{
 
         int keycode = event.getKeyCode();
         // ALT + KEYDOWN
-        int altstate = TextKeyListener.getMetaState(cs,KeyEvent.META_ALT_ON);
-        boolean alt = event.isAltPressed() || (altstate!=0);
+        int meta = (int)event.getMetaState();
+//        int altstate = TextKeyListener.getMetaState(cs,KeyEvent.META_ALT_ON);
+        boolean alt = (meta & mShortcutMetaKey)!=0 ; // || (altstate!=0);      // one of meta keies is pressed , or , Alt key is locked
 
         if ( alt && event.getAction() == KeyEvent.ACTION_DOWN ){
             if (doShortcut(keycode, event)){
-                if ( altstate == 1 ){
-                    TextKeyListener.clearMetaKeyState(cs,KeyEvent.META_ALT_ON);
-                }
+//                if ( altstate == 1 ){
+//                    TextKeyListener.clearMetaKeyState(cs,KeyEvent.META_ALT_ON);
+//                }
                 return true;
             }
 
@@ -148,8 +150,9 @@ public class EditText extends TextView{
             case KeyEvent.KEYCODE_A:
             case KeyEvent.KEYCODE_X:
             case KeyEvent.KEYCODE_C:
-            case KeyEvent.KEYCODE_V:
             case KeyEvent.KEYCODE_Z:
+                return onKeyShortcut( keycode , event );
+            case KeyEvent.KEYCODE_V:
                 return onKeyShortcut( keycode , event );
             case KeyEvent.KEYCODE_S:
             case KeyEvent.KEYCODE_D:
@@ -192,6 +195,10 @@ public class EditText extends TextView{
 
     public interface ShortcutListener {
         boolean onCommand(int keycode);
+    }
+
+    public void setShortcutMetaKey(int metakey) {
+        this.mShortcutMetaKey = metakey;
     }
 
 }

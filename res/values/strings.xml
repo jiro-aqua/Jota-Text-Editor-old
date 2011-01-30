@@ -76,7 +76,9 @@
     <string name="label_font_type_external">External</string>
     <string name="label_text_color">Text Color</string>
     <string name="label_highlight_color">Highlight Color</string>
-    <string name="label_background">Background</string>
+    <string name="label_underline_color">Underline Color</string>
+    <string name="label_underline">Show Underline</string>
+    <string name="label_theme">Background Color</string>
     <string name="label_background_white">White</string>
     <string name="label_background_black">Black</string>
     <string name="label_search">Search</string>
@@ -88,6 +90,7 @@
     <string name="label_mail_summary" >pandora@aquamarine.sakura.ne.jp</string>
     <string name="label_tweet" >Tweet to developer</string>
     <string name="label_tweet_summary" >\@jiro_aqua</string>
+    <string name="tweet_url" >http://twitter.com/home?status=\@jiro_aqua%20%23JotaTextEditor</string>
     <string name="label_about" >About Jota Text Editor</string>
 
     <string name="msg_init_setting" >This will initialize all of the preferences.\nAre you sure?</string>
@@ -102,5 +105,14 @@
     <string name="confirm_overwrite" >The file already exists.\nDo you want to overwrite?</string>
     <string name="label_file" >File</string>
     <string name="label_default_new_file" >Default directory of new file</string>
+
+    <string name="label_input" >Input</string>
+    <string name="label_shortcut_alt_left" >Shortcut with Left-Alt key</string>
+    <string name="label_shortcut_alt_right" >Shortcut with Right-Alt key</string>
+    <string name="label_shortcut_ctrl" >Shortcut with Ctrl Key</string>
+
+    <string name="label_open_last_file" >Remember last file</string>
+    <string name="label_open_last_file_summary" >If you start Jota from Icon, automatically open the file you opend last time.</string>
+    <string name="label_word_wrap" >Word wrap</string>
 
 </resources>

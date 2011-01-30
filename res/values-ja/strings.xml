@@ -77,7 +77,9 @@
     <string name="label_font_type_external">外部フォント</string>
     <string name="label_text_color">文字色</string>
     <string name="label_highlight_color">選択色</string>
-    <string name="label_background">背景</string>
+    <string name="label_underline_color">下線の色</string>
+    <string name="label_underline">カーソル位置に下線を表示</string>
+    <string name="label_theme">背景色</string>
     <string name="label_background_white">白</string>
     <string name="label_background_black">黒</string>
     <string name="label_search">検索</string>
@@ -89,6 +91,7 @@
     <string name="label_mail_summary" >pandora@aquamarine.sakura.ne.jp</string>
     <string name="label_tweet" >作者につぶやく</string>
     <string name="label_tweet_summary" >\@jiro_aqua</string>
+    <string name="tweet_url" >http://twitter.com/home?status=\@jiro_aqua%20%23JotaTextEditor</string>
     <string name="label_about" >Jota Text Editorについて</string>
 
     <string name="msg_init_setting" >この操作は全ての設定値を初期化します。\n実行しますか?</string>
@@ -103,6 +106,16 @@
     <string name="confirm_overwrite" >そのファイルは既に存在します。\n上書きしますか？</string>
     <string name="label_file" >ファイル</string>
     <string name="label_default_new_file" >デフォルトディレクトリ</string>
+
+    <string name="label_input" >入力</string>
+    <string name="label_shortcut_alt_left" >左ALTキーショートカット</string>
+    <string name="label_shortcut_alt_right" >右ALTキーショートカット</string>
+    <string name="label_shortcut_ctrl" >CTRLキーショートカット</string>
+
+    <string name="label_open_last_file" >前回のファイルを開く</string>
+    <string name="label_open_last_file_summary" >アイコンから起動した時に、前回開いていたファイルを自動的に開きます。</string>
+    <string name="label_word_wrap" >行を画面端で折り返す</string>
+
 
 </resources>
 

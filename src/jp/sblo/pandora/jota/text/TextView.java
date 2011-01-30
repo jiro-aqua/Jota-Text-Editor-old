@@ -948,7 +948,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             public void afterTextChanged(Editable s) {
             }
         });
-        mUnderLinePaint.setColor(0xFFFF0000);
 
     }
 
@@ -1814,6 +1813,29 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+    public void setUnderlineColor(int color) {
+        if (mUnderlineColor != color) {
+            mUnderlineColor = color;
+            if ( mUnderline ){
+                mUnderLinePaint.setColor(mUnderlineColor);
+            }else{
+                mUnderLinePaint.setColor(0);
+            }
+            invalidate();
+        }
+    }
+
+    public void enableUnderline(boolean underline) {
+        if (mUnderline != underline) {
+            mUnderline = underline;
+            if ( mUnderline ){
+                mUnderLinePaint.setColor(mUnderlineColor);
+            }else{
+                mUnderLinePaint.setColor(0);
+            }
+            invalidate();
+        }
+    }
     /**
      * Gives the text a shadow of the specified radius and color, the specified
      * distance from its normal position.
@@ -7627,4 +7649,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private Paint mUnderLinePaint = new Paint();
     private String mNameDirectIntent = null;
 
+    private int mUnderlineColor=0;
+    private boolean mUnderline=false;
 }

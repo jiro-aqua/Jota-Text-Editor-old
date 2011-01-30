@@ -53,5 +53,13 @@
 			android:layout_gravity="center_horizontal"
 			android:layout_weight="0.15"
 		/>
+		<Button
+		    android:id="@+id/btnCancel"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/label_cancel"
+			android:layout_gravity="center_horizontal"
+			android:layout_weight="0.15"
+		/>
 	</LinearLayout>
 </LinearLayout>

@@ -43,11 +43,10 @@ public class FileSelectorActivity extends ListActivity {
     private String m_strFileName;
 	private List<String> items = null;
     private Button mBtnOK;
+    private Button mBtnCancel;
     private TextView mTxtFilePath;
     private EditText mEdtFileName;
     private String[] mExtension = null;
-
-    private static String sDefaultDirectory = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,8 +54,10 @@ public class FileSelectorActivity extends ListActivity {
 		setContentView(R.layout.filelist);
 
         mBtnOK = (Button)findViewById(R.id.btnOK);
+        mBtnCancel = (Button)findViewById(R.id.btnCancel);
         mTxtFilePath = (TextView)findViewById(R.id.txtFilePath);
         mEdtFileName = (EditText)findViewById(R.id.edtFileName);
+
 
         Intent intent = getIntent();
         setResult(RESULT_CANCELED, intent);
@@ -67,10 +68,6 @@ public class FileSelectorActivity extends ListActivity {
             mMode = extras.getString(INTENT_MODE);
             mExtension = (String[]) extras.get(INTENT_EXTENSION);
             m_strDirPath = extras.getString(INTENT_INIT_PATH);
-        }
-        if (m_strDirPath==null || m_strDirPath.length()==0 ){
-            m_strDirPath = sDefaultDirectory;
-            m_strFileName = "untitled.txt";
         }
         File file = new File ( m_strDirPath );
         if ( !file.isDirectory() ){
@@ -194,6 +191,14 @@ public class FileSelectorActivity extends ListActivity {
 
         });
 
+        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                setResult( RESULT_CANCELED , null );
+                finish();
+            }
+
+        });
 
         fillList();
 	}
@@ -360,10 +365,5 @@ public class FileSelectorActivity extends ListActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    public static void setsDefaultDirectory(String defaultDirectory) {
-        FileSelectorActivity.sDefaultDirectory = defaultDirectory;
-    }
-
 
 }

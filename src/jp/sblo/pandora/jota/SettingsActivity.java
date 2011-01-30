@@ -1,7 +1,10 @@
 package jp.sblo.pandora.jota;
 
-import java.io.File;
 import java.net.URISyntaxException;
+import java.io.File;
+
+import com.android.internal.telephony.gsm.stk.TextColor;
+
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,12 +42,29 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_DIRECT_INTENT           = "DIRECT_INTENT";
     private static final String KEY_DIRECT_INTENT_INTENT    = "DIRECT_INTENT_INTENT";
     private static final String KEY_DEFAULT_FOLDER          = "DEFAULT_FOLDER";
+    private static final String KEY_SHORTCUT_ALT_LEFT       = "SHORTCUT_ALT_LEFT";
+    private static final String KEY_SHORTCUT_ALT_RIGHT      = "SHORTCUT_ALT_RIGHT";
+    private static final String KEY_SHORTCUT_CTRL           = "SHORTCUT_CTRL";
+    private static final String KEY_REMEMBER_LAST_FILE      = "REMEMBER_LAST_FILE";
+    private static final String KEY_WORD_WRAP               = "WORD_WRAP";
+    private static final String KEY_THEME                   = "THEME";
+    private static final String KEY_UNDERLINE               = "UNDERLINE";
+    private static final String KEY_UNDERLINE_COLOR         = "UNDERLINE_COLOR";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
 	public static final String  DI_SHARE = "share";
 	public static final String  DI_SEARCH = "search";
 	public static final String  DI_MUSHROOM = "mushroom";
+
+    public static final String  THEME_DEFAULT = "default";
+    public static final String  THEME_BLACK   = "black";
+
+    public static final int BACKGROUND_DEFAULT = 0xFFF6F6F6;
+    public static final int BACKGROUND_BLACK   = 0xFF000000;
+    public static final int COLOR_DEFAULT = 0xFF000000;
+    public static final int COLOR_BLACK   = 0xFFF6F6F6;
+    public static final int UNDERLINE_COLOR = 0xFFFF0000;
 
     private static final int REQUEST_CODE_PICK_SHARE = 1;
     private static final int REQUEST_CODE_PICK_SEARCH = 2;
@@ -112,11 +133,73 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setKey( KEY_FONT_SIZE);
 //                    pr.setSummary(sp.getString(pr.getKey(), ""));
                     pr.setTitle(R.string.label_font_size);
-                    pr.setEntries(new String[] { "10", "14", "16", "18", "20", "24", "30", "36",  });
-                    pr.setEntryValues(new String[] { "10", "14", "16", "18", "20", "24", "30", "36",  });
+                    pr.setEntries(new String[]     {"8", "10", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
+                    pr.setEntryValues(new String[] {"8", "10", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
                     catfont.addPreference(pr);
                 }
             }
+            {
+                // View Category
+                final PreferenceCategory cat = new PreferenceCategory(this);
+                cat.setTitle(R.string.label_view);
+                mPs.addPreference(cat);
+                if (false) {
+                    // word wrap
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_WORD_WRAP);
+                    pr.setTitle(R.string.label_word_wrap);
+                    cat.addPreference(pr);
+                }
+                {
+                    // show underline
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_UNDERLINE);
+                    pr.setTitle(R.string.label_underline);
+                    cat.addPreference(pr);
+                }
+                {   // theme
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setDialogTitle(R.string.label_theme);
+                    pr.setKey(KEY_THEME);
+                    pr.setTitle(R.string.label_theme);
+
+                    pr.setEntries(new String[] {
+                            getResources().getString(R.string.label_background_white),
+                            getResources().getString(R.string.label_background_black),
+                    });
+
+                    final String[] values = new String[] {
+                            THEME_DEFAULT,
+                            THEME_BLACK,
+                    };
+                    pr.setEntryValues(values);
+                    pr.setOnPreferenceChangeListener( mProcTheme );
+                    cat.addPreference(pr);
+                }
+                {
+                    // Text Color
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_text_color);
+                    pr.setOnPreferenceClickListener(mProcTextColor);
+                    cat.addPreference(pr);
+                }
+                {
+                    // Selection Color
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_highlight_color);
+                    pr.setOnPreferenceClickListener(mProcHighlightColor);
+                    cat.addPreference(pr);
+                }
+                {
+                    // Underline Color
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_underline_color);
+                    pr.setOnPreferenceClickListener(mProcUnderlineColor);
+                    cat.addPreference(pr);
+                }
+
+            }
+
             {
                 // File Category
                 final PreferenceCategory cat = new PreferenceCategory(this);
@@ -127,6 +210,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final Preference pr = new Preference(this);
                     pr.setTitle(R.string.label_default_new_file);
                     pr.setOnPreferenceClickListener(mProcDefaultDirectory);
+                    cat.addPreference(pr);
+                }
+                {
+                    // rememer last file
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_REMEMBER_LAST_FILE);
+                    pr.setTitle(R.string.label_open_last_file);
+                    pr.setSummary(R.string.label_open_last_file_summary);
                     cat.addPreference(pr);
                 }
             }
@@ -157,6 +248,31 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setEntryValues(values);
 
                     pr.setOnPreferenceChangeListener( mProcDirectIntent );
+                    category.addPreference(pr);
+                }
+            }
+            {
+                // Input Category
+                final PreferenceCategory category = new PreferenceCategory(this);
+                category.setTitle(R.string.label_input);
+
+                mPs.addPreference(category);
+                {
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_SHORTCUT_ALT_LEFT);
+                    pr.setTitle(R.string.label_shortcut_alt_left);
+                    category.addPreference(pr);
+                }
+                {
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_SHORTCUT_ALT_RIGHT);
+                    pr.setTitle(R.string.label_shortcut_alt_right);
+                    category.addPreference(pr);
+                }
+                {
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_SHORTCUT_CTRL);
+                    pr.setTitle(R.string.label_shortcut_ctrl);
                     category.addPreference(pr);
                 }
             }
@@ -227,7 +343,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     String path = extras.getString(FileSelectorActivity.INTENT_DIRPATH);
                     editor.putString(KEY_DEFAULT_FOLDER, path );
                     editor.commit();
-                    FileSelectorActivity.setsDefaultDirectory(path);
                     break;
                 }
             }
@@ -294,17 +409,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     };
     private OnPreferenceClickListener mProcTweet = new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
-            Intent it = new Intent();
-            it.setAction( Intent.ACTION_SEND );
-            it.setType("text/plain");
-            it.putExtra(Intent.EXTRA_TEXT, getString(R.string.label_tweet_summary) + " #JotaTextEditor " );
+            Intent intent = new Intent( Intent.ACTION_VIEW , Uri.parse( getString( R.string.tweet_url) ));
             try{
-                startActivity(it);
+                startActivity(intent);
             }catch(Exception e){}
             finish();
             return false;
         }
-
     };
     private OnPreferenceClickListener mProcAbout = new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
@@ -345,10 +456,96 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
+
+    private OnPreferenceChangeListener mProcTheme = new OnPreferenceChangeListener() {
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+
+            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+            Editor editor = sp.edit();
+
+            if ( SettingsActivity.THEME_DEFAULT.equals(newValue) ){
+                editor.putInt( KEY_TEXT_COLOR , COLOR_DEFAULT );
+                editor.putInt( KEY_BACKGROUND, BACKGROUND_DEFAULT );
+            }else if ( SettingsActivity.THEME_BLACK.equals(newValue) ){
+                editor.putInt( KEY_TEXT_COLOR , COLOR_BLACK );
+                editor.putInt( KEY_BACKGROUND, BACKGROUND_BLACK );
+            }
+            editor.putInt(KEY_HIGHLIGHT_COLOR, getTextColorHighlight(SettingsActivity.this) );
+            editor.commit();
+            return true;
+        }
+    };
+
+    abstract class ColorProc implements   OnPreferenceClickListener , ColorPickerDialog.OnColorChangedListener {}
+
+    private ColorProc mProcTextColor = new ColorProc(){
+        public boolean onPreferenceClick(Preference preference) {
+
+            ColorPickerDialog cpd = new ColorPickerDialog(SettingsActivity.this ,this,
+                    sSettings.textcolor,
+                    sSettings.backgroundcolor,
+                    false,
+                    getString(R.string.label_text_color)) ;
+            cpd.show();
+            return true;
+        }
+
+        public void colorChanged(int fg, int bg) {
+            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+            Editor editor = sp.edit();
+            editor.putInt( KEY_TEXT_COLOR , fg );
+            editor.commit();
+
+        }
+    };
+
+    private ColorProc mProcHighlightColor  = new ColorProc(){
+        public boolean onPreferenceClick(Preference preference) {
+
+            ColorPickerDialog cpd = new ColorPickerDialog(SettingsActivity.this ,this,
+                    sSettings.textcolor,
+                    sSettings.highlightcolor,
+                    true,
+                    getString(R.string.label_highlight_color)) ;
+            cpd.show();
+            return true;
+        }
+
+        public void colorChanged(int fg, int bg) {
+            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+            Editor editor = sp.edit();
+            editor.putInt( KEY_HIGHLIGHT_COLOR, bg );
+            editor.commit();
+
+        }
+    };
+
+    private ColorProc mProcUnderlineColor  = new ColorProc(){
+        public boolean onPreferenceClick(Preference preference) {
+
+            ColorPickerDialog cpd = new ColorPickerDialog(SettingsActivity.this ,this,
+                    sSettings.underlinecolor,
+                    sSettings.backgroundcolor,
+                    false,
+                    getString(R.string.label_highlight_color)) ;
+            cpd.show();
+            return true;
+        }
+
+        public void colorChanged(int fg, int bg) {
+            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+            Editor editor = sp.edit();
+            editor.putInt( KEY_UNDERLINE_COLOR, fg );
+            editor.commit();
+        }
+    };
+
+
     private OnPreferenceClickListener mProcDefaultDirectory = new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
             Intent intent = new Intent( SettingsActivity.this , FileSelectorActivity.class );
             intent.putExtra(FileSelectorActivity.INTENT_MODE, FileSelectorActivity.MODE_DIR);
+            intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH, sSettings.defaultdirectory );
 
             startActivityForResult(intent, REQUEST_CODE_DEFAULT_DIR);
 
@@ -370,7 +567,20 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		Typeface fontface;
 		int fontsize;
 		String defaultdirectory;
+        boolean shortcutaltleft;
+        boolean shortcutaltright;
+        boolean shortcutctrl;
+        boolean rememberlastfile;
+        boolean wordwrap;
+        String theme;
+        int backgroundcolor;
+        int textcolor;
+        int highlightcolor;
+        int underlinecolor;
+        boolean underline;
 	}
+
+	private static Settings sSettings;
 
 	public	static Settings readSettings(Context ctx)
 	{
@@ -390,7 +600,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	        }
         } catch (URISyntaxException e) {
         }
-        ret.fontsize = Integer.parseInt( sp.getString( KEY_FONT_SIZE , "16") );
+        ret.fontsize = Integer.parseInt( sp.getString( KEY_FONT_SIZE , "18") );
         CharSequence font = sp.getString(KEY_FONT, "NORMAL");
         if ( "NORMAL".equals(font) ){
             ret.fontface = Typeface.DEFAULT;
@@ -400,6 +610,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             ret.fontface = Typeface.DEFAULT;
         }
         ret.defaultdirectory = sp.getString( KEY_DEFAULT_FOLDER , Environment.getExternalStorageDirectory().getPath() );
+        ret.shortcutaltleft = sp.getBoolean( KEY_SHORTCUT_ALT_LEFT, false);
+        ret.shortcutaltright = sp.getBoolean( KEY_SHORTCUT_ALT_RIGHT, false);
+        ret.shortcutctrl = sp.getBoolean( KEY_SHORTCUT_CTRL, false);
+        ret.rememberlastfile = sp.getBoolean( KEY_REMEMBER_LAST_FILE, false);
+        ret.wordwrap = sp.getBoolean( KEY_WORD_WRAP, true);
+        ret.theme = sp.getString(KEY_THEME, THEME_DEFAULT);
+        ret.textcolor = sp.getInt(KEY_TEXT_COLOR,0);
+        ret.highlightcolor = sp.getInt(KEY_HIGHLIGHT_COLOR,0);
+        ret.backgroundcolor = sp.getInt(KEY_BACKGROUND, 0);
+        ret.underlinecolor =  sp.getInt(KEY_UNDERLINE_COLOR, 0);
+        ret.underline = sp.getBoolean(KEY_UNDERLINE, true);
+        sSettings = ret;
         return ret;
 	}
 
@@ -427,9 +649,23 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				}
                 if ( lastversion < 2 ){
                     editor.putString(KEY_FONT, "NORMAL");
-                    editor.putString(KEY_FONT_SIZE, "16");
+                    editor.putString(KEY_FONT_SIZE, "18");
                     editor.putString(KEY_DEFAULT_FOLDER, Environment.getExternalStorageDirectory().getPath());
 				}
+                if ( lastversion < 3 ){
+
+                    editor.putBoolean(KEY_SHORTCUT_ALT_LEFT, false);
+                    editor.putBoolean(KEY_SHORTCUT_ALT_RIGHT, false);
+                    editor.putBoolean(KEY_SHORTCUT_CTRL, false);
+                    editor.putBoolean(KEY_REMEMBER_LAST_FILE, false);
+                    editor.putBoolean(KEY_WORD_WRAP, true);
+                    editor.putString(KEY_THEME, THEME_DEFAULT);
+                    editor.putInt(KEY_TEXT_COLOR, COLOR_DEFAULT);
+                    editor.putInt(KEY_HIGHLIGHT_COLOR , getTextColorHighlight(ctx) );
+                    editor.putInt( KEY_BACKGROUND , BACKGROUND_DEFAULT );
+                    editor.putBoolean(KEY_UNDERLINE, true);
+                    editor.putInt( KEY_UNDERLINE_COLOR, UNDERLINE_COLOR );
+                }
 				editor.commit();
 			}
 
@@ -438,5 +674,17 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		return ret;
 	}
 
+	private static int getTextColorHighlight(Context ctx)
+	{
+        TypedArray a =
+            ctx.obtainStyledAttributes(
+                null, android.R.styleable.TextView, android.R.attr.textViewStyle, 0);
+        TypedArray appearance = null;
+        int ap = a.getResourceId(android.R.styleable.TextView_textAppearance, -1);
+        if (ap != -1) {
+            appearance = ctx.obtainStyledAttributes(ap, android.R.styleable. TextAppearance);
+        }
+        return appearance.getColor(android.R.styleable.TextAppearance_textColorHighlight, 0);
+	}
 }
 

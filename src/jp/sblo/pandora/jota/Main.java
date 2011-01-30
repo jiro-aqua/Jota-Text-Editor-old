@@ -219,6 +219,12 @@ public class Main
                 if ( text != null ){
                     mEditor.setText(text);
                 }
+            }else if ( mSettings.rememberlastfile ) {
+                File[] fl = getHistory();
+                if ( fl!=null ){
+                    mTask = new TextLoadTask( this , this );
+                    mTask.execute(fl[0].getPath());
+                }
             }
 
         }else{
@@ -456,13 +462,14 @@ public class Main
                     dialog.dismiss();
                     if ( mProcAfterSaveConfirm!=null ){
                         mProcAfterSaveConfirm.run();
-                        mProcAfterSaveConfirm = null;
                     }
+                    mProcAfterSaveConfirm = null;
                 }
             })
             .setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
+                    mProcAfterSaveConfirm = null;
                 }
             })
             .show();
@@ -519,7 +526,44 @@ public class Main
     {
         Intent intent = new Intent( this , FileSelectorActivity.class );
         intent.putExtra(FileSelectorActivity.INTENT_MODE, FileSelectorActivity.MODE_SAVE);
-        intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH, mInstanceState.filename);
+        String filename = mInstanceState.filename;
+        if ( filename == null || filename.length()==0 ){
+            // if file is unnamed. then use 1st line of text as filename.
+            Editable text = mEditor.getText();
+            int namelength = Math.min( text.length() , 20 );
+
+            CharSequence firstline = text.subSequence(0, namelength);
+            int length = firstline.length();
+            StringBuilder newline = new StringBuilder();
+            newline.insert(0, mSettings.defaultdirectory );
+            newline.append( '/' );
+            boolean named=false;
+            for(int i=0;i<length;i++ ){
+                char c = firstline.charAt(i);
+                if ( c < ' ' ){
+                    break;
+                }
+                if (   c!= '\\' &&
+                       c!= '/' &&
+                       c!= ':' &&
+                       c!= '*' &&
+                       c!= '?' &&
+                       c!= '\"' &&
+                       c!= '<' &&
+                       c!= '>' )
+                {
+                    newline.append(c);
+                    named = true;
+                }
+            }
+            if ( !named ){
+                newline.append("untitled");
+            }
+            newline.append(".txt");
+            filename = newline.toString();
+        }
+
+        intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH, filename);
         startActivityForResult(intent, REQUESTCODE_SAVEAS);
     }
 
@@ -726,6 +770,8 @@ public class Main
             File[] fl = getHistory();
             if ( fl!=null ){
                 intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH , fl[0].getPath() );
+            }else{
+                intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH , mSettings.defaultdirectory );
             }
 
             startActivityForResult(intent, REQUESTCODE_OPEN);
@@ -1186,11 +1232,27 @@ public class Main
     {
         mSettings = SettingsActivity.readSettings(Main.this);
         mEditor.setNameDirectIntent(mSettings.intentname);
-
         mEditor.setTypeface(mSettings.fontface);
         mEditor.setTextSize(mSettings.fontsize);
+        mEditor.setShortcutMetaKey(
+                (mSettings.shortcutaltleft?KeyEvent.META_ALT_LEFT_ON:0)
+                | (mSettings.shortcutaltright?KeyEvent.META_ALT_RIGHT_ON:0)
+                | (mSettings.shortcutctrl?8:0)            // ctrl key on Dynabook AZ
+        );
+        mEditor.setHorizontallyScrolling(!mSettings.wordwrap);
 
-        FileSelectorActivity.setsDefaultDirectory(mSettings.defaultdirectory);
+        mEditor.setTextColor( mSettings.textcolor );
+        mEditor.setHighlightColor( mSettings.highlightcolor );
+
+        if ( SettingsActivity.THEME_DEFAULT.equals(mSettings.theme) ){
+            mEditor.setBackgroundResource(R.drawable.textfield_default);
+        }else if ( SettingsActivity.THEME_BLACK.equals(mSettings.theme) ){
+            mEditor.setBackgroundResource(R.drawable.textfield_black);
+        }
+
+        mEditor.enableUnderline( mSettings.underline );
+        mEditor.setUnderlineColor( mSettings.underlinecolor );
+
     }
 
 }
