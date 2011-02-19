@@ -3,11 +3,13 @@ package jp.sblo.pandora.jota;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 
 
@@ -41,15 +43,19 @@ public class Search
             if ( !regexp ){
                 patternText = escapeMetaChar(patternText);
             }
+            try{
+                if ( ignoreCase ){
+                    mPattern = Pattern.compile(patternText, Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE|Pattern.MULTILINE );
+                }else{
+                    mPattern = Pattern.compile(patternText);
+                }
 
-            if ( ignoreCase ){
-                mPattern = Pattern.compile(patternText, Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE|Pattern.MULTILINE );
-            }else{
-                mPattern = Pattern.compile(patternText);
+                mTask = new SearchTask();
+                mTask.execute();
             }
-
-            mTask = new SearchTask();
-            mTask.execute();
+            catch( PatternSyntaxException e ){
+                Toast.makeText(parent, R.string.toast_syntax_error, Toast.LENGTH_LONG).show();
+            }
         }
     }
 

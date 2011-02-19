@@ -71,6 +71,9 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
 
             InputStream is;
             try {
+                mCharset = "utf-8";
+                mLinebreak = LineBreak.LF;
+
                 is = new BufferedInputStream( new FileInputStream( f ) , 65536 );
                 is.mark(65536);
 

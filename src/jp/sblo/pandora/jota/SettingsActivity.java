@@ -398,7 +398,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             int mill = (int)(System.currentTimeMillis() / 1000 / 60 /60 );
             it.setData(Uri.parse("mailto:" + getString(R.string.label_mail_summary)
                     + "?subject=Jota Text Editor(" + mill
-                    + ")&amp;body=(write your question here)(in English or in Japanese"));
+                    + ")&body=(write%20your%20question%20here)(in%20English%20or%20in%20Japanese.)%0a%0a%0a%0a%0aIf%20you%20don't%20mind,%20answer%20below%20questions.%0a"
+                    + "Your%20language(or%20character%20code):%0aYour%20device:\nAverage%20file%20size%20of%20your%20files:%0a"));
             try{
                 startActivity(it);
             }catch(Exception e){}
@@ -471,6 +472,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 editor.putInt( KEY_BACKGROUND, BACKGROUND_BLACK );
             }
             editor.putInt(KEY_HIGHLIGHT_COLOR, getTextColorHighlight(SettingsActivity.this) );
+            editor.putInt( KEY_UNDERLINE_COLOR, UNDERLINE_COLOR );
             editor.commit();
             return true;
         }

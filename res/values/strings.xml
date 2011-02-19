@@ -114,5 +114,6 @@
     <string name="label_open_last_file" >Remember last file</string>
     <string name="label_open_last_file_summary" >If you start Jota from Icon, automatically open the file you opend last time.</string>
     <string name="label_word_wrap" >Word wrap</string>
+    <string name="toast_syntax_error" >Syntax error.</string>
 
 </resources>

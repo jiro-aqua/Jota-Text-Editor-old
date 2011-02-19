@@ -115,6 +115,7 @@
     <string name="label_open_last_file" >前回のファイルを開く</string>
     <string name="label_open_last_file_summary" >アイコンから起動した時に、前回開いていたファイルを自動的に開きます。</string>
     <string name="label_word_wrap" >行を画面端で折り返す</string>
+    <string name="toast_syntax_error" >正規表現パターンの構文エラーです</string>
 
 
 </resources>

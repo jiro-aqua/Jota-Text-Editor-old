@@ -46,6 +46,12 @@ public class UndoBuffer implements Parcelable {
             String[] strs = in.readStringArray();
             item.oldtext = strs[0];
             item.newtext = strs[1];
+            if ( item.newtext == null ){
+                item.newtext = "";
+            }
+            if ( item.oldtext == null ){
+                item.oldtext = "";
+            }
             mBuffer.add(item);
         }
     }
