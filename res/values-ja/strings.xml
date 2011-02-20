@@ -3,7 +3,6 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Jota Text Editor</string>
     <string name="hint_message">Jota Text Editor</string>
-
     <string name="selectAll" >"すべて選択"</string>
     <string name="selectText" >"テキストを選択"</string>
     <string name="stopSelectingText" >"テキストの選択を終了"</string>
@@ -63,7 +62,7 @@
     <string name="button_replace_all">全置換</string>
     <string name="button_skip">スキップ</string>
 
-    <string name="about_url">file:///android_asset/about.html</string>
+    <string name="about_url">file:///android_asset/aboutja.html</string>
     <string name="about_title">Jota Text Editorについて</string>
     <string name="help_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor-ja</string>
     <string name="no_reciever_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor-ja/extension</string>
@@ -125,4 +124,3 @@
     <string name="label_customize_shortcut" >ショートカット設定</string>
 
 </resources>
-
