@@ -6,11 +6,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jp.sblo.pandora.jota.Search.OnSearchFinishedListener;
 import jp.sblo.pandora.jota.Search.Record;
 import jp.sblo.pandora.jota.TextLoadTask.OnFileLoadListener;
 import jp.sblo.pandora.jota.text.JotaDocumentWatcher;
+import jp.sblo.pandora.jota.text.Layout;
 import jp.sblo.pandora.jota.text.SpannableStringBuilder;
 import jp.sblo.pandora.jota.text.EditText.ShortcutListener;
 import android.app.Activity;
@@ -76,7 +79,7 @@ public class Main
 
     private TextLoadTask mTask;
 //    private String mSearchWord;
-//    private int mLine;
+    private int mLine;
 
     private Intent mReservedIntent;
     private int mReservedRequestCode;
@@ -199,9 +202,15 @@ public class Main
         if (savedInstanceState==null){
             Intent it = getIntent();
             if (it!=null && Intent.ACTION_VIEW.equals(it.getAction())){
+                mLine = -1;
                 Uri data = it.getData();
-                String path = Uri.decode( data.getSchemeSpecificPart().substring(2) );      // skip "//"
-
+                String path = Uri.decode( data.getEncodedPath() );
+                String lineparam = data.getQueryParameter("line");
+                if ( lineparam != null ){
+                    try{
+                        mLine = Integer.parseInt( lineparam );
+                    }catch( Exception e){}
+                }
 //                mSearchWord = null;
 //                mLine = -1;
 //
@@ -211,7 +220,7 @@ public class Main
 //                    mLine = extra.getInt("line");
 //                }
 
-                mTask = new TextLoadTask( this , this );
+                mTask = new TextLoadTask( this , this , mLine);
                 mTask.execute(path);
             }else if (it!=null && Intent.ACTION_SEND.equals(it.getAction())){
                 Bundle extras = it.getExtras();
@@ -222,7 +231,7 @@ public class Main
             }else if ( mSettings.rememberlastfile ) {
                 File[] fl = getHistory();
                 if ( fl!=null ){
-                    mTask = new TextLoadTask( this , this );
+                    mTask = new TextLoadTask( this , this , -1);
                     mTask.execute(fl[0].getPath());
                 }
             }
@@ -250,7 +259,7 @@ public class Main
 
     public void onPreFileLoad() {
     }
-    public void onFileLoaded(SpannableStringBuilder result , String filename, String charset, int linebreak) {
+    public void onFileLoaded(SpannableStringBuilder result , String filename, String charset, int linebreak , int offset ) {
         mTask = null;
         if ( result != null ){
             mInstanceState.filename = filename;
@@ -265,33 +274,45 @@ public class Main
             SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
             String sel = sp.getString(filename, "-1,-1");
 
-            int selStart = -1;
-            int selEnd = -1;
-            if ( sel != null ){
-                String [] sels = sel.split(",");
-                if ( sels.length >= 2 ){
-                    try{
-                        selStart = Integer.parseInt(sels[0]);
-                        selEnd = Integer.parseInt(sels[1]);
+            if ( offset != -1 ){
+                try{
+                    mEditor.setSelection(offset);
+                    mEditor.centerCursor();
+                }
+                catch(Exception e){
+                    offset = -1;
+                }
+            }
+            if ( offset == -1 ){
+                int selStart = -1;
+                int selEnd = -1;
+                if ( sel != null ){
+                    String [] sels = sel.split(",");
+                    if ( sels.length >= 2 ){
+                        try{
+                            selStart = Integer.parseInt(sels[0]);
+                            selEnd = Integer.parseInt(sels[1]);
 
-                        if ( selStart >=0 && selEnd >= 0 ){
-                            int len = mEditor.length();
-                            if ( selStart >= len ){
-                                selStart = len-1;
+                            if ( selStart >=0 && selEnd >= 0 ){
+                                int len = mEditor.length();
+                                if ( selStart >= len ){
+                                    selStart = len-1;
+                                }
+                                if ( selEnd >= len ){
+                                    selEnd = len-1;
+                                }
+                                mEditor.setSelection(selStart,selEnd);
+                                mEditor.centerCursor();
                             }
-                            if ( selEnd >= len ){
-                                selEnd = len-1;
-                            }
-                            mEditor.setSelection(selStart,selEnd);
-                            mEditor.centerCursor();
+
+                        }catch(Exception e){
+                            selStart = -1;
+                            selEnd = -1;
                         }
-
-                    }catch(Exception e){
-                        selStart = -1;
-                        selEnd = -1;
                     }
                 }
             }
+            mLine = -1;
             saveHistory();
 
         }
@@ -345,11 +366,31 @@ public class Main
         super.onNewIntent(intent);
 
         if (intent!=null && Intent.ACTION_VIEW.equals(intent.getAction())){
+            mLine = -1;
             Uri data = intent.getData();
-            mNewFilename = Uri.decode( data.getSchemeSpecificPart().substring(2) );      // skip "//"
+            mNewFilename = Uri.decode(  data.getEncodedPath()  );
+            String lineparam = data.getQueryParameter("line");
+            if ( lineparam != null ){
+                try{
+                    mLine = Integer.parseInt( lineparam );
+                }catch( Exception e){}
+            }
 
             if ( !mNewFilename.equals(mInstanceState.filename)){
                 confirmSave(mProcReopen);
+            }else{
+                if ( mLine > 0  ){
+                    Editable text = mEditor.getText();
+                    int offset = getOffsetOfLine(text , mLine);
+                    if ( offset < 0){
+                        offset = 0;
+                    }
+                    if ( offset > text.length()-1 ){
+                        offset = text.length()-1;
+                    }
+                    mEditor.setSelection(offset);
+                    mEditor.centerCursor();
+                }
             }
 
         }else if (intent!=null && Intent.ACTION_SEND.equals(intent.getAction())){
@@ -368,6 +409,22 @@ public class Main
             }
         }
 
+    }
+
+    private int getOffsetOfLine( CharSequence text , int line)
+    {
+        int pos= 0;
+        line = line -1;
+        Pattern pattern = Pattern.compile("\n");
+        Matcher m = pattern.matcher( text );
+        for( int i=0;i<line;i++ ){
+            if ( m.find() ){
+                pos = m.start() + 1;
+            }else{
+                break;
+            }
+        }
+        return pos;
     }
 
 
@@ -515,7 +572,7 @@ public class Main
                     onChanged();
                 }
             })
-            .execute(filename , charset , lb , text );
+            .execute(filename , charset , lb , text , mSettings.createbackup?"true":"false" );
         }else{
             saveAs();
         }
@@ -574,7 +631,7 @@ public class Main
                 case REQUESTCODE_OPEN:{
                     Bundle extras = data.getExtras();
                     String path = extras.getString(FileSelectorActivity.INTENT_FILEPATH);
-                    mTask = new TextLoadTask( this , this );
+                    mTask = new TextLoadTask( this , this , -1);
                     mTask.execute(path);
                 }
                 break;
@@ -715,6 +772,10 @@ public class Main
                 mProcSearchByIntent.run();
             }
             return true;
+            case R.id.menu_file_view:{
+                confirmSave(mProcViewByIntent);
+            }
+            return true;
             case R.id.menu_share:{
                 mProcShare.run();
             }
@@ -804,7 +865,7 @@ public class Main
 
     private Runnable mProcReopen =  new Runnable() {
         public void run() {
-            mTask = new TextLoadTask( Main.this , Main.this );
+            mTask = new TextLoadTask( Main.this , Main.this , mLine);
             mTask.execute(mNewFilename);
             mNewFilename = null;
         }
@@ -813,8 +874,7 @@ public class Main
 
 
 
-    abstract class PostProcess implements Runnable , DialogInterface.OnClickListener {
-    }
+    abstract class PostProcess implements Runnable , DialogInterface.OnClickListener {}
 
     private PostProcess mProcHistory =  new PostProcess() {
 
@@ -834,7 +894,7 @@ public class Main
 
         public void onClick(DialogInterface dialog, int which) {
             CharSequence path = fl[which].getPath();
-            mTask = new TextLoadTask( Main.this,Main.this );
+            mTask = new TextLoadTask( Main.this,Main.this ,-1);
             mTask.execute(path.toString());
         }
 
@@ -1045,6 +1105,33 @@ public class Main
     };
 
 
+    abstract class ViewByIntent implements Runnable {
+        abstract public void setIntent(Intent i);
+    }
+
+    private ViewByIntent mProcViewByIntent =  new ViewByIntent() {
+        Intent mIntent=null;
+
+        public void run() {
+            if ( mIntent == null ){
+                mIntent = new Intent();
+                mIntent.setAction(Intent.ACTION_VIEW);
+            }
+            mIntent.setDataAndType(Uri.parse("file://" + mInstanceState.filename ), "text/plain");
+            try{
+                startActivity(mIntent);
+            } catch (ActivityNotFoundException e) {
+            }
+            mIntent = null;
+        }
+
+        public void setIntent(Intent i)
+        {
+            mIntent = i;
+        }
+
+    };
+
     private Runnable mProcShare =  new Runnable() {
         public void run() {
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -1120,6 +1207,9 @@ public class Main
                         intent.putExtra("replace_key", "");
                     }
                     startActivityForResult(intent,REQUESTCODE_MUSHROOM);
+                }else if ( intent.getAction().equals( Intent.ACTION_VIEW )){
+                    mProcViewByIntent.setIntent(intent);
+                    confirmSave(mProcViewByIntent);
                 }
             }
         }

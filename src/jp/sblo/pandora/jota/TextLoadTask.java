@@ -22,25 +22,27 @@ import android.os.AsyncTask;
 public     class TextLoadTask extends AsyncTask<String, Integer, SpannableStringBuilder>{
 
     OnFileLoadListener mFileLoadListener=null;
-//    private int mLineToChar=-1;
+    private int mLineToChar=-1;
 
     private String mFilename;
     private String mCharset;
     private int mLinebreak;
     private ProgressDialog mProgressDialog;
     private Activity mActivity;
+    private int mLine;
 
     public interface OnFileLoadListener
     {
         void onPreFileLoad();
-        void onFileLoaded( SpannableStringBuilder result , String filename , String charset , int linebreak );
+        void onFileLoaded( SpannableStringBuilder result , String filename , String charset , int linebreak , int mOffset );
     }
 
 
-    public TextLoadTask( Activity activity , OnFileLoadListener postProc)
+    public TextLoadTask( Activity activity , OnFileLoadListener postProc , int initline )
     {
         mFileLoadListener = postProc;
         mActivity = activity;
+        mLine = initline;
     }
 
     @Override
@@ -168,9 +170,9 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
                     String text;
                     while(  ( text = br.readLine() )!=null ){
                         line++;
-//                        if ( line== mLine ){
-//                            mLineToChar = result.length();
-//                        }
+                        if ( line== mLine ){
+                            mLineToChar = result.length();
+                        }
                         result.append( text );
                         result.append( '\n' );
                     }
@@ -193,7 +195,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
         mProgressDialog.dismiss();
         mProgressDialog = null;
         if ( mFileLoadListener!= null ){
-            mFileLoadListener.onFileLoaded( result, mFilename, mCharset, mLinebreak);
+            mFileLoadListener.onFileLoaded( result, mFilename, mCharset, mLinebreak , mLineToChar );
         }
     }
 }

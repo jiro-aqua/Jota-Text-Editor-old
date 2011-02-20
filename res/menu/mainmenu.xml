@@ -26,6 +26,10 @@
         <item android:id="@+id/menu_file_new" 		
 		android:title="@string/menu_file_new"		
 	 />
+        <item android:id="@+id/menu_file_view" 		
+		android:title="@string/menu_file_view"		
+		android:alphabeticShortcut = "U"
+	 />
         <item android:id="@+id/menu_file_charcode" 
 		android:title="@string/menu_file_charcode" 
 	/>

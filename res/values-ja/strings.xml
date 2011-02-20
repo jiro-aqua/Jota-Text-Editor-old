@@ -41,6 +41,7 @@
     <string name="menu_file_charcode" >文字コード...</string>
     <string name="menu_file_lbcode" >改行コード...</string>
     <string name="menu_file_quit" >終了</string>
+    <string name="menu_file_view" >他のアプリで開く</string>
     <string name="menu_edit_undo" >やり直し</string>
     <string name="menu_search_byintent" >外部アプリで検索</string>
     <string name="menu_share" >共有</string>
@@ -102,6 +103,7 @@
     <string name="label_di_share" >共有</string>
     <string name="label_di_search" >検索</string>
     <string name="label_di_mushroom" >マッシュルーム</string>
+    <string name="label_di_view" >開く</string>
 
     <string name="confirm_overwrite" >そのファイルは既に存在します。\n上書きしますか？</string>
     <string name="label_file" >ファイル</string>
@@ -116,7 +118,8 @@
     <string name="label_open_last_file_summary" >アイコンから起動した時に、前回開いていたファイルを自動的に開きます。</string>
     <string name="label_word_wrap" >行を画面端で折り返す</string>
     <string name="toast_syntax_error" >正規表現パターンの構文エラーです</string>
-
+    <string name="label_create_backup" >バックアップファイル</string>
+    <string name="summary_create_backup" >「ファイル名~」という名前で、バックアップファイルを作成します</string>
 
 </resources>
 

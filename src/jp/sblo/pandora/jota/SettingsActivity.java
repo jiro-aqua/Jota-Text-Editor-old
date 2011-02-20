@@ -50,12 +50,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_THEME                   = "THEME";
     private static final String KEY_UNDERLINE               = "UNDERLINE";
     private static final String KEY_UNDERLINE_COLOR         = "UNDERLINE_COLOR";
+    private static final String KEY_CRETAE_BACKUP           = "CRETAE_BACKUP";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
 	public static final String  DI_SHARE = "share";
 	public static final String  DI_SEARCH = "search";
-	public static final String  DI_MUSHROOM = "mushroom";
+    public static final String  DI_MUSHROOM = "mushroom";
+    public static final String  DI_VIEW = "view";
 
     public static final String  THEME_DEFAULT = "default";
     public static final String  THEME_BLACK   = "black";
@@ -70,6 +72,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final int REQUEST_CODE_PICK_SEARCH = 2;
     private static final int REQUEST_CODE_PICK_MUSHROOM = 3;
     private static final int REQUEST_CODE_DEFAULT_DIR = 4;
+    private static final int REQUEST_CODE_PICK_VIEW = 5;
 
 	private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
@@ -220,6 +223,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setSummary(R.string.label_open_last_file_summary);
                     cat.addPreference(pr);
                 }
+                {
+                    // create backup file
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_CRETAE_BACKUP);
+                    pr.setTitle(R.string.label_create_backup);
+                    pr.setSummary(R.string.summary_create_backup);
+                    cat.addPreference(pr);
+                }
             }
 
             {
@@ -238,12 +249,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                             getResources().getString(R.string.label_di_share),
                             getResources().getString(R.string.label_di_search),
                             getResources().getString(R.string.label_di_mushroom),
+                            getResources().getString(R.string.label_di_view),
                     });
 
                     final String[] values = new String[] {
                             DI_SHARE,
                             DI_SEARCH,
                             DI_MUSHROOM,
+                            DI_VIEW,
                     };
                     pr.setEntryValues(values);
 
@@ -329,7 +342,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             {
                 case REQUEST_CODE_PICK_SHARE:
                 case REQUEST_CODE_PICK_SEARCH:
-                case REQUEST_CODE_PICK_MUSHROOM:{
+                case REQUEST_CODE_PICK_MUSHROOM:
+                case REQUEST_CODE_PICK_VIEW:
+                {
                     final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
                     Editor editor = sp.edit();
                     editor.putString(KEY_DIRECT_INTENT_INTENT, data.toUri(0) );
@@ -398,8 +413,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             int mill = (int)(System.currentTimeMillis() / 1000 / 60 /60 );
             it.setData(Uri.parse("mailto:" + getString(R.string.label_mail_summary)
                     + "?subject=Jota Text Editor(" + mill
-                    + ")&body=(write%20your%20question%20here)(in%20English%20or%20in%20Japanese.)%0a%0a%0a%0a%0aIf%20you%20don't%20mind,%20answer%20below%20questions.%0a"
-                    + "Your%20language(or%20character%20code):%0aYour%20device:\nAverage%20file%20size%20of%20your%20files:%0a"));
+                    + ")"));
             try{
                 startActivity(it);
             }catch(Exception e){}
@@ -447,6 +461,11 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 mainIntent.addCategory("com.adamrocker.android.simeji.REPLACE");
 
                 req = REQUEST_CODE_PICK_MUSHROOM;
+            } else if (newValue.equals( DI_VIEW )) {
+                mainIntent = new Intent(Intent.ACTION_VIEW);
+                mainIntent.setDataAndType(Uri.parse("file://"), "text/plain");
+
+                req = REQUEST_CODE_PICK_VIEW;
             }
             if ( mainIntent != null ){
                 Intent pickIntent = new Intent(SettingsActivity.this,ActivityPicker.class);
@@ -580,6 +599,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         int highlightcolor;
         int underlinecolor;
         boolean underline;
+        boolean createbackup;
 	}
 
 	private static Settings sSettings;
@@ -623,6 +643,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.backgroundcolor = sp.getInt(KEY_BACKGROUND, 0);
         ret.underlinecolor =  sp.getInt(KEY_UNDERLINE_COLOR, 0);
         ret.underline = sp.getBoolean(KEY_UNDERLINE, true);
+        ret.createbackup = sp.getBoolean(KEY_CRETAE_BACKUP, true);
         sSettings = ret;
         return ret;
 	}
@@ -667,6 +688,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putInt( KEY_BACKGROUND , BACKGROUND_DEFAULT );
                     editor.putBoolean(KEY_UNDERLINE, true);
                     editor.putInt( KEY_UNDERLINE_COLOR, UNDERLINE_COLOR );
+                }
+                if ( lastversion < 5 ){
+                    editor.putBoolean(KEY_CRETAE_BACKUP, true);
                 }
 				editor.commit();
 			}

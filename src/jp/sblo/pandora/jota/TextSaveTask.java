@@ -47,15 +47,20 @@ public     class TextSaveTask extends AsyncTask<String, Integer, String>{
         String charset = params[1] ;
         String lb = params[2] ;
         String text = params[3];
+        boolean createBackup = "true".equals(params[4]);
 
         File f = new File(filename);
 
         if ( f.exists() ){
-            File backup = new File( filename + "~" );
-            if ( backup.exists()) {
-                backup.delete();
+            if ( createBackup ){
+                File backup = new File( filename + "~" );
+                if ( backup.exists()) {
+                    backup.delete();
+                }
+                f.renameTo(backup);
+            }else{
+                f.delete();
             }
-            f.renameTo(backup);
         }
 
         try{
