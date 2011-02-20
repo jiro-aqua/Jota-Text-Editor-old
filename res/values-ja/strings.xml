@@ -65,7 +65,8 @@
 
     <string name="about_url">file:///android_asset/about.html</string>
     <string name="about_title">Jota Text Editorについて</string>
-    <string name="help_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor</string>
+    <string name="help_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor-ja</string>
+    <string name="no_reciever_url">http://sites.google.com/site/aquamarinepandora/home/jota-text-editor-ja/extension</string>
 
     <string name="spinner_message">処理中...</string>
 
@@ -120,6 +121,8 @@
     <string name="toast_syntax_error" >正規表現パターンの構文エラーです</string>
     <string name="label_create_backup" >バックアップファイル</string>
     <string name="summary_create_backup" >「ファイル名~」という名前で、バックアップファイルを作成します</string>
+
+    <string name="label_customize_shortcut" >ショートカット設定</string>
 
 </resources>
 

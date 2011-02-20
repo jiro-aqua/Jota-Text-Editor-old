@@ -1,22 +1,30 @@
 package jp.sblo.pandora.jota.text;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 import jp.sblo.pandora.jota.R;
 import android.content.Context;
 import android.text.Editable;
 import android.text.Spannable;
-import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
-//import android.util.Log;
 import android.view.KeyEvent;
 
 public class EditText extends TextView{
 
+    public final static int FUNCTION_NONE=-1;
+    public final static int FUNCTION_SELECT_ALL=0;
+    public final static int FUNCTION_UNDO=1;
+    public final static int FUNCTION_COPY=2;
+    public final static int FUNCTION_CUT=3;
+    public final static int FUNCTION_PASTE=4;
+    public final static int FUNCTION_DIRECTINTENT=5;
+    public final static int FUNCTION_SAVE=6;
 
     private JotaTextWatcher mTextWatcher;
     private WeakReference<ShortcutListener> mShortcutListener;
     private int mShortcutMetaKey = 0;
+    private HashMap<Integer,ShortcutSettings> mShortcuts;;
 
     public EditText(Context context) {
         this(context, null);
@@ -145,27 +153,47 @@ public class EditText extends TextView{
         return super.dispatchKeyEventPreIme(event);
     }
 
-    public boolean doShortcut(int keycode , KeyEvent event){
-        switch(keycode){
-            case KeyEvent.KEYCODE_A:
-            case KeyEvent.KEYCODE_X:
-            case KeyEvent.KEYCODE_C:
-            case KeyEvent.KEYCODE_Z:
-                return onKeyShortcut( keycode , event );
-            case KeyEvent.KEYCODE_V:
-                return onKeyShortcut( keycode , event );
-            case KeyEvent.KEYCODE_S:
-            case KeyEvent.KEYCODE_D:
-                ShortcutListener sl = mShortcutListener.get();
-                if ( sl!=null ){
-                    return sl.onCommand(keycode);
-                }
-                break;
+    public boolean doShortcut(int keycode, KeyEvent event) {
+
+        ShortcutSettings ss = mShortcuts.get(keycode);
+
+        if (ss != null && ss.enabled) {
+            ShortcutListener sl = mShortcutListener.get();
+
+            switch (ss.function) {
+                case FUNCTION_SELECT_ALL:
+                    return onKeyShortcut(KeyEvent.KEYCODE_A, event);
+
+                case FUNCTION_CUT:
+                    return onKeyShortcut(KeyEvent.KEYCODE_X, event);
+
+                case FUNCTION_COPY:
+                    return onKeyShortcut(KeyEvent.KEYCODE_C, event);
+
+                case FUNCTION_UNDO:
+                    return onKeyShortcut(KeyEvent.KEYCODE_Z, event);
+
+                case FUNCTION_PASTE:
+                    return onKeyShortcut(KeyEvent.KEYCODE_V, event);
+
+                case FUNCTION_SAVE:
+                    if (sl != null) {
+                        return sl.onCommand(KeyEvent.KEYCODE_S);
+                    }
+                    break;
+
+                case FUNCTION_DIRECTINTENT:
+                    if (sl != null) {
+                        return sl.onCommand(KeyEvent.KEYCODE_D);
+                    }
+                    break;
+
+                case FUNCTION_NONE:
+                    return false;
             }
+        }
         return false;
     }
-
-
 
     public void setDocumentChangedListener( JotaDocumentWatcher watcher )
     {
@@ -201,4 +229,19 @@ public class EditText extends TextView{
         this.mShortcutMetaKey = metakey;
     }
 
+
+    public static class ShortcutSettings {
+        boolean enabled;
+        int function;
+
+        public ShortcutSettings( boolean e , int f){
+            enabled=e;
+            function=f;
+        }
+    };
+
+    public void setShortcutSettings( HashMap<Integer,ShortcutSettings> s )
+    {
+        mShortcuts = s;
+    }
 }

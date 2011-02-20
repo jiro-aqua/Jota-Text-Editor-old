@@ -98,10 +98,15 @@ public class ActivityPicker extends AlertActivity implements
 
         // Build list adapter of pickable items
         List<PickAdapter.Item> items = getItems();
-        mAdapter = new PickAdapter(this, items);
-        params.mAdapter = mAdapter;
+        if ( items != null ){
+            mAdapter = new PickAdapter(this, items);
+            params.mAdapter = mAdapter;
 
-        setupAlert();
+            setupAlert();
+        }else{
+            setResult(Activity.RESULT_FIRST_USER);
+            finish();
+        }
     }
 
     /**
@@ -150,6 +155,7 @@ public class ActivityPicker extends AlertActivity implements
             intent.getParcelableArrayListExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE);
 
         if (labels != null && icons != null && labels.size() == icons.size()) {
+
             for (int i = 0; i < labels.size(); i++) {
                 String label = labels.get(i);
                 Drawable icon = null;
@@ -174,6 +180,9 @@ public class ActivityPicker extends AlertActivity implements
             putIntentItems(mBaseIntent, items);
         }
 
+        if ( items.size() == 0 ){
+            return null;
+        }
         return items;
     }
 

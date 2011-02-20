@@ -680,6 +680,15 @@ public class Main
                 break;
 
             }
+        }else if ( resultCode == RESULT_FIRST_USER ){
+            switch( requestCode ){
+                case REQUESTCODE_APPCHOOSER:{
+                    Intent intent = new Intent( Intent.ACTION_VIEW , Uri.parse( getString( R.string.no_reciever_url) ));
+                    try{
+                        startActivity(intent);
+                    }catch(Exception e){}
+                }
+            }
         }
         mReservedIntent = null;
         mReservedRequestCode = 0;
@@ -820,6 +829,15 @@ public class Main
 
     private Runnable mProcQuit =  new Runnable() {
         public void run() {
+            Intent intent = getIntent();
+            if ( intent != null ){
+                if ( Intent.ACTION_GET_CONTENT.equals(intent.getAction())){
+                    if ( mInstanceState.filename != null ){
+                        intent.setData(Uri.parse("file://"+mInstanceState.filename));
+                        setResult( RESULT_OK ,intent );
+                    }
+                }
+            }
             Main.this.finish();
         }
     };
@@ -1342,7 +1360,7 @@ public class Main
 
         mEditor.enableUnderline( mSettings.underline );
         mEditor.setUnderlineColor( mSettings.underlinecolor );
-
+        mEditor.setShortcutSettings( mSettings.shortcuts );
     }
 
 }

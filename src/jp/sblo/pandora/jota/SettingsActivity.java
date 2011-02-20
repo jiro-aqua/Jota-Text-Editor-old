@@ -1,11 +1,9 @@
 package jp.sblo.pandora.jota;
 
 import java.net.URISyntaxException;
-import java.io.File;
+import java.util.HashMap;
 
-import com.android.internal.telephony.gsm.stk.TextColor;
-
-
+import jp.sblo.pandora.jota.text.EditText.ShortcutSettings;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -288,6 +286,12 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setTitle(R.string.label_shortcut_ctrl);
                     category.addPreference(pr);
                 }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_customize_shortcut);
+                    pr.setOnPreferenceClickListener(mProcShortcutSettings);
+                    category.addPreference(pr);
+                }
             }
 
             {
@@ -359,6 +363,15 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putString(KEY_DEFAULT_FOLDER, path );
                     editor.commit();
                     break;
+                }
+            }
+        }else if ( resultCode == RESULT_FIRST_USER ){
+            switch( requestCode ){
+                case REQUEST_CODE_PICK_MUSHROOM:{
+                    Intent intent = new Intent( Intent.ACTION_VIEW , Uri.parse( getString( R.string.no_reciever_url) ));
+                    try{
+                        startActivity(intent);
+                    }catch(Exception e){}
                 }
             }
         }
@@ -575,6 +588,17 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     };
 
+    private OnPreferenceClickListener mProcShortcutSettings = new OnPreferenceClickListener() {
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this , SettingsShortcutActivity.class );
+            startActivity(intent);
+            return true;
+        }
+    };
+
+
+
+
     public boolean onPreferenceChange(Preference preference, Object newValue) {
 		return false;
 	}
@@ -600,6 +624,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         int underlinecolor;
         boolean underline;
         boolean createbackup;
+        HashMap<Integer,ShortcutSettings> shortcuts;
 	}
 
 	private static Settings sSettings;
@@ -644,6 +669,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.underlinecolor =  sp.getInt(KEY_UNDERLINE_COLOR, 0);
         ret.underline = sp.getBoolean(KEY_UNDERLINE, true);
         ret.createbackup = sp.getBoolean(KEY_CRETAE_BACKUP, true);
+        ret.shortcuts = SettingsShortcutActivity.loadShortcuts(ctx);
         sSettings = ret;
         return ret;
 	}
@@ -693,6 +719,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putBoolean(KEY_CRETAE_BACKUP, true);
                 }
 				editor.commit();
+                SettingsShortcutActivity.writeDefaultShortcuts(ctx);
 			}
 
 		} catch (NameNotFoundException e) {
