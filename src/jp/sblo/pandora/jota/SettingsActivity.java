@@ -3,6 +3,8 @@ package jp.sblo.pandora.jota;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
+import org.apache.xml.utils.res.IntArrayWrapper;
+
 import jp.sblo.pandora.jota.text.EditText.ShortcutSettings;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
@@ -26,7 +29,7 @@ import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 
-public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener,OnSharedPreferenceChangeListener {
 
     private static final String KEY_FONT                    = "FONT";
     private static final String KEY_FONT_SIZE               = "FONT_SIZE";
@@ -39,6 +42,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_IGNORE_CASE             = "IGNORE_CASE";
     private static final String KEY_DIRECT_INTENT           = "DIRECT_INTENT";
     private static final String KEY_DIRECT_INTENT_INTENT    = "DIRECT_INTENT_INTENT";
+    private static final String KEY_DIRECT_INTENT2          = "DIRECT_INTENT2";
+    private static final String KEY_DIRECT_INTENT_INTENT2   = "DIRECT_INTENT_INTENT2";
     private static final String KEY_DEFAULT_FOLDER          = "DEFAULT_FOLDER";
     private static final String KEY_SHORTCUT_ALT_LEFT       = "SHORTCUT_ALT_LEFT";
     private static final String KEY_SHORTCUT_ALT_RIGHT      = "SHORTCUT_ALT_RIGHT";
@@ -49,9 +54,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_UNDERLINE               = "UNDERLINE";
     private static final String KEY_UNDERLINE_COLOR         = "UNDERLINE_COLOR";
     private static final String KEY_CRETAE_BACKUP           = "CRETAE_BACKUP";
+    private static final String KEY_CHARSET_OPEN            = "CHARSET_OPEN";
+    private static final String KEY_CHARSET_SAVE            = "CHARSET_SAVE";
+    private static final String KEY_LINEBREAK_SAVE          = "LINEBREAK_SAVE";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
+    public static final String  DI_INSERT = "insert";
 	public static final String  DI_SHARE = "share";
 	public static final String  DI_SEARCH = "search";
     public static final String  DI_MUSHROOM = "mushroom";
@@ -71,9 +80,21 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final int REQUEST_CODE_PICK_MUSHROOM = 3;
     private static final int REQUEST_CODE_DEFAULT_DIR = 4;
     private static final int REQUEST_CODE_PICK_VIEW = 5;
+    private static final int REQUEST_CODE_PICK_SHARE2 = 6;
+    private static final int REQUEST_CODE_PICK_SEARCH2 = 7;
+    private static final int REQUEST_CODE_PICK_MUSHROOM2 = 8;
+    private static final int REQUEST_CODE_PICK_VIEW2 = 9;
 
 	private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
+
+    private ListPreference mPrefFont;
+    private ListPreference mPrefFontSize;
+	private ListPreference mPrefCharsetOpen;
+	private ListPreference mPrefCharsetSave;
+	private ListPreference mPrefLinebreakSave;
+    private ListPreference mPrefDirectIntent;
+    private ListPreference mPrefInsert;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +103,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		mPm = getPreferenceManager();
 
 		createDictionaryPreference();
-
 	}
 
 
@@ -127,6 +147,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setEntryValues( new CharSequence[] { "NORMAL" , "MONOSPACE" } );
 //                    pr.setSummary(sp.getString(pr.getKey(), ""));
                     catfont.addPreference(pr);
+                    mPrefFont = pr;
                 }
                 {
                     // FontSize
@@ -137,6 +158,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setEntries(new String[]     {"8", "10", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
                     pr.setEntryValues(new String[] {"8", "10", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
                     catfont.addPreference(pr);
+                    mPrefFontSize = pr;
                 }
             }
             {
@@ -229,8 +251,45 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setSummary(R.string.summary_create_backup);
                     cat.addPreference(pr);
                 }
+                {
+                    // Characterset for Open
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_CHARSET_OPEN );
+                    pr.setTitle(R.string.label_charset_open);
+                    String[] entries = getResources().getStringArray(R.array.CharcterSet_open);
+                    String[] values = getResources().getStringArray(R.array.CharcterSet_open);
+                    values[0]="";
+                    pr.setEntries( entries );
+                    pr.setEntryValues( values );
+                    cat.addPreference(pr);
+                    mPrefCharsetOpen = pr;
+                }
+                {
+                    // Characterset for Save
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_CHARSET_SAVE );
+                    pr.setTitle(R.string.label_charset_save);
+                    String[] entries = getResources().getStringArray(R.array.CharcterSet_save);
+                    String[] values = getResources().getStringArray(R.array.CharcterSet_save);
+                    values[0]="";
+                    pr.setEntries( entries );
+                    pr.setEntryValues( values );
+                    cat.addPreference(pr);
+                    mPrefCharsetSave = pr;
+                }
+                {
+                    // Characterset for Save
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_LINEBREAK_SAVE );
+                    pr.setTitle(R.string.label_linebreak_save);
+                    String[] entries = getResources().getStringArray(R.array.LineBreak_save);
+                    String[] values = new String[] { "-1" , "0", "1" , "2" };
+                    pr.setEntries( entries );
+                    pr.setEntryValues( values );
+                    cat.addPreference(pr);
+                    mPrefLinebreakSave = pr;
+                }
             }
-
             {
                 // Direct Intent Category
                 final PreferenceCategory category = new PreferenceCategory(this);
@@ -260,6 +319,34 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
                     pr.setOnPreferenceChangeListener( mProcDirectIntent );
                     category.addPreference(pr);
+                    mPrefDirectIntent = pr;
+                }
+                {
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setDialogTitle(R.string.label_select_kind);
+                    pr.setKey(KEY_DIRECT_INTENT2);
+                    pr.setTitle(R.string.label_select_insert);
+
+                    pr.setEntries(new String[] {
+                            getResources().getString(R.string.label_di_insert),
+                            getResources().getString(R.string.label_di_share),
+                            getResources().getString(R.string.label_di_search),
+                            getResources().getString(R.string.label_di_mushroom),
+                            getResources().getString(R.string.label_di_view),
+                    });
+
+                    final String[] values = new String[] {
+                            DI_INSERT,
+                            DI_SHARE,
+                            DI_SEARCH,
+                            DI_MUSHROOM,
+                            DI_VIEW,
+                    };
+                    pr.setEntryValues(values);
+
+                    pr.setOnPreferenceChangeListener( mProcDirectIntent2 );
+                    category.addPreference(pr);
+                    mPrefInsert = pr;
                 }
             }
             {
@@ -335,6 +422,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             }
         }
         setPreferenceScreen(mPs);
+
+        setSummary();
+
     }
 
     @Override
@@ -353,6 +443,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     Editor editor = sp.edit();
                     editor.putString(KEY_DIRECT_INTENT_INTENT, data.toUri(0) );
                     editor.commit();
+                    setSummary();
                     break;
                 }
                 case REQUEST_CODE_DEFAULT_DIR:{
@@ -364,6 +455,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.commit();
                     break;
                 }
+                case REQUEST_CODE_PICK_SHARE2:
+                case REQUEST_CODE_PICK_SEARCH2:
+                case REQUEST_CODE_PICK_MUSHROOM2:
+                case REQUEST_CODE_PICK_VIEW2:
+                {
+                    final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                    Editor editor = sp.edit();
+                    editor.putString(KEY_DIRECT_INTENT_INTENT2, data.toUri(0) );
+                    editor.commit();
+                    setSummary();
+                    break;
+                }
             }
         }else if ( resultCode == RESULT_FIRST_USER ){
             switch( requestCode ){
@@ -372,6 +475,40 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     try{
                         startActivity(intent);
                     }catch(Exception e){}
+                }
+            }
+        }else  if ( resultCode == RESULT_CANCELED ){
+            switch( requestCode )
+            {
+                case REQUEST_CODE_PICK_SHARE:
+                case REQUEST_CODE_PICK_SEARCH:
+                case REQUEST_CODE_PICK_MUSHROOM:
+                case REQUEST_CODE_PICK_VIEW:
+                {
+                    final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                    Editor editor = sp.edit();
+                    editor.putString(KEY_DIRECT_INTENT, "");
+                    editor.putString(KEY_DIRECT_INTENT_INTENT, "" );
+                    editor.commit();
+                    setSummary();
+                    break;
+                }
+                case REQUEST_CODE_DEFAULT_DIR:{
+                    break;
+                }
+                case REQUEST_CODE_PICK_SHARE2:
+                case REQUEST_CODE_PICK_SEARCH2:
+                case REQUEST_CODE_PICK_MUSHROOM2:
+                case REQUEST_CODE_PICK_VIEW2:
+                {
+                    final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                    Editor editor = sp.edit();
+                    editor.putString(KEY_DIRECT_INTENT2, DI_INSERT);
+                    editor.putString(KEY_DIRECT_INTENT_INTENT2, "" );
+                    editor.commit();
+                    mPrefInsert.setValueIndex(0);
+                    setSummary();
+                    break;
                 }
             }
         }
@@ -453,6 +590,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
+
     private OnPreferenceChangeListener mProcDirectIntent = new OnPreferenceChangeListener() {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             // lets launch app picker if the user selected to launch an app on gesture
@@ -489,6 +627,46 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
+    private OnPreferenceChangeListener mProcDirectIntent2 = new OnPreferenceChangeListener() {
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            // lets launch app picker if the user selected to launch an app on gesture
+            Intent mainIntent=null;
+            int req = 0;
+            if (newValue.equals( DI_SHARE ))
+            {
+                mainIntent = new Intent(Intent.ACTION_SEND, null);
+                mainIntent.setType("text/plain");
+                mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+                req = REQUEST_CODE_PICK_SHARE2;
+            } else if (newValue.equals( DI_SEARCH )) {
+                mainIntent = new Intent(Intent.ACTION_SEARCH, null);
+
+                req = REQUEST_CODE_PICK_SEARCH2;
+            } else if (newValue.equals( DI_MUSHROOM )) {
+                mainIntent = new Intent( "com.adamrocker.android.simeji.ACTION_INTERCEPT" );
+                mainIntent.addCategory("com.adamrocker.android.simeji.REPLACE");
+
+                req = REQUEST_CODE_PICK_MUSHROOM2;
+            } else if (newValue.equals( DI_VIEW )) {
+                mainIntent = new Intent(Intent.ACTION_VIEW);
+                mainIntent.setDataAndType(Uri.parse("file://"), "text/plain");
+
+                req = REQUEST_CODE_PICK_VIEW2;
+            } else if (newValue.equals( DI_INSERT )) {
+                final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+                Editor editor = sp.edit();
+                editor.putString(KEY_DIRECT_INTENT_INTENT2, "");
+                editor.commit();
+            }
+            if ( mainIntent != null ){
+                Intent pickIntent = new Intent(SettingsActivity.this,ActivityPicker.class);
+                pickIntent.putExtra(Intent.EXTRA_INTENT, mainIntent);
+                startActivityForResult(pickIntent,req);
+            }
+            return true;
+        }
+    };
 
     private OnPreferenceChangeListener mProcTheme = new OnPreferenceChangeListener() {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -625,6 +803,11 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         boolean underline;
         boolean createbackup;
         HashMap<Integer,ShortcutSettings> shortcuts;
+        String CharsetOpen;
+        String CharsetSave;
+        int LinebreakSave;
+        Intent directintent2;
+        String intentname2;
 	}
 
 	private static Settings sSettings;
@@ -645,6 +828,17 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	            ret.intentname = ret.directintent.getExtras().getString( ActivityPicker.EXTRA_APPNAME );
 	            ret.directintent.removeExtra(ActivityPicker.EXTRA_APPNAME);
 	        }
+        } catch (URISyntaxException e) {
+        }
+        String di2 = sp.getString(KEY_DIRECT_INTENT_INTENT2, "");
+        ret.directintent2 = null;
+        ret.intentname2=null;
+        try {
+            if ( di2.length() > 0 ){
+                ret.directintent2  = Intent.parseUri( di2, 0);
+                ret.intentname2 = ret.directintent2.getExtras().getString( ActivityPicker.EXTRA_APPNAME );
+                ret.directintent2.removeExtra(ActivityPicker.EXTRA_APPNAME);
+            }
         } catch (URISyntaxException e) {
         }
         ret.fontsize = Integer.parseInt( sp.getString( KEY_FONT_SIZE , "18") );
@@ -670,6 +864,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.underline = sp.getBoolean(KEY_UNDERLINE, true);
         ret.createbackup = sp.getBoolean(KEY_CRETAE_BACKUP, true);
         ret.shortcuts = SettingsShortcutActivity.loadShortcuts(ctx);
+        ret.CharsetOpen = sp.getString(KEY_CHARSET_OPEN, "");
+        ret.CharsetSave = sp.getString(KEY_CHARSET_SAVE, "");
+        ret.LinebreakSave = Integer.parseInt( sp.getString(KEY_LINEBREAK_SAVE, "-1") );
         sSettings = ret;
         return ret;
 	}
@@ -718,6 +915,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 if ( lastversion < 5 ){
                     editor.putBoolean(KEY_CRETAE_BACKUP, true);
                 }
+                if ( lastversion < 6 ){
+                    editor.putString(KEY_CHARSET_OPEN, "");
+                    editor.putString(KEY_CHARSET_SAVE, "");
+                    editor.putString(KEY_LINEBREAK_SAVE, "-1");
+                    editor.putString(KEY_DIRECT_INTENT2, DI_INSERT);
+                    editor.putString(KEY_DIRECT_INTENT_INTENT2, "");
+                }
 				editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
 			}
@@ -739,5 +943,73 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
         return appearance.getColor(android.R.styleable.TextAppearance_textColorHighlight, 0);
 	}
+
+	private void setSummary()
+	{
+	    CharSequence entry;
+	    String intentname;
+
+	    sSettings = readSettings(this);
+
+	    if ( sSettings.directintent != null ){
+    	    entry = mPrefDirectIntent.getEntry();
+    	    intentname = sSettings.intentname;
+    	    if ( entry != null ){
+                if ( intentname != null ){
+                    mPrefDirectIntent.setSummary(entry+" : " +intentname);
+                }else{
+                    mPrefDirectIntent.setSummary(entry );
+                }
+    	    }
+	    }else{
+	        mPrefDirectIntent.setSummary(null);
+	    }
+
+        entry = mPrefInsert.getEntry();
+        intentname = sSettings.intentname2;
+        if ( entry != null ){
+            if ( intentname != null ){
+                mPrefInsert.setSummary(entry+" : " +intentname);
+            }else{
+                mPrefInsert.setSummary(entry );
+            }
+        }
+
+        entry = mPrefCharsetOpen.getEntry();
+        if ( entry != null ){
+            mPrefCharsetOpen.setSummary(entry);
+        }
+        entry = mPrefCharsetSave.getEntry();
+        if ( entry != null ){
+            mPrefCharsetSave.setSummary(entry);
+        }
+        entry = mPrefLinebreakSave.getEntry();
+        if ( entry != null ){
+            mPrefLinebreakSave.setSummary(entry);
+        }
+        entry = mPrefFont.getEntry();
+        if ( entry != null ){
+            mPrefFont.setSummary(entry);
+        }
+        entry = mPrefFontSize.getEntry();
+        if ( entry != null ){
+            mPrefFontSize.setSummary(entry);
+        }
+
+	}
+
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        setSummary();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPs.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPs.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
 }
 

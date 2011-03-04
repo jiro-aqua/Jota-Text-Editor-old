@@ -11,16 +11,18 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,8 @@ public class FileSelectorActivity extends ListActivity {
 	public static final String INTENT_MODE = "MODE";
     final public static String INTENT_EXTENSION = "EXT";
     final public static String INTENT_INIT_PATH = "INIPATH";
+    public static final String INTENT_CHARSET = "CHARSET";
+    public static final String INTENT_LINEBREAK = "LINEBREAK";
 	public static final String MODE_OPEN = "OPEN";
     public static final String MODE_SAVE = "SAVE";
     public static final String MODE_DIR = "DIR";
@@ -47,17 +51,25 @@ public class FileSelectorActivity extends ListActivity {
     private TextView mTxtFilePath;
     private EditText mEdtFileName;
     private String[] mExtension = null;
+    private Spinner mCharsetSpinnerOpen;
+    private Spinner mCharsetSpinnerSave;
+    private Spinner mLinebreakSpinner;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.filelist);
 
+
         mBtnOK = (Button)findViewById(R.id.btnOK);
         mBtnCancel = (Button)findViewById(R.id.btnCancel);
         mTxtFilePath = (TextView)findViewById(R.id.txtFilePath);
         mEdtFileName = (EditText)findViewById(R.id.edtFileName);
 
+        mCharsetSpinnerOpen = (Spinner)findViewById(R.id.spinner_charset_open);
+        mCharsetSpinnerSave = (Spinner)findViewById(R.id.spinner_charset_save);
+        mLinebreakSpinner = (Spinner)findViewById(R.id.spinner_linebreak);
 
         Intent intent = getIntent();
         setResult(RESULT_CANCELED, intent);
@@ -68,7 +80,17 @@ public class FileSelectorActivity extends ListActivity {
             mMode = extras.getString(INTENT_MODE);
             mExtension = (String[]) extras.get(INTENT_EXTENSION);
             m_strDirPath = extras.getString(INTENT_INIT_PATH);
+
+            String charset = extras.getString(INTENT_CHARSET);
+            if ( charset != null ){
+                selectItemOfSpinner( mCharsetSpinnerOpen , charset );
+                selectItemOfSpinner( mCharsetSpinnerSave , charset );
+            }
+
+            int linebreak = extras.getInt(INTENT_LINEBREAK , -1);
+            mLinebreakSpinner.setSelection(linebreak+1);
         }
+
         File file = new File ( m_strDirPath );
         if ( !file.isDirectory() ){
             m_strDirPath = file.getParent();
@@ -81,23 +103,30 @@ public class FileSelectorActivity extends ListActivity {
             return;
         }
 
-        if( MODE_SAVE.equals(mMode) ) {
-
-            setTitle(R.string.fs_title_save);
-            mEdtFileName.setEnabled(true);
-            mEdtFileName.setText(m_strFileName);
-        } else if ( MODE_OPEN.equals(mMode)  ){
-
+        if ( MODE_OPEN.equals(mMode)  ){
             setTitle(R.string.fs_title_open);
             mBtnOK.setVisibility(View.GONE);
             mEdtFileName.setVisibility(View.GONE);
             mEdtFileName.setEnabled(false);
+            mCharsetSpinnerOpen.setVisibility(View.VISIBLE);
+            mCharsetSpinnerSave.setVisibility(View.GONE);
+            mLinebreakSpinner.setVisibility(View.GONE);
+
+        } else if( MODE_SAVE.equals(mMode) ) {
+            setTitle(R.string.fs_title_save);
+            mEdtFileName.setEnabled(true);
+            mEdtFileName.setText(m_strFileName);
+            mCharsetSpinnerOpen.setVisibility(View.GONE);
+            mCharsetSpinnerSave.setVisibility(View.VISIBLE);
+            mLinebreakSpinner.setVisibility(View.VISIBLE);
 
         } else if ( MODE_DIR.equals(mMode)){
-
             setTitle(R.string.fs_title_dir);
             mEdtFileName.setEnabled(false);
             mEdtFileName.setVisibility(View.GONE);
+            mCharsetSpinnerOpen.setVisibility(View.GONE);
+            mCharsetSpinnerSave.setVisibility(View.GONE);
+            mLinebreakSpinner.setVisibility(View.GONE);
 
         }else{
             Log.e("JotaFileSelector", "MODE parameter must be OPEN , SAVE or DIR.");
@@ -210,6 +239,18 @@ public class FileSelectorActivity extends ListActivity {
         intent.putExtra(INTENT_FILENAME, strFileName );
         intent.putExtra(INTENT_DIRPATH, m_strDirPath );
 
+        if (mCharsetSpinnerSave.getSelectedItemPosition() != 0
+                && mCharsetSpinnerSave.getSelectedItemPosition() != android.widget.AdapterView.INVALID_POSITION) {
+            intent.putExtra(INTENT_CHARSET, (String)mCharsetSpinnerSave.getSelectedItem());
+        }else{
+            intent.putExtra(INTENT_CHARSET, "");
+        }
+        if ( mLinebreakSpinner.getSelectedItemPosition() != android.widget.AdapterView.INVALID_POSITION) {
+            intent.putExtra(INTENT_LINEBREAK, mLinebreakSpinner.getSelectedItemPosition() - 1);
+        }else{
+            intent.putExtra(INTENT_LINEBREAK,  - 1);
+        }
+
         String strFilePath;
         if( m_strDirPath.equals("/")) {
             strFilePath = "/" + strFileName;
@@ -268,6 +309,12 @@ public class FileSelectorActivity extends ListActivity {
                     strFilePath = m_strDirPath + "/" + strItem;
                 }
                 intent.putExtra(INTENT_FILEPATH, strFilePath );
+                if (mCharsetSpinnerOpen.getSelectedItemPosition() != 0
+                        && mCharsetSpinnerOpen.getSelectedItemPosition() != android.widget.AdapterView.INVALID_POSITION) {
+                    intent.putExtra(INTENT_CHARSET, (String)mCharsetSpinnerOpen.getSelectedItem());
+                }else{
+                    intent.putExtra(INTENT_CHARSET, "");
+                }
                 setResult(RESULT_OK, intent);
                 finish();
 		    }else if ( MODE_SAVE.equals(mMode)){
@@ -365,5 +412,20 @@ public class FileSelectorActivity extends ListActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    private void selectItemOfSpinner( Spinner spinner , String s )
+    {
+        SpinnerAdapter adapter = spinner.getAdapter();
+        int max = adapter.getCount();
+        for( int i=0;i<max;i++ ){
+            String item = (String)adapter.getItem(i);
+            if ( s.equals(item) ){
+                spinner.setSelection(i);
+                break;
+            }
+        }
+        return;
+    }
+
 
 }

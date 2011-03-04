@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +18,10 @@ import org.mozilla.universalchardet.UniversalDetector.DetectorException;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 public     class TextLoadTask extends AsyncTask<String, Integer, SpannableStringBuilder>{
 
@@ -30,7 +34,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
     private ProgressDialog mProgressDialog;
     private Activity mActivity;
     private int mLine;
-
+    private ContentResolver mCr;
     public interface OnFileLoadListener
     {
         void onPreFileLoad();
@@ -43,6 +47,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
         mFileLoadListener = postProc;
         mActivity = activity;
         mLine = initline;
+        mCr = mActivity.getContentResolver();
     }
 
     @Override
@@ -59,38 +64,60 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
-        mActivity = null;
     }
     @Override
     protected SpannableStringBuilder doInBackground(String... params)
     {
-        SpannableStringBuilder result=new SpannableStringBuilder();
-        File f = new File(params[0]);
-
-        mFilename = params[0];
-
-        if ( f.exists() ){
-
-            InputStream is;
+        String uri = params[0];
+        String charset = params[1];
+        if ( uri.startsWith("content://") ){
+            // content provider
             try {
-                mCharset = "utf-8";
-                mLinebreak = LineBreak.LF;
-
-                is = new BufferedInputStream( new FileInputStream( f ) , 65536 );
-                is.mark(65536);
-
-                // preread leading 64KB
-                int nread;
-                byte[] buff = new byte[64*1024];
-                nread = is.read(buff);
-
-                if ( nread <= 0 ){
-                    return new SpannableStringBuilder("");
+                return openFile( mCr.openInputStream(Uri.parse(uri)),charset );
+            } catch (FileNotFoundException e) {
+            }
+        }else{
+            // file
+            File f = new File(uri);
+            if ( f.exists() ){
+                mFilename = uri;
+                try{
+                    return openFile( new FileInputStream( f ),charset );
+                } catch( Exception e){
+                    e.printStackTrace();
                 }
+            }
+        }
+        return null;
+    }
 
-                // Detect charset
-                UniversalDetector detector;
-                String encode = null;
+    protected SpannableStringBuilder openFile(InputStream input , String encode)
+    {
+        SpannableStringBuilder result=new SpannableStringBuilder();
+        InputStream is;
+        try {
+            mCharset = "utf-8";
+            mLinebreak = LineBreak.LF;
+
+            is = new BufferedInputStream( input , 65536 );
+            is.mark(65536);
+
+            // preread leading 64KB
+            int nread;
+            byte[] buff = new byte[64*1024];
+            nread = is.read(buff);
+
+            if ( nread <= 0 ){
+                if ( encode.length() != 0 ){
+                    mCharset = encode;
+                }
+                return new SpannableStringBuilder("");
+            }
+
+            // Detect charset
+            UniversalDetector detector;
+            if ( encode ==null || encode.length() == 0 ){
+
                 try {
                     detector = new UniversalDetector();
                     detector.handleData(buff, 0, nread);
@@ -99,101 +126,111 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
                     detector.destroy();
                 } catch (DetectorException e1) {
                 }
-                is.reset();
-
-                // detect linbreak code
-                Charset charset = null;
-                if ( encode != null && encode.length() > 0 ){
-                    charset = Charset.forName(encode);
-                }else{
-                    charset = Charset.forName("UTF-8");
-                }
-
-                byte[] cr = new byte[] { '\r' , };
-                byte[] lf = new byte[] { '\n' , };
-                if ( charset != null ){
-                    ByteBuffer bb;
-                    bb = charset.encode("\r");
-                    cr = new byte[bb.limit()];
-                    bb.get(cr);
-                    bb = charset.encode("\n");
-                    lf = new byte[bb.limit()];
-                    bb.get(lf);
-                }
-
-                int linebreak = LineBreak.LF;
-                if ( cr.length == 1 ){
-                    for( int i=0;i<nread-1 ;i++ ){
-                        if ( buff[i] == lf[0] ){
-                            linebreak = LineBreak.LF;
-                            break;
-                        } else if ( buff[i] == cr[0] ){
-                            if ( buff[i+1] == lf[0] ){
-                                linebreak = LineBreak.CRLF;
-                            }else{
-                                linebreak = LineBreak.CR;
-                            }
-                            break;
-                        }
-                   }
-                }else{      // cr.length == 2 // we dont think in the case cr.length>2
-                    for( int i=0;i<nread-2 ;i+=2 ){
-                        if ( buff[i] == lf[0] && buff[i+1]==lf[1] ){
-                            linebreak = LineBreak.LF;
-                            break;
-                        } else if ( buff[i] == cr[0] && buff[i+1]==cr[1] ){
-                            if ( buff[i+2] == lf[0] && buff[i+3]==lf[1] ){
-                                linebreak = LineBreak.CRLF;
-                            }else{
-                                linebreak = LineBreak.CR;
-                            }
-                            break;
-                        }
-                   }
-                }
-//                if ( encode != null ){
-//                    Log.e( TAG , "CharSet="+encode+"Linebreak=" + new String[]{"CR","LF","CRLF"}[linebreak]);
-//                }else{
-//                    Log.e( TAG , "CharSet="+"--"+"Linebreak=" + new String[]{"CR","LF","CRLF"}[linebreak]);
-//                }
-                if ( encode == null ){
-                    encode = "utf-8";
-                }
-                mCharset = encode;
-                mLinebreak = linebreak;
-
-                BufferedReader br=null;
-                try {
-                    br = new BufferedReader( new InputStreamReader( is , encode ) , 8192 );
-
-                    int line=0;
-                    String text;
-                    while(  ( text = br.readLine() )!=null ){
-                        line++;
-                        if ( line== mLine ){
-                            mLineToChar = result.length();
-                        }
-                        result.append( text );
-                        result.append( '\n' );
-                    }
-                    br.close();
-                    is.close();
-                    return result;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
             }
+            is.reset();
+            // detect linbreak code
+            if ( encode == null || encode.length() == 0 ){
+                encode = "utf-8";
+            }
+            Charset charset = Charset.forName(encode);
+
+            byte[] cr = new byte[] { '\r' , };
+            byte[] lf = new byte[] { '\n' , };
+            if ( charset != null ){
+                ByteBuffer bb;
+                bb = charset.encode("\r");
+                cr = new byte[bb.limit()];
+                bb.get(cr);
+                bb = charset.encode("\n");
+                lf = new byte[bb.limit()];
+                bb.get(lf);
+            }
+
+            int linebreak = LineBreak.LF;
+            if ( cr.length == 1 ){
+                for( int i=0;i<nread-1 ;i++ ){
+                    if ( buff[i] == lf[0] ){
+                        linebreak = LineBreak.LF;
+                        break;
+                    } else if ( buff[i] == cr[0] ){
+                        if ( buff[i+1] == lf[0] ){
+                            linebreak = LineBreak.CRLF;
+                        }else{
+                            linebreak = LineBreak.CR;
+                        }
+                        break;
+                    }
+               }
+            }else{      // cr.length == 2 // we dont think in the case cr.length>2
+                for( int i=0;i<nread-2 ;i+=2 ){
+                    if ( buff[i] == lf[0] && buff[i+1]==lf[1] ){
+                        linebreak = LineBreak.LF;
+                        break;
+                    } else if ( buff[i] == cr[0] && buff[i+1]==cr[1] ){
+                        if ( buff[i+2] == lf[0] && buff[i+3]==lf[1] ){
+                            linebreak = LineBreak.CRLF;
+                        }else{
+                            linebreak = LineBreak.CR;
+                        }
+                        break;
+                    }
+               }
+            }
+//            if ( encode != null ){
+//                Log.e( TAG , "CharSet="+encode+"Linebreak=" + new String[]{"CR","LF","CRLF"}[linebreak]);
+//            }else{
+//                Log.e( TAG , "CharSet="+"--"+"Linebreak=" + new String[]{"CR","LF","CRLF"}[linebreak]);
+//            }
+            mCharset = encode;
+            mLinebreak = linebreak;
+
+            BufferedReader br=null;
+            try {
+                br = new BufferedReader( new InputStreamReader( is , encode ) , 8192 );
+
+                int line=0;
+                String text;
+                while(  ( text = br.readLine() )!=null ){
+                    // remove BOM
+                    if ( line == 0 ){
+                        if ( text.length() > 0 && text.charAt(0) == 0xfeff ){
+                            text = text.substring(1);
+                        }
+                    }
+
+                    line++;
+                    if ( line== mLine ){
+                        mLineToChar = result.length();
+                    }
+                    result.append( text );
+                    result.append( '\n' );
+                }
+                br.close();
+                is.close();
+                return result;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
         return null;
     }
+
 
     @Override
     protected void onPostExecute(SpannableStringBuilder result)
     {
         mProgressDialog.dismiss();
         mProgressDialog = null;
+        if ( result != null ){
+            String[] linebreak =  mActivity.getResources().getStringArray(R.array.LineBreak);
+            String message = mActivity.getString(R.string.toast_opening_message ,mCharset , linebreak[mLinebreak] );
+            Toast.makeText(mActivity, message , Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(mActivity, R.string.toast_open_failed, Toast.LENGTH_LONG).show();
+        }
+        mActivity = null;
         if ( mFileLoadListener!= null ){
             mFileLoadListener.onFileLoaded( result, mFilename, mCharset, mLinebreak , mLineToChar );
         }

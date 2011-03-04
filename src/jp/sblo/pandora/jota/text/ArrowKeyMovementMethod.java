@@ -259,6 +259,12 @@ implements MovementMethod
     }
 
     public boolean onKeyUp(TextView widget, Spannable buffer, int keyCode, KeyEvent event) {
+        switch (keyCode) {
+        case KeyEvent.KEYCODE_VOLUME_UP:
+            return true;
+        case KeyEvent.KEYCODE_VOLUME_DOWN:
+            return true;
+        }
         return false;
     }
 

@@ -36,6 +36,9 @@
         <item android:id="@+id/menu_file_lbcode" 
 		android:title="@string/menu_file_lbcode" 
 	/>
+        <item android:id="@+id/menu_file_shortcut" 
+		android:title="@string/menu_file_shortcut" 
+	/>
         <item android:id="@+id/menu_file_quit" 
 		android:title="@string/menu_file_quit" 
 		android:alphabeticShortcut = "Q"

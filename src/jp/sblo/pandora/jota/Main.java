@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -13,7 +14,6 @@ import jp.sblo.pandora.jota.Search.OnSearchFinishedListener;
 import jp.sblo.pandora.jota.Search.Record;
 import jp.sblo.pandora.jota.TextLoadTask.OnFileLoadListener;
 import jp.sblo.pandora.jota.text.JotaDocumentWatcher;
-import jp.sblo.pandora.jota.text.Layout;
 import jp.sblo.pandora.jota.text.SpannableStringBuilder;
 import jp.sblo.pandora.jota.text.EditText.ShortcutListener;
 import android.app.Activity;
@@ -21,13 +21,18 @@ import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,14 +41,18 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class Main
@@ -204,13 +213,31 @@ public class Main
             if (it!=null && Intent.ACTION_VIEW.equals(it.getAction())){
                 mLine = -1;
                 Uri data = it.getData();
-                String path = Uri.decode( data.getEncodedPath() );
-                String lineparam = data.getQueryParameter("line");
-                if ( lineparam != null ){
+                String scheme = data.getScheme();
+                String path = null;
+                if ( ContentResolver.SCHEME_FILE.equals(scheme)){
+                    path = Uri.decode( data.getEncodedPath() );
+                    String lineparam = data.getQueryParameter("line");
+                    if ( lineparam != null ){
+                        try{
+                            mLine = Integer.parseInt( lineparam );
+                        }catch( Exception e){}
+                    }
+                }else if ( ContentResolver.SCHEME_CONTENT.equals(scheme)){
+                    Cursor cur = managedQuery(data, null, null, null, null);
+                    cur.moveToFirst();
                     try{
-                        mLine = Integer.parseInt( lineparam );
-                    }catch( Exception e){}
+                        path = cur.getString(cur.getColumnIndex("_data"));
+                        if ( path != null && !path.startsWith(Environment.getExternalStorageDirectory().getPath() )) {
+                            // from content provider
+                            path = data.toString();
+                        }
+                    }
+                    catch( Exception e){
+                    }
+                }else{
                 }
+
 //                mSearchWord = null;
 //                mLine = -1;
 //
@@ -219,9 +246,10 @@ public class Main
 //                    mSearchWord = extra.getString("query");
 //                    mLine = extra.getInt("line");
 //                }
-
-                mTask = new TextLoadTask( this , this , mLine);
-                mTask.execute(path);
+                if ( path != null ){
+                    mTask = new TextLoadTask( this , this , mLine);
+                    mTask.execute(path,mSettings.CharsetOpen);
+                }
             }else if (it!=null && Intent.ACTION_SEND.equals(it.getAction())){
                 Bundle extras = it.getExtras();
                 String text = extras.getString(Intent.EXTRA_TEXT);
@@ -232,7 +260,7 @@ public class Main
                 File[] fl = getHistory();
                 if ( fl!=null ){
                     mTask = new TextLoadTask( this , this , -1);
-                    mTask.execute(fl[0].getPath());
+                    mTask.execute(fl[0].getPath(),mSettings.CharsetOpen);
                 }
             }
 
@@ -368,13 +396,30 @@ public class Main
         if (intent!=null && Intent.ACTION_VIEW.equals(intent.getAction())){
             mLine = -1;
             Uri data = intent.getData();
-            mNewFilename = Uri.decode(  data.getEncodedPath()  );
-            String lineparam = data.getQueryParameter("line");
-            if ( lineparam != null ){
+            String scheme = data.getScheme();
+            if ( ContentResolver.SCHEME_FILE.equals(scheme)){
+                mNewFilename = Uri.decode(  data.getEncodedPath()  );
+                String lineparam = data.getQueryParameter("line");
+                if ( lineparam != null ){
+                    try{
+                        mLine = Integer.parseInt( lineparam );
+                    }catch( Exception e){}
+                }
+            }else if ( ContentResolver.SCHEME_CONTENT.equals(scheme)){
+                Cursor cur = managedQuery(data, null, null, null, null);
+                cur.moveToFirst();
                 try{
-                    mLine = Integer.parseInt( lineparam );
-                }catch( Exception e){}
+                    mNewFilename = cur.getString(cur.getColumnIndex("_data"));
+                    if ( mNewFilename != null && !mNewFilename.startsWith(Environment.getExternalStorageDirectory().getPath() )) {
+                        // from content provider
+                        mNewFilename = data.toString();
+                    }
+                }
+                catch( Exception e){
+                }
+            }else{
             }
+
 
             if ( !mNewFilename.equals(mInstanceState.filename)){
                 confirmSave(mProcReopen);
@@ -546,16 +591,30 @@ public class Main
         return true;
     }
 
-    private void save( )
+    private void save()
+    {
+        String charset = mSettings.CharsetSave;
+        if ( charset.length() == 0  ){
+            charset = mInstanceState.charset ;
+        }
+
+        int linebreak = mSettings.LinebreakSave;
+        if ( linebreak == -1 ){
+            linebreak = mInstanceState.linebreak ;
+        }
+        save( charset, linebreak );
+    }
+
+    private void save(String charset,int linebreak  )
     {
         String filename = mInstanceState.filename;
         if ( filename != null ){
-            String charset = mInstanceState.charset;
-            int linebreak = mInstanceState.linebreak;
+//            charset= mInstanceState.charset;
+//            linebreak = mInstanceState.linebreak;
             String text = mEditor.getText().toString();
             String lb = "\n";
             if (linebreak == LineBreak.CR) {
-                lb = "'\r";
+                lb = "\r";
             } else if (linebreak == LineBreak.CRLF) {
                 lb = "\r\n";
             }
@@ -619,7 +678,12 @@ public class Main
             newline.append(".txt");
             filename = newline.toString();
         }
-
+        if ( mSettings.CharsetSave.length() > 0 ){
+            intent.putExtra(FileSelectorActivity.INTENT_CHARSET , mSettings.CharsetSave );
+        }
+        if ( mSettings.LinebreakSave != -1 ){
+            intent.putExtra(FileSelectorActivity.INTENT_LINEBREAK , mSettings.LinebreakSave );
+        }
         intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH, filename);
         startActivityForResult(intent, REQUESTCODE_SAVEAS);
     }
@@ -631,16 +695,24 @@ public class Main
                 case REQUESTCODE_OPEN:{
                     Bundle extras = data.getExtras();
                     String path = extras.getString(FileSelectorActivity.INTENT_FILEPATH);
+                    String charset = extras.getString(FileSelectorActivity.INTENT_CHARSET);
                     mTask = new TextLoadTask( this , this , -1);
-                    mTask.execute(path);
+                    mTask.execute(path,charset);
                 }
                 break;
                 case REQUESTCODE_SAVEAS:{
                     Bundle extras = data.getExtras();
                     mInstanceState.filename = extras.getString(FileSelectorActivity.INTENT_FILEPATH);
-                    mInstanceState.charset = DEF_CHARSET;
-                    mInstanceState.linebreak =DEF_LINEBREAK;;
-                    save();
+
+                    String charset = extras.getString(FileSelectorActivity.INTENT_CHARSET);
+                    if ( charset == null || charset.length()==0 ){
+                        charset = mInstanceState.charset;
+                    }
+                    int linebreak = extras.getInt(FileSelectorActivity.INTENT_LINEBREAK , -1);
+                    if ( linebreak == -1 ){
+                        linebreak = mInstanceState.linebreak;
+                    }
+                    save( charset , linebreak );
                 }
                 break;
                 case REQUESTCODE_MUSHROOM:{
@@ -708,6 +780,19 @@ public class Main
             menuitem.setEnabled(false);
         }
 
+        menuitem = menu.findItem(R.id.menu_insert);
+        name = mSettings.intentname2;
+        if ( name!=null && !SettingsActivity.DI_INSERT.equals(name)  ){
+            menuitem.setTitle( name );
+            menuitem.setIcon(R.drawable.ic_menu_direct);
+        }else{
+            menuitem.setTitle( R.string.menu_insert );
+            menuitem.setIcon(R.drawable.ic_menu_compose);
+        }
+
+        menuitem = menu.findItem(R.id.menu_file_shortcut);
+        menuitem.setEnabled( mInstanceState.filename!=null );
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -755,6 +840,10 @@ public class Main
             return true;
             case R.id.menu_file_lbcode:{
                 mProcLineBreak.run();
+            }
+            return true;
+            case R.id.menu_file_shortcut:{
+                mProcCreateShortcut.run();
             }
             return true;
             case R.id.menu_file_quit:{
@@ -852,6 +941,9 @@ public class Main
             }else{
                 intent.putExtra(FileSelectorActivity.INTENT_INIT_PATH , mSettings.defaultdirectory );
             }
+            if ( mSettings.CharsetOpen.length() > 0 ){
+                intent.putExtra(FileSelectorActivity.INTENT_CHARSET , mSettings.CharsetOpen );
+            }
 
             startActivityForResult(intent, REQUESTCODE_OPEN);
         }
@@ -884,7 +976,7 @@ public class Main
     private Runnable mProcReopen =  new Runnable() {
         public void run() {
             mTask = new TextLoadTask( Main.this , Main.this , mLine);
-            mTask.execute(mNewFilename);
+            mTask.execute(mNewFilename,mSettings.CharsetOpen);
             mNewFilename = null;
         }
     };
@@ -896,27 +988,73 @@ public class Main
 
     private PostProcess mProcHistory =  new PostProcess() {
 
+        class ListStruct {
+            String main;
+            String sub;
+        }
+
         File[] fl = null;
 
         public void run() {
             fl = getHistory();
             if ( fl!=null ){
-                CharSequence[] items = new CharSequence[fl.length];
+                ArrayList<ListStruct> items = new ArrayList<ListStruct> ();
                 int max  = fl.length;
                 for( int i=0;i<max;i++ ){
-                    items[i] = fl[i].getName();
+                    ListStruct item = new ListStruct();
+                    item.main = fl[i].getName();
+                    item.sub = fl[i].getPath();
+                    items.add(item);
                 }
-                new AlertDialog.Builder(Main.this).setTitle(R.string.history).setItems(items, this).show();
+                ListAdapter adapter = new DialogListAdapter(Main.this,R.layout.dialog_list_row,R.id.txtMain,items);
+                new AlertDialog.Builder(Main.this).setTitle(R.string.history).setAdapter(adapter, this).show();
             }
         }
 
         public void onClick(DialogInterface dialog, int which) {
             CharSequence path = fl[which].getPath();
             mTask = new TextLoadTask( Main.this,Main.this ,-1);
-            mTask.execute(path.toString());
+            mTask.execute(path.toString(),mSettings.CharsetOpen);
         }
 
+         class DialogListAdapter extends ArrayAdapter<ListStruct> {
 
+            class ViewHolder {
+                TextView main;
+                TextView sub;
+            }
+
+            public DialogListAdapter(Context context, int resource, int textViewResourceId,
+                    List<ListStruct> objects) {
+                super(context, resource, textViewResourceId, objects);
+            }
+
+            @Override
+            public View getView(int position, View convertView, android.view.ViewGroup parent) {
+                final View view;
+                ViewHolder holder;
+                if ( convertView != null ) {
+                    view = convertView;
+                    holder = (ViewHolder) view.getTag();
+                } else {
+                    view = View.inflate(Main.this , R.layout.dialog_list_row , (ViewGroup)null );
+
+                    holder = new ViewHolder();
+                    holder.main = (TextView)view.findViewById(R.id.txtMain);
+                    holder.sub  = (TextView)view.findViewById(R.id.txtSub);
+
+                    view.setTag(holder);
+                }
+                ListStruct d = getItem(position);
+
+                holder.main.setText(d.main);
+                holder.sub.setText(d.sub);
+
+                return view;
+
+            }
+
+        }
 
     };
 
@@ -1019,17 +1157,89 @@ public class Main
             mInstanceState.linebreak = which;
         }
     };
+    private PostProcess mProcCreateShortcut =  new PostProcess() {
+        String[] items;
+
+        public void run() {
+            items = getResources().getStringArray(R.array.CreateShortcut);
+
+            new AlertDialog.Builder(Main.this).setTitle(R.string.menu_file_shortcut).setItems(items, this).show();
+        }
+
+        public void onClick(DialogInterface dialog, int which) {
+             // create shortcut
+             Intent shortcutIntent = new Intent(Intent.ACTION_VIEW);
+             shortcutIntent.setDataAndType(Uri.parse("file://" + mInstanceState.filename ), "text/plain");
+
+             if ( which == 1 ){
+                 shortcutIntent.setPackage(getApplicationInfo().packageName);
+             }
+
+             String name = new File(mInstanceState.filename).getName();
+
+             Intent intent = new Intent();
+             intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+             intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
+             Parcelable iconResource = Intent.ShortcutIconResource.fromContext(Main.this, R.drawable.icon_note);
+             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconResource);
+             intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+             sendBroadcast(intent);
+        }
+    };
+
+
 
     private Runnable mProcInsert =  new Runnable() {
         public void run() {
-            Intent intent = new Intent( "com.adamrocker.android.simeji.ACTION_INTERCEPT" );
-            intent.addCategory("com.adamrocker.android.simeji.REPLACE");
 
+            if ( mSettings.directintent2 == null  ){
+                Intent intent = new Intent( "com.adamrocker.android.simeji.ACTION_INTERCEPT" );
+                intent.addCategory("com.adamrocker.android.simeji.REPLACE");
+
+                int startsel = mEditor.getSelectionStart();
+                int endsel = mEditor.getSelectionEnd();
+                Editable text = mEditor.getText();
+
+                String substr = "";
+                if ( startsel != endsel ){
+                    if ( endsel < startsel ){
+                        int temp = startsel ;
+                        startsel = endsel;
+                        endsel = temp;
+                    }
+                    substr = text.subSequence(startsel, endsel).toString();
+                }
+                intent.putExtra("replace_key", substr);
+
+                try{
+                    Intent pickIntent = new Intent(Main.this,ActivityPicker.class);
+                    pickIntent.putExtra(Intent.EXTRA_INTENT, intent);
+                    mReservedIntent = intent;
+                    mReservedRequestCode = REQUESTCODE_MUSHROOM;
+                    startActivityForResult(pickIntent,REQUESTCODE_APPCHOOSER);
+                }
+                catch(Exception e)
+                {
+                }
+            }else{
+                sendDirectIntent( mSettings.directintent2 );
+            }
+        }
+
+    };
+
+
+    private void sendDirectIntent( Intent intent )
+    {
+        if (  intent == null ){
+            return;
+        }else{
+
+            String substr =null;
+
+            Editable text = mEditor.getText();
             int startsel = mEditor.getSelectionStart();
             int endsel = mEditor.getSelectionEnd();
-            Editable text = mEditor.getText();
-
-            String substr = "";
             if ( startsel != endsel ){
                 if ( endsel < startsel ){
                     int temp = startsel ;
@@ -1038,20 +1248,44 @@ public class Main
                 }
                 substr = text.subSequence(startsel, endsel).toString();
             }
-            intent.putExtra("replace_key", substr);
 
-            try{
-                Intent pickIntent = new Intent(Main.this,ActivityPicker.class);
-                pickIntent.putExtra(Intent.EXTRA_INTENT, intent);
-                mReservedIntent = intent;
-                mReservedRequestCode = REQUESTCODE_MUSHROOM;
-                startActivityForResult(pickIntent,REQUESTCODE_APPCHOOSER);
-            }
-            catch(Exception e)
-            {
+            if ( intent.getAction().equals( Intent.ACTION_SEND )){
+                if ( substr != null){
+                    intent.putExtra(Intent.EXTRA_TEXT, substr );
+                }else{
+                    intent.putExtra(Intent.EXTRA_TEXT, text.toString() );
+                }
+                try{
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                }
+            }else if ( intent.getAction().equals( Intent.ACTION_SEARCH )){
+                if ( substr != null){
+                    intent.putExtra(SearchManager.QUERY, substr);
+                }else{
+                    return;
+                }
+                try{
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                }
+            }else if ( intent.getAction().equals( "com.adamrocker.android.simeji.ACTION_INTERCEPT" )){
+                if ( substr != null){
+                    intent.putExtra("replace_key", substr);
+                }else{
+                    intent.putExtra("replace_key", "");
+                }
+                startActivityForResult(intent,REQUESTCODE_MUSHROOM);
+            }else if ( intent.getAction().equals( Intent.ACTION_VIEW )){
+                if ( mInstanceState.filename != null || mEditor.isChanged() ){
+                    mProcViewByIntent.setIntent(intent);
+                    confirmSave(mProcViewByIntent);
+                }
             }
         }
-    };
+    }
+
+
     private Runnable mProcSearchByIntent =  new Runnable() {
 
         public void run() {
@@ -1179,57 +1413,7 @@ public class Main
 
     private Runnable mProcDirect =  new Runnable() {
         public void run() {
-            if ( mSettings.directintent == null ){
-                return;
-            }else{
-
-                Intent intent = new Intent( mSettings.directintent );
-                String substr =null;
-
-                Editable text = mEditor.getText();
-                int startsel = mEditor.getSelectionStart();
-                int endsel = mEditor.getSelectionEnd();
-                if ( startsel != endsel ){
-                    if ( endsel < startsel ){
-                        int temp = startsel ;
-                        startsel = endsel;
-                        endsel = temp;
-                    }
-                    substr = text.subSequence(startsel, endsel).toString();
-                }
-
-                if ( intent.getAction().equals( Intent.ACTION_SEND )){
-                    if ( substr != null){
-                        intent.putExtra(Intent.EXTRA_TEXT, substr );
-                    }else{
-                        intent.putExtra(Intent.EXTRA_TEXT, text.toString() );
-                    }
-                    try{
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                    }
-                }else if ( intent.getAction().equals( Intent.ACTION_SEARCH )){
-                    if ( substr != null){
-                        intent.putExtra(SearchManager.QUERY, substr);
-                    }else{
-                        return;
-                    }
-                    try{
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                    }
-                }else if ( intent.getAction().equals( "com.adamrocker.android.simeji.ACTION_INTERCEPT" )){
-                    if ( substr != null){
-                        intent.putExtra("replace_key", substr);
-                    }else{
-                        intent.putExtra("replace_key", "");
-                    }
-                    startActivityForResult(intent,REQUESTCODE_MUSHROOM);
-                }else if ( intent.getAction().equals( Intent.ACTION_VIEW )){
-                    mProcViewByIntent.setIntent(intent);
-                    confirmSave(mProcViewByIntent);
-                }
-            }
+            sendDirectIntent( mSettings.directintent );
         }
     };
 
@@ -1361,6 +1545,7 @@ public class Main
         mEditor.enableUnderline( mSettings.underline );
         mEditor.setUnderlineColor( mSettings.underlinecolor );
         mEditor.setShortcutSettings( mSettings.shortcuts );
+
     }
 
 }

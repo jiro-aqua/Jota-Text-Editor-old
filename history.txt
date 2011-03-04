@@ -1,8 +1,6 @@
 Jota Text Editor
 
 Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
-
-
 「イオタ」と読んでください。
 
 ★現在αテスト中です。以下の条件で構わない人だけダウンロードしてください。
@@ -51,34 +49,42 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
   マッシュルーム
   テキストの共有
   外部アプリによる検索
+  外部アプリで開く
 
   ★任意のアプリを直接呼び出すダイレクトインテント機能を搭載
 
 ・サムをドラッグすることによるファイル内移動
 ・フリックによる高速スクロール
 ・アンドゥ
-・Altキー同時押しによるショートカットキー
+・左右Alt/Ctrlキー同時押しによるショートカットキー(キー毎に割り当て有無を設定可能)
+・色のカスタマイズ対応
+・テキストファイルのショートカットアイコン作成機能
+・ファイルエクスプローラ系アプリ、コンテンツプロバイダ系アプリからの呼出に対応
 
-・Android1.6～で動作確認
-  (IS01,HTC Desireで動作確認済み）
+・対応OS Android 1.6/2.1/2.2
+  (IS01,HTC Desire,005SHで動作確認）
 
 ・今後も含め、有料化および広告付与は行いません。
 ・安定したらオープンソースとして配布する予定です。
 
 
+注意
+　近い将来のバージョンアップでRTL言語への対応を廃止する予定です。
 
-★作者からの返事が必要な方は、メールまたはTwitter(@jiro_aqua)にてご連絡ください。
+
+★不具合等発見された方、または、作者からの返事が必要な方は、メールまたはTwitter(@jiro_aqua)にてご連絡ください。
 　レビューコメントには、基本的に返事できません。
 
+★タッチパネル機でiWnn/ATOKをお使いの場合、横向き(ランドスケープモード）ではIMEによってエディタ画面が隠され、編集が行えません。
+　これはIMEの問題です。Simeji,Open Wnn Flick,Grafitti等のIMEをご利用ください。
 
-
+--------------------------------------------------------------------------------
 Jota Text Editor
 
-Jota is a text editor which oriented to edit long big file.
-
+Jota is a text editor designed for a long text file.
 It's pronouced as "i-o-ta".
 
-★Jota is currently Ain lpha-test phase. 
+★Jota is currently in Alpha-test phase. 
   Only in the case you can agreed below statement, you can use this.
   - Don't cry when Jota crashed and lost your text.
   - Mail me when you found a bug.
@@ -119,8 +125,8 @@ Functions
 ・Auto-Detect linebreak code.
 ・Change linebreak code.
 ・Keep linebreak code until saving a file.
-・Save cursor position with file.
-・Save history of opend files.
+・Save position of the cursor with file.
+・Save history of recened files.
 
 ・Search a word in a file. (Support Regular Expression)
 
@@ -128,25 +134,39 @@ Functions
   Mushroom
   Share (ACTION_SEND)
   Search (ACTION_SEARCH)
+  Open (ACTION_VIEW)
 
   ★Direct Intent : You can launch any one application on menu item.
 
 ・Scroll with Thumb-drag.
 ・Scroll with Flick.
 ・Undo
-・Support a Shortcut key with ALT Key.
+・Support a Shortcut key with ALT/CTRL Key.
+・Customize colors.
+・Create a shortcut icon on HOME app.
+・Customizable shortcut key bind.
 
 ・Support Android OS 1.6 or later.
+・Support both touch-screen device and qwerty-keyboard device.
 
 ・Forever FREE and NO-AD.
 ・In the future , source code will be opend unde Apache License.
 
 
+CAUTION
+  At near future version, RTL-Language and bi-directional text won't be supported.
 
-★If you need a reply from me , DONT put it in Market's Review .
-  But please mail me or tweet me (@jiro_aqua)
+
+★If you need a reply from me , DON'T put it in Market's Review .
+  Instead please let me know by E-mail or Twiter(@jiro_aqua)
   You can send a message to me from Jota's Preferences Screen.
 
+★In landscape orientation, you can't edit correctly because software keyboard will cover all of the screen.
+  This is a issue of the software keyboard.
+  I recommend to use 3rd party's Keyboard app like Grafitti.
+
+
+--------------------------------------------------------------------------------
 
 [2011/01/23 v.0.0.1α]
 
@@ -190,5 +210,80 @@ BUG fix
 
 CAUTION
   At near future version, RTL-Language and bi-directional text won't be supported.
+
+
+[2011/02/11 v.0.0.3α]
+
+バグ修正
+・アプリ切替時にクラッシュするバグを修正
+
+[2011/02/11 v.0.0.3α]
+BUG fix
+・fixed the bug that application switching cause a crash.
+
+
+[2011/02/20 v.0.0.4α]
+変更
+・Dropboxからの新規作成に対応
+・ショートカットキーの有効無効の選択オプション追加
+・バックアップ作成有無の選択オプション追加
+・アプリ連携時にACTION_VIEWを投げる機能を追加
+・aGrepから行番号指定で開く機能を追加
+
+バグ修正
+・不正な正規表現でクラッシュするバグを修正
+・0バイトファイルをセーブできないバグを修正
+
+
+[2011/02/20 v.0.0.4α]
+Change
+・Support for Dropbox's New menu.
+・Add a option to select shortcut keys.
+・Add a option to create backup file.
+・Add a menu to send ACTION_VIEW.
+・Add a feature to recieve line number from aGrep.
+
+Bug fix
+・fixed a bug that crashes on bad regular expression.
+・fixed a bug that couldn't save after 0-bytes file read.
+
+
+[2011/03/04 v.0.0.5α]
+機能追加／変更
+・K9Mailの添付ファイルを開く機能を追加
+・SH製端末のコンテンツマネージャから開く機能を追加
+・ファイルを開く時に文字コードを指定する機能を追加
+・ファイルを保存する時に、文字コード／改行コードを指定する機能を追加
+・デフォルトの文字コード／改行コードを設定する機能を追加
+・「挿入」メニューにダイレクトインテントを割り当てる機能を追加
+・QVGA用のアイコンリソースを追加
+・ホームアプリにショートカットアイコンを作成する機能を追加
+・ファイル履歴を名前＋パスの二段構成に変更
+・A2SD対応
+
+バグ修正
+・ボリュームボタンのKEYUPイベントで音が鳴るバグを修正
+・UTF-16/32でBOMを出力しないバグを修正
+・改行CRの時に、余計な文字が出力されるバグを修正
+・その他細かいバグ修正
+
+
+[2011/03/04 v.0.0.5α]
+Change
+・Added a support to open the attachment of K9-mail.
+・Added an option to select a character code when open file.
+・Added an option to select a character/linebreak code when save file.
+・Added an option to set default character/linebreak code.
+・Added an option to change "Insert" menu into Direct Intent.
+・Added a menu to create shortcut icon on the home application.
+・Added resources for QVGA devices.
+・Added a support for A2SD.
+・Changed file-history to show a path of the file.
+
+Bug fix
+・Fixed the bug that a beep sound is played when volume+/- key is released.
+・Fixed the bug that BOM is not outputed in UTF-16/32.
+・Fixed the bug that unnecessary character is outputed with CR.
+・Fixed some minor bugs.
 
 

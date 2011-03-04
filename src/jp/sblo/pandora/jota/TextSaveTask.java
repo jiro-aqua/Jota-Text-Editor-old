@@ -67,6 +67,11 @@ public     class TextSaveTask extends AsyncTask<String, Integer, String>{
             BufferedWriter bw=null;
             bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( f ) , Charset.forName(charset) ) , 65536 );
 
+            if ( charset.startsWith("UTF-16") || charset.startsWith("UTF-32") ){
+                char bom = 0xFEFF;
+                bw.write(bom);
+            }
+
             int pos0 = 0;
             int len = text.length();
             while( pos0<len ){

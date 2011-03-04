@@ -5,14 +5,15 @@
     android:layout_height="fill_parent"
     >
 <!---
-    <TextView
+	<TextView
 	    android:id="@+id/txtDirName"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:singleLine="true"
 		android:textSize="14sp"
 	/>
- -->	<ListView
+	 -->
+	<ListView
 		android:id="@id/android:list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
@@ -30,36 +31,59 @@
 		android:textSize="14sp"
 		android:background="#F444"
 	/>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<EditText
+	    android:id="@+id/edtFileName"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:singleLine="true"
+		android:focusable="true"
+		android:textSize="14sp"
+	/>
+	<LinearLayout 
 	    android:orientation="horizontal"
-	    android:layout_gravity="center_horizontal"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	>
-		<EditText
-		    android:id="@+id/edtFileName"
-			android:layout_width="wrap_content"
+		<Spinner
+		    android:id="@+id/spinner_charset_open"
+			android:layout_width="1dip"
 			android:layout_height="wrap_content"
-			android:singleLine="true"
-			android:focusable="true"
+			android:layout_weight="1"
 			android:textSize="14sp"
-			android:layout_weight="0.7"
+			android:entries="@array/CharcterSet_open"
+			android:prompt="@string/charset"
+		/>
+		<Spinner
+		    android:id="@+id/spinner_charset_save"
+			android:layout_width="1dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:textSize="14sp"
+			android:entries="@array/CharcterSet_save"
+			android:prompt="@string/charset"
+		/>
+		<Spinner
+		    android:id="@+id/spinner_linebreak"
+			android:layout_width="1dip"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:textSize="14sp"
+			android:entries="@array/LineBreak_save"
+			android:prompt="@string/linebreak"
 		/>
 		<Button
 		    android:id="@+id/btnOK"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_width="1dip"
+			android:layout_height="fill_parent"
 			android:text="@string/label_ok"
-			android:layout_gravity="center_horizontal"
-			android:layout_weight="0.15"
+			android:layout_weight="1"
 		/>
 		<Button
 		    android:id="@+id/btnCancel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
+			android:layout_width="1dip"
+			android:layout_height="fill_parent"
 			android:text="@string/label_cancel"
-			android:layout_gravity="center_horizontal"
-			android:layout_weight="0.15"
+			android:layout_weight="1"
 		/>
 	</LinearLayout>
 </LinearLayout>
