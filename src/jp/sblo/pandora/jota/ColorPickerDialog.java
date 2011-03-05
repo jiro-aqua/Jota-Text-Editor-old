@@ -357,6 +357,7 @@ public class ColorPickerDialog extends Dialog {
     	mTitle = title;
     }
 
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         OnColorChangedListener l = new OnColorChangedListener() {

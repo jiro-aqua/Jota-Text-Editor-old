@@ -224,16 +224,21 @@ public class Main
                         }catch( Exception e){}
                     }
                 }else if ( ContentResolver.SCHEME_CONTENT.equals(scheme)){
-                    Cursor cur = managedQuery(data, null, null, null, null);
-                    cur.moveToFirst();
-                    try{
-                        path = cur.getString(cur.getColumnIndex("_data"));
-                        if ( path != null && !path.startsWith(Environment.getExternalStorageDirectory().getPath() )) {
-                            // from content provider
-                            path = data.toString();
+                    ContentResolver cr = getContentResolver();
+                    Cursor cur = cr.query(data, null, null, null, null);
+                    if ( cur != null ){
+                        cur.moveToFirst();
+                        try{
+                            path = cur.getString(cur.getColumnIndex("_data"));
+                            if ( path == null || !path.startsWith(Environment.getExternalStorageDirectory().getPath() )) {
+                                // from content provider
+                                path = data.toString();
+                            }
                         }
-                    }
-                    catch( Exception e){
+                        catch( Exception e){
+                        }
+                    }else{
+                        path = data.toString();
                     }
                 }else{
                 }
@@ -406,16 +411,21 @@ public class Main
                     }catch( Exception e){}
                 }
             }else if ( ContentResolver.SCHEME_CONTENT.equals(scheme)){
-                Cursor cur = managedQuery(data, null, null, null, null);
-                cur.moveToFirst();
-                try{
-                    mNewFilename = cur.getString(cur.getColumnIndex("_data"));
-                    if ( mNewFilename != null && !mNewFilename.startsWith(Environment.getExternalStorageDirectory().getPath() )) {
-                        // from content provider
-                        mNewFilename = data.toString();
+                ContentResolver cr = getContentResolver();
+                Cursor cur = cr.query(data, null, null, null, null);
+                if ( cur != null ){
+                    cur.moveToFirst();
+                    try{
+                        mNewFilename = cur.getString(cur.getColumnIndex("_data"));
+                        if ( mNewFilename == null || !mNewFilename.startsWith(Environment.getExternalStorageDirectory().getPath() )) {
+                            // from content provider
+                            mNewFilename = data.toString();
+                        }
                     }
-                }
-                catch( Exception e){
+                    catch( Exception e){
+                    }
+                }else{
+                    mNewFilename = data.toString();
                 }
             }else{
             }
@@ -1423,13 +1433,6 @@ public class Main
             mChkReplace.setChecked(false);
             mEdtSearchWord.requestFocus();
        }
-    };
-
-    private Runnable mProcUndo =  new Runnable() {
-        public void run() {
-            // TODO:
-
-        }
     };
 
 

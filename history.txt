@@ -250,7 +250,7 @@ Bug fix
 
 [2011/03/04 v.0.0.5α]
 機能追加／変更
-・K9Mailの添付ファイルを開く機能を追加
+・GMail/K9Mailの添付ファイルを開く機能を追加
 ・SH製端末のコンテンツマネージャから開く機能を追加
 ・ファイルを開く時に文字コードを指定する機能を追加
 ・ファイルを保存する時に、文字コード／改行コードを指定する機能を追加
@@ -270,7 +270,7 @@ Bug fix
 
 [2011/03/04 v.0.0.5α]
 Change
-・Added a support to open the attachment of K9-mail.
+・Added a support to open the attachment of GMail/K9Mail.
 ・Added an option to select a character code when open file.
 ・Added an option to select a character/linebreak code when save file.
 ・Added an option to set default character/linebreak code.

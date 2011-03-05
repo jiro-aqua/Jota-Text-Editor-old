@@ -3,8 +3,6 @@ package jp.sblo.pandora.jota;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-import org.apache.xml.utils.res.IntArrayWrapper;
-
 import jp.sblo.pandora.jota.text.EditText.ShortcutSettings;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -36,8 +34,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_TEXT_COLOR              = "TEXT_COLOR";
     private static final String KEY_HIGHLIGHT_COLOR         = "HIGHLIGHT_COLOR";
     private static final String KEY_BACKGROUND              = "BACKGROUND";
-    private static final String KEY_BACKGROUND_WHITE        = "BACKGROUND_WHITE";
-    private static final String KEY_BACKGROUND_BLACK        = "BACKGROUND_BLACK";
+//    private static final String KEY_BACKGROUND_WHITE        = "BACKGROUND_WHITE";
+//    private static final String KEY_BACKGROUND_BLACK        = "BACKGROUND_BLACK";
     private static final String KEY_RE                      = "RE";
     private static final String KEY_IGNORE_CASE             = "IGNORE_CASE";
     private static final String KEY_DIRECT_INTENT           = "DIRECT_INTENT";
@@ -111,7 +109,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         mPs = mPm.createPreferenceScreen(this);
 
         {
-            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+//            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
             {
                 // Search Category
@@ -166,13 +164,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 final PreferenceCategory cat = new PreferenceCategory(this);
                 cat.setTitle(R.string.label_view);
                 mPs.addPreference(cat);
-                if (false) {
-                    // word wrap
-                    final CheckBoxPreference pr = new CheckBoxPreference(this);
-                    pr.setKey(KEY_WORD_WRAP);
-                    pr.setTitle(R.string.label_word_wrap);
-                    cat.addPreference(pr);
-                }
+//                if (false) {
+//                    // word wrap
+//                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+//                    pr.setKey(KEY_WORD_WRAP);
+//                    pr.setTitle(R.string.label_word_wrap);
+//                    cat.addPreference(pr);
+//                }
                 {
                     // show underline
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
