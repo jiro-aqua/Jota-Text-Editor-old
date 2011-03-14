@@ -49,8 +49,7 @@ public class EditText extends TextView{
         setFastScrollEnabled(true);
 
         // change width of the caret
-        float caretThick = context.getResources().getDimension(R.dimen.caret_thick);
-        setCaretThick( caretThick );
+        setCaretThick( context.getResources().getDimension(R.dimen.caret_thick) );
 
         // set my Editable
         setEditableFactory( JotaEditableFactory.getInstance() );

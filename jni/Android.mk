@@ -17,6 +17,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := libuniversalchardet
+LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := \
 universalchardet/CharDistribution.cpp \
 universalchardet/JpCntx.cpp \

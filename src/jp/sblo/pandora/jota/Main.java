@@ -290,8 +290,10 @@ public class Main
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
     }
 
+    @Override
     public void onPreFileLoad() {
     }
+    @Override
     public void onFileLoaded(SpannableStringBuilder result , String filename, String charset, int linebreak , int offset ) {
         mTask = null;
         if ( result != null ){
@@ -299,6 +301,7 @@ public class Main
             mInstanceState.charset = charset;
             mInstanceState.linebreak = linebreak;
 
+            mSearchResult = null;
 
             SpannableStringBuilder ss =  result ;
             mEditor.setText(ss);
@@ -979,6 +982,7 @@ public class Main
             mBtnSkip.setEnabled(false);
             mBtnReplaceAll.setEnabled(false);
 
+            mSearchResult = null;
 
         }
     };

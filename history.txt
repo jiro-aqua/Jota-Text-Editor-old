@@ -39,6 +39,8 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
   HZ-GB-2312
   X-ISO-10646-UCS-4-3412
   X-ISO-10646-UCS-4-2143
+  (実際にデコード可能かどうかは、Androidの実装に依存します）
+
 ・文字コードの変更
 ・改行コード自動判定、保存、変更
 ・カーソル位置の保存
@@ -77,6 +79,8 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 
 ★タッチパネル機でiWnn/ATOKをお使いの場合、横向き(ランドスケープモード）ではIMEによってエディタ画面が隠され、編集が行えません。
 　これはIMEの問題です。Simeji,Open Wnn Flick,Grafitti等のIMEをご利用ください。
+
+★grep(テキストファイルの串刺し検索)が必要な方は、拙作「aGrep」もお試しください。
 
 --------------------------------------------------------------------------------
 Jota Text Editor
@@ -120,6 +124,7 @@ Functions
   HZ-GB-2312
   X-ISO-10646-UCS-4-3412
   X-ISO-10646-UCS-4-2143
+  (Whether you can decode or not depends on Android's implementation.)
 
 ・Change character codes.
 ・Auto-Detect linebreak code.
@@ -165,6 +170,7 @@ CAUTION
   This is a issue of the software keyboard.
   I recommend to use 3rd party's Keyboard app like Grafitti.
 
+★If you need grep (search from multiple text files), try my app "aGrep".
 
 --------------------------------------------------------------------------------
 
