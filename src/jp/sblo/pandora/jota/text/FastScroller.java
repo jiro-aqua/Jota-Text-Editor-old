@@ -35,7 +35,7 @@ import android.widget.SectionIndexer;
 class FastScroller {
 
     // Minimum number of pages to justify showing a fast scroll thumb
-    private static int MIN_PAGES = 1;
+    private static int MIN_PAGES = 1;// Jota Text Editor
     // Scroll thumb not showing
     private static final int STATE_NONE = 0;
     // Not implemented yet - fade-in transition
@@ -46,32 +46,39 @@ class FastScroller {
     private static final int STATE_DRAGGING = 3;
     // Scroll thumb fading out due to inactivity timeout
     private static final int STATE_EXIT = 4;
-
+    
     private Drawable mThumbDrawable;
+//    private Drawable mOverlayDrawable;// Jota Text Editor
 
     private int mThumbH;
     private int mThumbW;
     private int mThumbY;
 
+// Jota Text Editor
     private TextView mList;
     private boolean mScrollCompleted;
     private int mVisibleItem;
     private Paint mPaint;
+//    private int mListOffset;// Jota Text Editor
     private int mItemCount = -1;
     private boolean mLongList;
-
+    
     private Object [] mSections;
+// Jota Text Editor
+//    private String mSectionText;
+//    private boolean mDrawOverlay;
     private ScrollFade mScrollFade;
-
+    
     private int mState;
-
+    
     private Handler mHandler = new Handler();
 
-//    private BaseAdapter mListAdapter;
+//    private BaseAdapter mListAdapter;// Jota Text Editor
     private SectionIndexer mSectionIndexer;
 
     private boolean mChangedBounds;
 
+// Jota Text Editor
     public FastScroller(Context context, TextView listView) {
         mList = listView;
         init(context);
@@ -98,25 +105,26 @@ class FastScroller {
         }
         mState = state;
     }
-
+    
     public int getState() {
         return mState;
     }
-
+    
     private void resetThumbPos() {
         final int viewWidth = mList.getWidth();
         // Bounds are always top right. Y coordinate get's translated during draw
         mThumbDrawable.setBounds(viewWidth - mThumbW, 0, viewWidth, mThumbH);
         mThumbDrawable.setAlpha(ScrollFade.ALPHA_MAX);
+// Jota Text Editor
 //        mList.invalidate(viewWidth - mThumbW, mThumbY, viewWidth, mThumbY + mThumbH);
     }
-
+    
     private void useThumbDrawable(Context context, Drawable drawable) {
         mThumbDrawable = drawable;
         mThumbW = context.getResources().getDimensionPixelSize(
-                R.dimen.fastscroll_thumb_width);
+                R.dimen.fastscroll_thumb_width);// Jota Text Editor
         mThumbH = context.getResources().getDimensionPixelSize(
-                R.dimen.fastscroll_thumb_height);
+                R.dimen.fastscroll_thumb_height);// Jota Text Editor
         mChangedBounds = true;
     }
 
@@ -124,41 +132,50 @@ class FastScroller {
         // Get both the scrollbar states drawables
         final Resources res = context.getResources();
         useThumbDrawable(context, res.getDrawable(
-                R.drawable.scrollbar_handle_accelerated_anim2));
+                R.drawable.scrollbar_handle_accelerated_anim2));// Jota Text Editor
 
+// Jota Text Editor
+//        mOverlayDrawable = res.getDrawable(
+//                com.android.internal.R.drawable.menu_submenu_background);
         mScrollCompleted = true;
 
         getSectionsFromIndexer();
 
+// Jota Text Editor
+//        mOverlaySize = context.getResources().getDimensionPixelSize(
+//                com.android.internal.R.dimen.fastscroll_overlay_size);
+//        mOverlayPos = new RectF();
         mScrollFade = new ScrollFade();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setTextAlign(Paint.Align.CENTER);
+// Jota Text Editor
         TypedArray ta = context.getTheme().obtainStyledAttributes(new int[] {
                 android.R.attr.textColorPrimary });
         ColorStateList textColor = ta.getColorStateList(ta.getIndex(0));
         int textColorNormal = textColor.getDefaultColor();
         mPaint.setColor(textColorNormal);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
+        
         mState = STATE_NONE;
     }
-
+    
     void stop() {
         setState(STATE_NONE);
     }
-
+    
     boolean isVisible() {
         return !(mState == STATE_NONE);
     }
-
+    
     public void draw(Canvas canvas) {
-
+        
         if (mState == STATE_NONE) {
             // No need to draw anything
             return;
         }
 
+// Jota Text Editor
         final int y = mThumbY + mList.getScrollY();
         final int viewWidth = mList.getWidth();
         final FastScroller.ScrollFade scrollFade = mScrollFade;
@@ -173,11 +190,13 @@ class FastScroller {
             mThumbDrawable.setBounds(left, 0, viewWidth, mThumbH);
             mChangedBounds = true;
         }
+
         canvas.translate(0, y);
         mThumbDrawable.draw(canvas);
         canvas.translate(0, -y);
 
         // If user is dragging the scroll bar, draw the alphabet overlay
+// Jota Text Editor
         if (alpha == 0) { // Done with exit
             setState(STATE_NONE);
         } else {
@@ -189,10 +208,22 @@ class FastScroller {
         if (mThumbDrawable != null) {
             mThumbDrawable.setBounds(w - mThumbW, 0, w, mThumbH);
         }
+// Jota Text Editor
+//        final RectF pos = mOverlayPos;
+//        pos.left = (w - mOverlaySize) / 2;
+//        pos.right = pos.left + mOverlaySize;
+//        pos.top = h / 10; // 10% from top
+//        pos.bottom = pos.top + mOverlaySize;
+//        if (mOverlayDrawable != null) {
+///          mOverlayDrawable.setBounds((int) pos.left, (int) pos.top,
+//                (int) pos.right, (int) pos.bottom);
+//        }
     }
 
+// Jota Text Editor
     void onScroll(TextView view, int firstVisibleItem, int visibleItemCount,
             int totalItemCount) {
+// Jota Text Editor
 //         Are there enough pages to require fast scroll? Recompute only if total count changes
         if (mItemCount != totalItemCount && visibleItemCount > 0) {
             mItemCount = totalItemCount;
@@ -205,9 +236,8 @@ class FastScroller {
             return;
         }
         if (totalItemCount - visibleItemCount > 0 && mState != STATE_DRAGGING ) {
-            mThumbY = ((mList.getHeight() - mThumbH) * firstVisibleItem)
+            mThumbY = ((mList.getHeight() - mThumbH) * firstVisibleItem)// Jota Text Editor
                     / (totalItemCount - visibleItemCount);
-
             if (mChangedBounds) {
                 resetThumbPos();
                 mChangedBounds = false;
@@ -229,20 +259,23 @@ class FastScroller {
     }
 
     Object[] getSections() {
-        if (mSections == null ) {
+        if (mSections == null ) {// Jota Text Editor
             getSectionsFromIndexer();
         }
         return mSections;
     }
 
     private void getSectionsFromIndexer() {
+//        Adapter adapter = mList.getAdapter();// Jota Text Editor
         mSectionIndexer = null;
+// Jota Text Editor
         mSections = new String[] { " " };
     }
 
     private void scrollTo(float position) {
-        int count = mList.getLineCount();
+        int count = mList.getLineCount();// Jota Text Editor
         mScrollCompleted = false;
+// Jota Text Editor
 //        float fThreshold = (1.0f / count) / 8;
 //        final Object[] sections = mSections;
 //        int sectionIndex;
@@ -317,6 +350,7 @@ class FastScroller {
 //        } else {
             int index = (int) (position * count);
             mList.moveToLine(index);
+// Jota Text Editor
 //            sectionIndex = -1;
 //        }
     }
@@ -327,7 +361,7 @@ class FastScroller {
         mList.onTouchEvent(cancelFling);
         cancelFling.recycle();
     }
-
+    
     boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mState > STATE_NONE && ev.getAction() == MotionEvent.ACTION_DOWN) {
             if (isPointInside(ev.getX(), ev.getY())) {
@@ -348,10 +382,11 @@ class FastScroller {
         if (action == MotionEvent.ACTION_DOWN) {
             if (isPointInside(me.getX(), me.getY())) {
                 setState(STATE_DRAGGING);
-                if (mSections == null ) {
+                if (mSections == null ) {// Jota Text Editor
                     getSectionsFromIndexer();
                 }
                 if (mList != null) {
+// Jota Text Editor
 //                    mList.requestDisallowInterceptTouchEvent(true);
 //                    mList.reportScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
                 }
@@ -365,6 +400,7 @@ class FastScroller {
                     // ViewGroup does the right thing already, but there might
                     // be other classes that don't properly reset on touch-up,
                     // so do this explicitly just in case.
+// Jota Text Editor
 //                    mList.requestDisallowInterceptTouchEvent(false);
 //                    mList.reportScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
                 }
@@ -378,7 +414,7 @@ class FastScroller {
             if (mState == STATE_DRAGGING) {
                 final int viewHeight = mList.getHeight();
                 // Jitter
-                int newThumbY = (int) me.getY() - mThumbH / 2;
+                int newThumbY = (int) me.getY() - mThumbH / 2;// Jota Text Editor
                 if (newThumbY < 0) {
                     newThumbY = 0;
                 } else if (newThumbY + mThumbH > viewHeight) {
@@ -388,6 +424,7 @@ class FastScroller {
                     return true;
                 }
                 mThumbY = newThumbY;
+// Jota Text Editor
 //                // If the previous scrollTo is still pending
 //                if (mScrollCompleted) {
                     scrollTo((float) mThumbY / (viewHeight - mThumbH));
@@ -403,18 +440,18 @@ class FastScroller {
     }
 
     public class ScrollFade implements Runnable {
-
+        
         long mStartTime;
         long mFadeDuration;
         static final int ALPHA_MAX = 208;
         static final long FADE_DURATION = 200;
-
+        
         void startFade() {
             mFadeDuration = FADE_DURATION;
             mStartTime = SystemClock.uptimeMillis();
             setState(STATE_EXIT);
         }
-
+        
         int getAlpha() {
             if (getState() != STATE_EXIT) {
                 return ALPHA_MAX;
@@ -424,17 +461,17 @@ class FastScroller {
             if (now > mStartTime + mFadeDuration) {
                 alpha = 0;
             } else {
-                alpha = (int) (ALPHA_MAX - ((now - mStartTime) * ALPHA_MAX) / mFadeDuration);
+                alpha = (int) (ALPHA_MAX - ((now - mStartTime) * ALPHA_MAX) / mFadeDuration); 
             }
             return alpha;
         }
-
+        
         public void run() {
             if (getState() != STATE_EXIT) {
                 startFade();
                 return;
             }
-
+            
             if (getAlpha() > 0) {
                 mList.invalidate();
             } else {

@@ -63,7 +63,7 @@ extends Layout
                         boolean includepad,
                         TextUtils.TruncateAt ellipsize, int ellipsizedWidth) {
         super((ellipsize == null)
-                ? source
+                ? source 
                 : (source instanceof Spanned)
                     ? new SpannedEllipsizer(source)
                     : new Ellipsizer(source),
@@ -73,10 +73,11 @@ extends Layout
          * This is annoying, but we can't refer to the layout until
          * superclass construction is finished, and the superclass
          * constructor wants the reference to the display text.
-         *
+         * 
          * This will break if the superclass constructor ever actually
          * cares about the content instead of just holding the reference.
          */
+// Jota Text Editor
 //        if (ellipsize != null) {
 //            Ellipsizer e = (Ellipsizer) getText();
 //
@@ -108,6 +109,7 @@ extends Layout
     /* package */ StaticLayout(boolean ellipsize) {
         super(null, null, 0, null, 0, 0);
 
+		// Jota Text Editor
         mLines = new int[ArrayUtils.idealIntArraySize(2 )];
         mLineDirections = new Directions[
                              ArrayUtils.idealIntArraySize(2 /* * mColumns*/)];
@@ -143,6 +145,7 @@ extends Layout
         float[] widths = mWidths;
 
         AlteredCharSequence alter = null;
+// Jota Text Editor
 //        Spanned spanned = null;
 
 //        if (source instanceof Spanned)
@@ -166,7 +169,7 @@ extends Layout
             int restwidth = outerwidth;
 
             LineHeightSpan[] chooseht = null;
-
+// Jota Text Editor
 //            if (spanned != null) {
 //                LeadingMarginSpan[] sp;
 //
@@ -237,6 +240,7 @@ extends Layout
             // as viable breakpoints, and that the entire run gets the
             // same bidi direction.
 
+// Jota Text Editor
 //            if (source instanceof Spanned) {
 //                Spanned sp = (Spanned) source;
 //                ReplacementSpan[] spans = sp.getSpans(start, end, ReplacementSpan.class);
@@ -305,6 +309,7 @@ extends Layout
 
             int next;
             for (int i = start; i < end; i = next) {
+		// Jota Text Editor
 //                if (spanned == null)
                     next = end;
 //                else
@@ -318,6 +323,7 @@ extends Layout
                                      end - start + (i - start), next - i);
 
                     paint.getFontMetricsInt(fm);
+// Jota Text Editor
 //                } else {
 //                    mWorkPaint.baselineShift = 0;
 //
@@ -370,6 +376,7 @@ extends Layout
                             if (bm != null) {
                                 Paint whichPaint;
 
+// Jota Text Editor
 //                                if (spanned == null) {
                                     whichPaint = paint;
 //                                } else {
@@ -411,7 +418,7 @@ extends Layout
                         /*
                          * From the Unicode Line Breaking Algorithm:
                          * (at least approximately)
-                         *
+                         *  
                          * .,:; are class IS: breakpoints
                          *      except when adjacent to digits
                          * /    is class SY: a breakpoint
@@ -610,14 +617,14 @@ extends Layout
      * Runs the unicode bidi algorithm on the first n chars in chs, returning
      * the char dirs in chInfo and the base line direction of the first
      * paragraph.
-     *
+     * 
      * XXX change result from dirs to levels
-     *
+     *  
      * @param dir the direction flag, either DIR_REQUEST_LTR,
      * DIR_REQUEST_RTL, DIR_REQUEST_DEFAULT_LTR, or DIR_REQUEST_DEFAULT_RTL.
      * @param chs the text to examine
-     * @param chInfo on input, if hasInfo is true, override and other flags
-     * representing out-of-band embedding information. On output, the generated
+     * @param chInfo on input, if hasInfo is true, override and other flags 
+     * representing out-of-band embedding information. On output, the generated 
      * dirs of the text.
      * @param n the length of the text/information in chs and chInfo
      * @param hasInfo true if chInfo has input information, otherwise the
@@ -625,9 +632,9 @@ extends Layout
      * @return the resolved direction level of the first paragraph, either
      * DIR_LEFT_TO_RIGHT or DIR_RIGHT_TO_LEFT.
      */
-    /* package */ static int bidi(int dir, char[] chs, byte[] chInfo, int n,
+    /* package */ static int bidi(int dir, char[] chs, byte[] chInfo, int n, 
             boolean hasInfo) {
-
+        
         AndroidCharacter.getDirectionalities(chs, chInfo, n);
 
         /*
@@ -835,7 +842,7 @@ extends Layout
                 chInfo[j] = SOR;
             }
         }
-
+        
         return dir;
     }
 
@@ -978,6 +985,7 @@ extends Layout
                       TextUtils.TruncateAt ellipsize, float ellipsiswidth,
                       float textwidth, TextPaint paint) {
         int j = mLineCount;
+		// Jota Text Editor
         int off = j * 1;
         int want = off + 1 + TOP;
         int want2 = j + TOP;
@@ -992,6 +1000,7 @@ extends Layout
             mLines = grow;
             lines = grow;
         }
+		// Jota Text Editor
         if (want2 >= mLineDirections.length ){
             int nlen2 = ArrayUtils.idealIntArraySize(want2 + 1);
             Directions[] grow2 = new Directions[nlen2];
@@ -1055,6 +1064,7 @@ extends Layout
         }
 
         lines[off + START] = start;
+		// Jota Text Editor
 //        lines[off + TOP] = v;
 //        lines[off + DESCENT] = below + extra;
 
@@ -1116,6 +1126,7 @@ extends Layout
             mLineDirections[j] = linedirs;
 
             // If ellipsize is in marquee mode, do not apply ellipsis on the first line
+		// Jota Text Editor
 //            if (ellipsize != null && (ellipsize != TextUtils.TruncateAt.MARQUEE || j != 0)) {
 //                calculateEllipsis(start, end, widths, widstart, widoff,
 //                                  ellipsiswidth, ellipsize, j,
@@ -1127,6 +1138,7 @@ extends Layout
         return v;
     }
 
+		// Jota Text Editor
 //    private void calculateEllipsis(int linestart, int lineend,
 //                                   float[] widths, int widstart, int widoff,
 //                                   float avail, TextUtils.TruncateAt where,
@@ -1220,7 +1232,7 @@ extends Layout
         int[] lines = mLines;
         while (high - low > 1) {
             guess = (high + low) >> 1;
-            if ( guess * mHeight > vertical){
+            if ( guess * mHeight > vertical){		// Jota Text Editor
                 high = guess;
             } else {
                 low = guess;
@@ -1239,24 +1251,24 @@ extends Layout
 
     public int getLineTop(int line) {
         return mHeight * line ;
-        //return mLines[mColumns * line + TOP];
+        //return mLines[mColumns * line + TOP];		// Jota Text Editor
     }
 
     public int getLineDescent(int line) {
         return mDescent;
-//        return mLines[mColumns * line + DESCENT];
+//        return mLines[mColumns * line + DESCENT];		// Jota Text Editor
     }
 
     public int getLineStart(int line) {
-        return mLines[ line + START] & START_MASK;
+        return mLines[ line + START] & START_MASK;		// Jota Text Editor
     }
 
     public int getParagraphDirection(int line) {
-        return mLines[ line + DIR] >> DIR_SHIFT;
+        return mLines[ line + DIR] >> DIR_SHIFT;		// Jota Text Editor
     }
 
     public boolean getLineContainsTab(int line) {
-        return (mLines[ line + TAB] & TAB_MASK) != 0;
+        return (mLines[ line + TAB] & TAB_MASK) != 0;		// Jota Text Editor
     }
 
     public final Directions getLineDirections(int line) {
@@ -1273,6 +1285,7 @@ extends Layout
 
     @Override
     public int getEllipsisCount(int line) {
+// Jota Text Editor
 //        if (mColumns < COLUMNS_ELLIPSIZE) {
             return 0;
 //        }
@@ -1282,6 +1295,7 @@ extends Layout
 
     @Override
     public int getEllipsisStart(int line) {
+// Jota Text Editor
 //        if (mColumns < COLUMNS_ELLIPSIZE) {
             return 0;
 //        }
@@ -1296,7 +1310,7 @@ extends Layout
 
     private int mLineCount;
     private int mTopPadding, mBottomPadding;
-//    private int mColumns;
+//    private int mColumns;		// Jota Text Editor
     private int mEllipsizedWidth;
 
     private static final int COLUMNS_NORMAL = 3;
@@ -1327,6 +1341,7 @@ extends Layout
     private float[] mWidths;
     private Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
 
+	// Jota Text Editor
     private int mHeight;
     private int mDescent;
 

@@ -157,9 +157,11 @@ public abstract class Layout {
      * Draw this Layout on the specified Canvas.
      */
     public void draw(Canvas c) {
+		// Jota Text Editor
         draw(c, null, null, 0 , -1, null);
     }
 
+	// Jota Text Editor
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
             int cursorOffsetVertical  ) {
         draw(c, highlight, highlightPaint, cursorOffsetVertical , -1 , null);
@@ -175,6 +177,7 @@ public abstract class Layout {
      * @param cursorOffsetVertical the amount to temporarily translate the
      *        canvas while rendering the highlight
      */
+	// Jota Text Editor
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
                      int cursorOffsetVertical , int selLine, Paint underlinePaint ) {
         int dtop, dbottom;
@@ -207,7 +210,7 @@ public abstract class Layout {
 
         TextPaint paint = mPaint;
         CharSequence buf = mText;
-//        int width = mWidth;
+//        int width = mWidth;		// Jota Text Editor
         boolean spannedText = mSpannedText;
 
         ParagraphStyle[] spans = NO_PARA_SPANS;
@@ -217,6 +220,7 @@ public abstract class Layout {
         // First, draw LineBackgroundSpans.
         // LineBackgroundSpans know nothing about the alignment or direction of
         // the layout or line.  XXX: Should they?
+		// Jota Text Editor
 //        if (spannedText) {
 //            textLength = buf.length();
 //            for (int i = first; i <= last; i++) {
@@ -267,7 +271,6 @@ public abstract class Layout {
             }
         }
 
-
         Alignment align = mAlignment;
 
         // Next draw the lines, one at a time.
@@ -285,6 +288,7 @@ public abstract class Layout {
             int lbaseline = lbottom - getLineDescent(i);
 
             boolean isFirstParaLine = false;
+// Jota Text Editor
 //            if (spannedText) {
 //                if (start == 0 || buf.charAt(start - 1) == '\n') {
 //                    isFirstParaLine = true;
@@ -311,6 +315,7 @@ public abstract class Layout {
             int left = 0;
             int right = mWidth;
 
+		// Jota Text Editor
 //            // Draw all leading margin spans.  Adjust left or right according
 //            // to the paragraph direction of the line.
 //            if (spannedText) {
@@ -373,6 +378,7 @@ public abstract class Layout {
             /**
              * underline
              */
+			// Jota Text Editor
             if ( selLine == i && underlinePaint != null){
                 int underlinepos = getLineBaseline(i) + 1;
                 c.drawLine(0 , underlinepos, getWidth() , underlinepos, underlinePaint );
@@ -1846,7 +1852,6 @@ public abstract class Layout {
             mDirections = dirs;
         }
     }
-
 
     /**
      * Return the offset of the first character to be ellipsized away,

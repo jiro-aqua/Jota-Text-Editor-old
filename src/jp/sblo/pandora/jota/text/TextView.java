@@ -202,6 +202,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private boolean mFreezesText;
     private boolean mFrozenWithFocus;
     private boolean mTemporaryDetach;
+// Jota Text Editor
 //    private boolean mDispatchTemporaryDetach;
 
     private boolean mEatTouchRelease = false;
@@ -333,7 +334,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     public TextView(Context context,
                     AttributeSet attrs) {
-        this(context, attrs, android.R.attr.textViewStyle);
+        this(context, attrs, android.R.attr.textViewStyle);// Jota Text Editor
     }
 
     @SuppressWarnings({
@@ -346,6 +347,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mText = "";
 
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+// Jota Text Editor
 //        mTextPaint.density = getResources().getDisplayMetrics().density;
 //        mTextPaint.setCompatibilityScaling(
 //                getResources().getCompatibilityInfo().applicationScale);
@@ -355,6 +357,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         // mTextPaint.setTextAlign(Paint.Align.LEFT);
 
         mHighlightPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+// Jota Text Editor
 //        mHighlightPaint.setCompatibilityScaling(
 //                getResources().getCompatibilityInfo().applicationScale);
 
@@ -363,7 +366,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         TypedArray a =
             context.obtainStyledAttributes(
-                attrs, android.R.styleable.TextView, defStyle, 0);
+                attrs, android.R.styleable.TextView, defStyle, 0);// Jota Text Editor
 
         int textColorHighlight = 0;
         ColorStateList textColor = null;
@@ -380,10 +383,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
          * for this View override it.
          */
         TypedArray appearance = null;
-        int ap = a.getResourceId(android.R.styleable.TextView_textAppearance, -1);
+        int ap = a.getResourceId(android.R.styleable.TextView_textAppearance, -1);// Jota Text Editor
         if (ap != -1) {
             appearance = context.obtainStyledAttributes(ap,
-                                android.R.styleable.
+                                android.R.styleable.// Jota Text Editor
                                 TextAppearance);
         }
         if (appearance != null) {
@@ -391,6 +394,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             for (int i = 0; i < n; i++) {
                 int attr = appearance.getIndex(i);
 
+// Jota Text Editor
                 switch (attr) {
                 case android.R.styleable.TextAppearance_textColorHighlight:
                     textColorHighlight = appearance.getColor(attr, textColorHighlight);
@@ -915,7 +919,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
          * focusable by default.
          */
         a = context.obtainStyledAttributes(attrs,
-                                           android.R.styleable.View,
+                                           android.R.styleable.View,// Jota Text Editor
                                            defStyle, 0);
 
         boolean focusable = mMovement != null || mInput != null;
@@ -927,15 +931,15 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             int attr = a.getIndex(i);
 
             switch (attr) {
-            case android.R.styleable.View_focusable:
+            case android.R.styleable.View_focusable:// Jota Text Editor
                 focusable = a.getBoolean(attr, focusable);
                 break;
 
-            case android.R.styleable.View_clickable:
+            case android.R.styleable.View_clickable:// Jota Text Editor
                 clickable = a.getBoolean(attr, clickable);
                 break;
 
-            case android.R.styleable.View_longClickable:
+            case android.R.styleable.View_longClickable:// Jota Text Editor
                 longClickable = a.getBoolean(attr, longClickable);
                 break;
             }
@@ -948,6 +952,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         prepareCursorControllers();
 
+		// Jota Text Editor
         mUndoBuffer.removeAll();
 
         addTextChangedListener(new TextWatcher() {
@@ -1626,36 +1631,36 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public void setTextAppearance(Context context, int resid) {
         TypedArray appearance =
             context.obtainStyledAttributes(resid,
-                                           android.R.styleable.TextAppearance);
+                                           android.R.styleable.TextAppearance);// Jota Text Editor
 
         int color;
         ColorStateList colors;
         int ts;
 
-        color = appearance.getColor(android.R.styleable.TextAppearance_textColorHighlight, 0);
+        color = appearance.getColor(android.R.styleable.TextAppearance_textColorHighlight, 0);// Jota Text Editor
         if (color != 0) {
             setHighlightColor(color);
         }
 
-        colors = appearance.getColorStateList(android.R.styleable.
+        colors = appearance.getColorStateList(android.R.styleable.// Jota Text Editor
                                               TextAppearance_textColor);
         if (colors != null) {
             setTextColor(colors);
         }
 
-        ts = appearance.getDimensionPixelSize(android.R.styleable.
+        ts = appearance.getDimensionPixelSize(android.R.styleable.// Jota Text Editor
                                               TextAppearance_textSize, 0);
         if (ts != 0) {
             setRawTextSize(ts);
         }
 
-        colors = appearance.getColorStateList(android.R.styleable.
+        colors = appearance.getColorStateList(android.R.styleable.// Jota Text Editor
                                               TextAppearance_textColorHint);
         if (colors != null) {
             setHintTextColor(colors);
         }
 
-        colors = appearance.getColorStateList(android.R.styleable.
+        colors = appearance.getColorStateList(android.R.styleable.// Jota Text Editor
                                               TextAppearance_textColorLink);
         if (colors != null) {
             setLinkTextColor(colors);
@@ -1663,9 +1668,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         int typefaceIndex, styleIndex;
 
-        typefaceIndex = appearance.getInt(android.R.styleable.
+        typefaceIndex = appearance.getInt(android.R.styleable.// Jota Text Editor
                                           TextAppearance_typeface, -1);
-        styleIndex = appearance.getInt(android.R.styleable.
+        styleIndex = appearance.getInt(android.R.styleable.// Jota Text Editor
                                        TextAppearance_textStyle, -1);
 
         setTypefaceByIndex(typefaceIndex, styleIndex);
@@ -1841,6 +1846,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+// Jota Text Editor
     public void setUnderlineColor(int color) {
         if (mUnderlineColor != color) {
             mUnderlineColor = color;
@@ -1853,6 +1859,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+// Jota Text Editor
     public void enableUnderline(boolean underline) {
         if (mUnderline != underline) {
             mUnderline = underline;
@@ -2380,7 +2387,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         CharSequence text;
         boolean frozenWithFocus;
         CharSequence error;
-        UndoBuffer undoBuffer;
+        UndoBuffer undoBuffer;// Jota Text Editor
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -2400,7 +2407,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 out.writeInt(1);
                 TextUtils.writeToParcel(error, out, flags);
             }
-            out.writeParcelable(undoBuffer, 0);
+            out.writeParcelable(undoBuffer, 0);// Jota Text Editor
         }
 
         @Override
@@ -2435,7 +2442,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             if (in.readInt() != 0) {
                 error = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
             }
-            undoBuffer = in.readParcelable(UndoBuffer.class.getClassLoader());
+            undoBuffer = in.readParcelable(UndoBuffer.class.getClassLoader());// Jota Text Editor
         }
     }
 
@@ -2489,7 +2496,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
 
             ss.error = mError;
-            ss.undoBuffer = mUndoBuffer;
+            ss.undoBuffer = mUndoBuffer;// Jota Text Editor
             return ss;
         }
 
@@ -2545,7 +2552,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 }
             });
         }
-        mUndoBuffer = ss.undoBuffer;
+        mUndoBuffer = ss.undoBuffer;// Jota Text Editor
 
     }
 
@@ -2693,6 +2700,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             text = TextUtils.stringOrSpannedString(text);
         }
 
+// Jota Text Editor
 //        if (mAutoLinkMask != 0) {
 //            Spannable s2;
 //
@@ -3374,7 +3382,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         if (mPopup == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            final TextView err = (TextView) inflater.inflate(R.layout.textview_hint,
+            final TextView err = (TextView) inflater.inflate(R.layout.textview_hint,// Jota Text Editor
                     null);
 
             final float scale = getResources().getDisplayMetrics().density;
@@ -3407,9 +3415,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             mAbove = above;
 
             if (above) {
-                mView.setBackgroundResource(R.drawable.popup_inline_error_above);
+                mView.setBackgroundResource(R.drawable.popup_inline_error_above);// Jota Text Editor
             } else {
-                mView.setBackgroundResource(R.drawable.popup_inline_error);
+                mView.setBackgroundResource(R.drawable.popup_inline_error);// Jota Text Editor
             }
         }
 
@@ -3940,6 +3948,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     @Override
     protected void onDraw(Canvas canvas) {
+// Jota Text Editor
 //        restartMarqueeIfNeeded();
 
         // Draw the background for this view
@@ -4073,6 +4082,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             canvas.translate(compoundPaddingLeft, extendedPaddingTop + voffsetText);
         }
 
+// Jota Text Editor
 //        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
 //            if (!mSingleLine && getLineCount() == 1 && canMarquee() &&
 //                    (mGravity & Gravity.HORIZONTAL_GRAVITY_MASK) != Gravity.LEFT) {
@@ -4187,10 +4197,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
         }
 
+// Jota Text Editor
         int selLine = layout.getLineForOffset(selEnd);
 
         layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText,selLine , mUnderLinePaint );
 
+// Jota Text Editor
 //        if (mMarquee != null && mMarquee.shouldDrawGhost()) {
 //            canvas.translate((int) mMarquee.getGhostOffset(), 0.0f);
 //            layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText);
@@ -5047,6 +5059,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     mSpacingAdd, mIncludePad, mInput == null ? mEllipsize : null,
                     ellipsisWidth);
         } else {
+// Jota Text Editor
 //            if (boring == UNKNOWN_BORING) {
 //                boring = BoringLayout.isBoring(mTransformed, mTextPaint,
 //                                               mBoring);
@@ -5782,6 +5795,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
                 if (duration > ANIMATED_SCROLL_GAP) {
                     mScroller.startScroll(mScrollX, mScrollY, dx, dy);
+					// Jota Text Editor
                     //awakenScrollBars(mScroller.getDuration());
                     invalidate();
                 } else {
@@ -5829,18 +5843,21 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
         int start = getSelectionStart();
         int end = getSelectionEnd();
+// Jota Text Editor
 //        if (start != end) {
 //            return false;
 //        }
 
         // First: make sure the line is visible on screen:
 
+// Jota Text Editor
         int line = mLayout.getLineForOffset(end);
 //        int line = mLayout.getLineForOffset(start);
 
         final int top = mLayout.getLineTop(line);
         final int bottom = mLayout.getLineTop(line + 1);
         final int vspace = mBottom - mTop - getExtendedPaddingTop() - getExtendedPaddingBottom();
+// Jota Text Editor
 //        int vslack = (bottom - top) / 2;
 //        if (vslack > vspace / 4)
 //            vslack = vspace / 4;
@@ -5860,6 +5877,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         final int leftChar = mLayout.getOffsetForHorizontal(line, hs);
         final int rightChar = mLayout.getOffsetForHorizontal(line, hspace+hs);
 
+// Jota Text Editor
         int newEnd = end;
         if (newEnd < leftChar) {
             newEnd = leftChar;
@@ -5867,6 +5885,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             newEnd = rightChar;
         }
 
+// Jota Text Editor
         if (newEnd != end) {
             Selection.setSelection((Spannable)mText, newEnd);
             stopTextSelectionMode();
@@ -6580,6 +6599,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
     private void makeBlink() {
+// Jota Text Editor
         if (!mCursorVisible || !isTextEditable()) {
             if (mBlink != null) {
                 mBlink.removeCallbacks(mBlink);
@@ -6595,6 +6615,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mBlink.postAtTime(mBlink, mShowCursor + BLINK);
     }
 
+// Jota Text Editor
 //    /**
 //     * @hide
 //     */
@@ -6607,6 +6628,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     @Override
     public void onStartTemporaryDetach() {
+// Jota Text Editor
 //        super.onStartTemporaryDetach();
 //        // Only track when onStartTemporaryDetach() is called directly,
 //        // usually because this instance is an editable field in a list
@@ -6616,6 +6638,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     @Override
     public void onFinishTemporaryDetach() {
+// Jota Text Editor
 //        super.onFinishTemporaryDetach();
 //        // Only track when onStartTemporaryDetach() is called directly,
 //        // usually because this instance is an editable field in a list
@@ -6698,6 +6721,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             onEndBatchEdit();
 
             hideInsertionPointCursorController();
+// Jota Text Editor
 //            if (this instanceof ExtractEditText) {
 //                // terminateTextSelectionMode would remove selection, which we want to keep when
 //                // ExtractEditText goes out of focus.
@@ -6711,6 +6735,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
         }
 
+// Jota Text Editor
 //        startStopMarquee(focused);
 
         if (mTransformation != null) {
@@ -6766,6 +6791,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         startStopMarquee(hasWindowFocus);
     }
 
+// Jota Text Editor
 //    @Override
 //    protected void onVisibilityChanged(View changedView, int visibility) {
 //        super.onVisibilityChanged(changedView, visibility);
@@ -6774,6 +6800,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 //        }
 //    }
 
+// Jota Text Editor
     @Override
     protected void onWindowVisibilityChanged (int visibility) {
         super.onWindowVisibilityChanged(visibility);
@@ -6820,6 +6847,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 Selection.setSelection((Spannable)mText, prevStart, prevEnd);
 
                 // Tapping inside the selection displays the cut/copy/paste context menu
+// Jota Text Editor
 //                showContextMenu();
                 startTextSelectionMode();
                 getSelectionController().show();
@@ -6866,6 +6894,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getAction() & MotionEvent.ACTION_MASK ;
 
+// Jota Text Editor
         if (mFastScroller != null) {
             boolean intercepted = mFastScroller.onInterceptTouchEvent(event);
             if (intercepted) {
@@ -7146,16 +7175,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
      */
     public static ColorStateList getTextColors(Context context, TypedArray attrs) {
         ColorStateList colors;
-        colors = attrs.getColorStateList(android.R.styleable.
+        colors = attrs.getColorStateList(android.R.styleable.// Jota Text Editor
                                          TextView_textColor);
 
         if (colors == null) {
-            int ap = attrs.getResourceId(android.R.styleable.
+            int ap = attrs.getResourceId(android.R.styleable.// Jota Text Editor
                                          TextView_textAppearance, -1);
             if (ap != -1) {
                 TypedArray appearance;
                 appearance = context.obtainStyledAttributes(ap,
-                                            android.R.styleable.TextAppearance);
+                                            android.R.styleable.TextAppearance);// Jota Text Editor
                 colors = appearance.getColorStateList(android.R.styleable.
                                                   TextAppearance_textColor);
                 appearance.recycle();
@@ -7214,6 +7243,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
             break;
 
+// Jota Text Editor
         case KeyEvent.KEYCODE_Z:
             if (canUndo()) {
                 return onTextContextMenuItem(ID_UNDO);
@@ -7239,6 +7269,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
 
+// Jota Text Editor
     private boolean canUndo() {
         return  mUndoBuffer.canUndo();
     }
@@ -7253,6 +7284,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
     private boolean canCut() {
+// Jota Text Editor
 //        if (mTransformation instanceof PasswordTransformationMethod) {
 //            return false;
 //        }
@@ -7267,6 +7299,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
     private boolean canCopy() {
+// Jota Text Editor
 //        if (mTransformation instanceof PasswordTransformationMethod) {
 //            return false;
 //        }
@@ -7279,6 +7312,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
     private boolean canPaste() {
+// Jota Text Editor
         return (mText instanceof Editable &&
                 mInput != null &&
                 getSelectionStart() >= 0 &&
@@ -7489,6 +7523,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         // it may not be called (if the user/ discards the context menu with the back key).
         mDPadCenterIsDown = mEnterKeyIsDown = false;
 
+// Jota Text Editor
 //        if (!isFocused()) {
 //            if (isFocusable() && mInput != null) {
 //                if (canCopy()) {
@@ -7508,22 +7543,32 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         MenuHandler handler = new MenuHandler();
 
+// Jota Text Editor
+//        if (canSelectAll()) {
+//            menu.add(0, ID_SELECT_ALL, 0,
+//                    com.android.internal.R.string.selectAll).
+//                setOnMenuItemClickListener(handler).
+//                setAlphabeticShortcut('a');
+//            added = true;
+//        }
+
         boolean selection = getSelectionStart() != getSelectionEnd();
 
         if (canSelectText()) {
             if (MetaKeyKeyListener.getMetaState(mText, MetaKeyKeyListener.META_SELECTING) != 0) {
                 menu.add(0, ID_STOP_SELECTING_TEXT, 0,
-                        R.string.stopSelectingText).
+                        R.string.stopSelectingText).// Jota Text Editor
                     setOnMenuItemClickListener(handler);
                 added = true;
             } else {
                 menu.add(0, ID_START_SELECTING_TEXT, 0,
-                        R.string.selectText).
+                        R.string.selectText).// Jota Text Editor
                     setOnMenuItemClickListener(handler);
                 added = true;
             }
         }
 
+// Jota Text Editor
         if (canUndo()) {
             int name;
             name = R.string.menu_edit_undo;
@@ -7537,6 +7582,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         if (canCut()) {
             int name;
             if (selection) {
+// Jota Text Editor
                 name = R.string.cut;
                 menu.add(0, ID_CUT, 0, name).
                 setOnMenuItemClickListener(handler).
@@ -7551,6 +7597,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         if (canCopy()) {
             int name;
             if (selection) {
+// Jota Text Editor
                 name = R.string.copy;
                 menu.add(0, ID_COPY, 0, name).
                 setOnMenuItemClickListener(handler).
@@ -7563,12 +7610,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
 
         if (canPaste()) {
+// Jota Text Editor
             menu.add(0, ID_PASTE, 0, R.string.paste).
                     setOnMenuItemClickListener(handler).
                     setAlphabeticShortcut('v');
             added = true;
         }
 
+// Jota Text Editor
 //        if (mText instanceof Spanned) {
 //            int selStart = getSelectionStart();
 //            int selEnd = getSelectionEnd();
@@ -7586,6 +7635,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 //            }
 //        }
 
+// Jota Text Editor
         if (canSelectAll()) {
             menu.add(0, ID_SELECT_ALL, 0,
                     R.string.selectAll).
@@ -7594,6 +7644,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             added = true;
         }
 
+// Jota Text Editor
         if (canCopy()) {
             int name;
             if (selection && mNameDirectIntent!=null ) {
@@ -7606,11 +7657,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
 
         if (isInputMethodTarget()) {
-            menu.add(1, ID_SWITCH_INPUT_METHOD, 0, R.string.inputMethod).
+            menu.add(1, ID_SWITCH_INPUT_METHOD, 0, R.string.inputMethod).// Jota Text Editor
                     setOnMenuItemClickListener(handler);
             added = true;
         }
 
+// Jota Text Editor
 //        String word = getWordForDictionary();
 //        if (word != null) {
 //            menu.add(1, ID_ADD_TO_DICTIONARY, 0,
@@ -7642,9 +7694,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_CUT = android.R.id.cut;
     private static final int ID_COPY = android.R.id.copy;
     private static final int ID_PASTE = android.R.id.paste;
-    private static final int ID_DIRECTINTENT = R.id.directintent;
+    private static final int ID_DIRECTINTENT = R.id.directintent;// Jota Text Editor
     private static final int ID_COPY_URL = android.R.id.copyUrl;
-    private static final int ID_UNDO = R.id.undo;
+    private static final int ID_UNDO = R.id.undo;// Jota Text Editor
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
     private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;
 
@@ -7663,6 +7715,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
      * or {@link android.R.id#switchInputMethod}.
      */
     public boolean onTextContextMenuItem(int id) {
+// Jota Text Editor
         int min = 0;
         int max = mText.length();
 
@@ -7825,6 +7878,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return false;
     }
 
+// Jota Text Editor
     public void setCaretThick( float thick ){
         mHighlightPaint.setStrokeWidth(thick);
         mTextPaint.setStrokeWidth(thick);
@@ -7841,6 +7895,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 return;
             }
 
+// Jota Text Editor
 //            selectCurrentWord();
             getSelectionController().show();
             final InputMethodManager imm = (InputMethodManager)
@@ -7858,12 +7913,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+// Jota Text Editor
     public void moveToLine(int line){
         int offset = mLayout.getLineStart(line);
         Selection.setSelection((Spannable) mText, offset,  offset );
         Log.e( TAG , "offset="+offset);
     }
 
+// Jota Text Editor
     public void setFastScrollEnabled(boolean enabled) {
         mFastScrollEnabled = enabled;
         if (enabled) {
@@ -7878,6 +7935,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+// Jota Text Editor
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 
@@ -7886,6 +7944,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
     }
 
+// Jota Text Editor
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
@@ -7897,16 +7956,19 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     }
 
+// Jota Text Editor
     @Override
     protected boolean isVerticalScrollBarHidden() {
         return mFastScroller != null && mFastScroller.isVisible();
     }
 
+// Jota Text Editor
     public int   getVisibleHeight()
     {
         return  mBottom - mTop - getExtendedPaddingBottom() - getExtendedPaddingTop();
     }
 
+// Jota Text Editor
     public boolean movePage(boolean up , boolean extendSelection )
     {
         int maxline = mLayout.getLineCount();
@@ -7938,6 +8000,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return true;
     }
 
+// Jota Text Editor
     public boolean centerCursor() {
 
         if ( mLayout == null ){
@@ -7966,12 +8029,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return true;
     }
 
+// Jota Text Editor
     public void setChanged( boolean changed ){
         if ( changed == false ){
             mUndoBuffer.removeAll();
         }
     }
 
+// Jota Text Editor
     public void setNameDirectIntent(String name)
     {
         mNameDirectIntent = name;
@@ -8048,9 +8113,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             mController = controller;
             mContainer = new PopupWindow(TextView.this.mContext, null,
                     com.android.internal.R.attr.textSelectHandleWindowStyle);
-//            mContainer.setSplitTouchEnabled(true);
+//            mContainer.setSplitTouchEnabled(true);// Jota Text Editor
             mContainer.setClippingEnabled(false);
-//            mContainer.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);
+//            mContainer.setWindowLayoutType(WindowManager.LayoutParams.TYPE_APPLICATION_SUB_PANEL);// Jota Text Editor
 
             setOrientation(pos);
         }
@@ -8764,6 +8829,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private InputFilter[] mFilters = NO_FILTERS;
     private static final Spanned EMPTY_SPANNED = new SpannedString("");
 
+// Jota Text Editor
     private FastScroller mFastScroller;
     boolean mFastScrollEnabled;
 

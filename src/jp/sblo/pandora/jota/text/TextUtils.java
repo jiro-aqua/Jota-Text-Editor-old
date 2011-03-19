@@ -706,6 +706,7 @@ public class TextUtils {
                     readSpan(p, sp, new SubscriptSpan(p));
                     break;
 
+// Jota Text Editor
 //                case ABSOLUTE_SIZE_SPAN:
 //                    readSpan(p, sp, new AbsoluteSizeSpan(p));
 //                    break;
@@ -990,7 +991,7 @@ public class TextUtils {
     /**
      * Returns the original text if it fits in the specified width
      * given the properties of the specified Paint,
-     * or, if it does not fit, a copy with ellipsis character added
+     * or, if it does not fit, a copy with ellipsis character added 
      * at the specified edge or center.
      * If <code>preserveLength</code> is specified, the returned copy
      * will be padded with zero-width spaces to preserve the original
@@ -1069,7 +1070,7 @@ public class TextUtils {
                     return blank(text, fit, len);
                 } else {
                     return text.toString().substring(0, fit) + sEllipsis;
-                }
+                } 
             } else /* where == TruncateAt.MIDDLE */ {
                 int right = p.breakText(text, 0, len, false,
                                         (avail - ellipsiswid) / 2, null);
@@ -1263,7 +1264,7 @@ public class TextUtils {
                 buf[i] = '\uFEFF';
             }
         }
-
+    
         String ret = new String(buf, 0, len);
         recycle(buf);
 
@@ -1536,7 +1537,7 @@ public class TextUtils {
      */
     public static final int CAP_MODE_CHARACTERS
             = InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS;
-
+    
     /**
      * Capitalization mode for {@link #getCapsMode}: capitalize the first
      * character of all words.  This value is explicitly defined to be the same as
@@ -1544,7 +1545,7 @@ public class TextUtils {
      */
     public static final int CAP_MODE_WORDS
             = InputType.TYPE_TEXT_FLAG_CAP_WORDS;
-
+    
     /**
      * Capitalization mode for {@link #getCapsMode}: capitalize the first
      * character of each sentence.  This value is explicitly defined to be the same as
@@ -1552,13 +1553,13 @@ public class TextUtils {
      */
     public static final int CAP_MODE_SENTENCES
             = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
-
+    
     /**
      * Determine what caps mode should be in effect at the current offset in
      * the text.  Only the mode bits set in <var>reqModes</var> will be
      * checked.  Note that the caps mode flags here are explicitly defined
      * to match those in {@link InputType}.
-     *
+     * 
      * @param cs The text that should be checked for caps modes.
      * @param off Location in the text at which to check.
      * @param reqModes The modes to be checked: may be any combination of
@@ -1658,7 +1659,7 @@ public class TextUtils {
 
         return mode;
     }
-
+    
     private static Object sLock = new Object();
     private static char[] sTemp = null;
 }

@@ -173,7 +173,7 @@ public class Styled
      * no style changes in the middle of the run. If any style is replacement
      * text, the first character will get the width of the replacement and the
      * remaining characters will get a width of 0.
-     *
+     * 
      * @param paint the paint, will not be modified
      * @param workPaint a paint to modify; on return will reflect the original
      *        paint plus the effect of all spans on the run
@@ -189,6 +189,7 @@ public class Styled
                                     TextPaint workPaint,
                                     Spanned text, int start, int end,
                                     float[] widths, Paint.FontMetricsInt fmi) {
+// Jota Text Editor
 //        MetricAffectingSpan[] spans =
 //            text.getSpans(start, end, MetricAffectingSpan.class);
 //
@@ -278,7 +279,7 @@ public class Styled
 
             return ret * dir;   // Layout.DIR_RIGHT_TO_LEFT == -1
         }
-
+        
         float ox = x;
         int minAscent = 0, maxDescent = 0, minTop = 0, maxBottom = 0;
 
@@ -360,7 +361,7 @@ public class Styled
                        x, top, y, bottom, null, paint, workPaint,
                        needWidth);
     }
-
+    
     /**
      * Draws a run of text on a single line, with its
      * origin at (x,y), in the specified Paint. The origin is interpreted based
@@ -373,7 +374,7 @@ public class Styled
      * float, Paint)} and
      * {@link android.graphics.Canvas#drawRect(float, float, float, float,
      * Paint)}.
-     *
+     * 
      * @param canvas The target canvas
      * @param text The text to be drawn
      * @param start The index of the first character in text to draw
@@ -409,13 +410,13 @@ public class Styled
         return drawText(canvas, text, start, end, direction, false,
                         x, top, y, bottom, paint, workPaint, needWidth);
     }
-
+    
     /**
      * Returns the width of a run of left-to-right text on a single line,
      * considering style information in the text (e.g. even when text is an
      * instance of {@link android.text.Spanned}, this method correctly measures
      * the width of the text).
-     *
+     * 
      * @param paint the main {@link TextPaint} object; will not be modified
      * @param workPaint the {@link TextPaint} object available for modification;
      *        will not necessarily be used

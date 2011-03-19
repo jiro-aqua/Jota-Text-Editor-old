@@ -41,7 +41,7 @@ public class Selection {
         else
             return -1;
     }
-
+   
     /**
      * Return the offset of the selection edge or cursor, or -1 if
      * there is no selection or cursor.
@@ -60,7 +60,7 @@ public class Selection {
     // private static int pin(int value, int min, int max) {
     //     return value < min ? 0 : (value > max ? max : value);
     // }
-
+   
     /**
      * Set the selection anchor to <code>start</code> and the selection edge
      * to <code>stop</code>.
@@ -72,7 +72,7 @@ public class Selection {
 
         int ostart = getSelectionStart(text);
         int oend = getSelectionEnd(text);
-
+    
         if (ostart != start || oend != stop) {
             text.setSpan(SELECTION_START, start, start,
                          Spanned.SPAN_POINT_POINT|Spanned.SPAN_INTERMEDIATE);
@@ -420,10 +420,15 @@ public class Selection {
         }
     }
 
+// Jota Text Editor
+//    private static final class START implements NoCopySpan { };
+//    private static final class END implements NoCopySpan { };
+    
     /*
      * Public constants
      */
 
+	// Jota Text Editor
     public static final Object SELECTION_START = android.text.Selection.SELECTION_START;
     public static final Object SELECTION_END = android.text.Selection.SELECTION_END;
 }
