@@ -30,7 +30,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -42,10 +41,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.ResultReceiver;
@@ -256,8 +253,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private boolean mSelectionMoved = false;
     private boolean mTouchFocusSelected = false;
 
-    private Marquee mMarquee;
-    private boolean mRestartMarquee;
+ // Jota Text Editor
+//    private Marquee mMarquee;
+//    private boolean mRestartMarquee;
 
     private int mMarqueeRepeatLimit = 3;
 
@@ -3523,17 +3521,19 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                           mPopup.getWidth(), mPopup.getHeight());
         }
 
-        restartMarqueeIfNeeded();
+        // Jota Text Editor
+//        restartMarqueeIfNeeded();
 
         return result;
     }
 
-    private void restartMarqueeIfNeeded() {
-        if (mRestartMarquee && mEllipsize == TextUtils.TruncateAt.MARQUEE) {
-            mRestartMarquee = false;
-            startMarquee();
-        }
-    }
+// Jota Text Editor
+//    private void restartMarqueeIfNeeded() {
+//        if (mRestartMarquee && mEllipsize == TextUtils.TruncateAt.MARQUEE) {
+//            mRestartMarquee = false;
+//            startMarquee();
+//        }
+//    }
 
     /**
      * Sets the list of input filters that will be used if the buffer is
@@ -4408,7 +4408,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         switch (keyCode) {
             case KeyEvent.KEYCODE_ENTER:
-                mEnterKeyIsDown = true;
+//                mEnterKeyIsDown = true;// Jota Text Editor
                 // If ALT modifier is held, then we always insert a
                 // newline character.
                 if ((event.getMetaState()&KeyEvent.META_ALT_ON) == 0) {
@@ -4441,7 +4441,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 break;
 
             case KeyEvent.KEYCODE_DPAD_CENTER:
-                mDPadCenterIsDown = true;
+//                mDPadCenterIsDown = true;// Jota Text Editor
                 if (shouldAdvanceFocusOnEnter()) {
                     return 0;
                 }
@@ -4537,7 +4537,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_CENTER:
-                mDPadCenterIsDown = false;
+//                mDPadCenterIsDown = false;    // Jota Text Editor
                 /*
                  * If there is a click listener, just call through to
                  * super, which will invoke it.
@@ -4558,7 +4558,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 return super.onKeyUp(keyCode, event);
 
             case KeyEvent.KEYCODE_ENTER:
-                mEnterKeyIsDown = false;
+//                mEnterKeyIsDown = false;// Jota Text Editor
                 if (mInputContentType != null
                         && mInputContentType.onEditorActionListener != null
                         && mInputContentType.enterDown) {
@@ -5026,7 +5026,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                                  BoringLayout.Metrics boring,
                                  BoringLayout.Metrics hintBoring,
                                  int ellipsisWidth, boolean bringIntoView) {
-        stopMarquee();
+     // Jota Text Editor
+//        stopMarquee();
 
         mHighlightPathBogus = true;
 
@@ -5192,43 +5193,45 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             registerForPreDraw();
         }
 
-        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
-            if (!compressText(ellipsisWidth)) {
-                final int height = mLayoutParams.height;
-                // If the size of the view does not depend on the size of the text, try to
-                // start the marquee immediately
-                if (height != LayoutParams.WRAP_CONTENT && height != LayoutParams.MATCH_PARENT) {
-                    startMarquee();
-                } else {
-                    // Defer the start of the marquee until we know our width (see setFrame())
-                    mRestartMarquee = true;
-                }
-            }
-        }
+     // Jota Text Editor
+//        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
+//            if (!compressText(ellipsisWidth)) {
+//                final int height = mLayoutParams.height;
+//                // If the size of the view does not depend on the size of the text, try to
+//                // start the marquee immediately
+//                if (height != LayoutParams.WRAP_CONTENT && height != LayoutParams.MATCH_PARENT) {
+//                    startMarquee();
+//                } else {
+//                    // Defer the start of the marquee until we know our width (see setFrame())
+//                    mRestartMarquee = true;
+//                }
+//            }
+//        }
 
         // CursorControllers need a non-null mLayout
         prepareCursorControllers();
     }
 
-    private boolean compressText(float width) {
-        // Only compress the text if it hasn't been compressed by the previous pass
-        if (width > 0.0f && mLayout != null && getLineCount() == 1 && !mUserSetTextScaleX &&
-                mTextPaint.getTextScaleX() == 1.0f) {
-            final float textWidth = mLayout.getLineWidth(0);
-            final float overflow = (textWidth + 1.0f - width) / width;
-            if (overflow > 0.0f && overflow <= Marquee.MARQUEE_DELTA_MAX) {
-                mTextPaint.setTextScaleX(1.0f - overflow - 0.005f);
-                post(new Runnable() {
-                    public void run() {
-                        requestLayout();
-                    }
-                });
-                return true;
-            }
-        }
-
-        return false;
-    }
+// Jota Text Editor
+//    private boolean compressText(float width) {
+//        // Only compress the text if it hasn't been compressed by the previous pass
+//        if (width > 0.0f && mLayout != null && getLineCount() == 1 && !mUserSetTextScaleX &&
+//                mTextPaint.getTextScaleX() == 1.0f) {
+//            final float textWidth = mLayout.getLineWidth(0);
+//            final float overflow = (textWidth + 1.0f - width) / width;
+//            if (overflow > 0.0f && overflow <= Marquee.MARQUEE_DELTA_MAX) {
+//                mTextPaint.setTextScaleX(1.0f - overflow - 0.005f);
+//                post(new Runnable() {
+//                    public void run() {
+//                        requestLayout();
+//                    }
+//                });
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
     private static int desired(Layout layout) {
         int n = layout.getLineCount();
@@ -5841,7 +5844,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         if (!(mText instanceof Spannable)) {
             return false;
         }
-        int start = getSelectionStart();
+// Jota Text Editor
+//        int start = getSelectionStart();
         int end = getSelectionEnd();
 // Jota Text Editor
 //        if (start != end) {
@@ -6110,178 +6114,181 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         prepareCursorControllers();
     }
 
-    private boolean canMarquee() {
-        int width = (mRight - mLeft - getCompoundPaddingLeft() - getCompoundPaddingRight());
-        return width > 0 && mLayout.getLineWidth(0) > width;
-    }
+// Jota Text Editor
+//    private boolean canMarquee() {
+//        int width = (mRight - mLeft - getCompoundPaddingLeft() - getCompoundPaddingRight());
+//        return width > 0 && mLayout.getLineWidth(0) > width;
+//    }
 
-    private void startMarquee() {
-        // Do not ellipsize EditText
-        if (mInput != null) return;
+ // Jota Text Editor
+//    private void startMarquee() {
+//        // Do not ellipsize EditText
+//        if (mInput != null) return;
+//
+//        if (compressText(getWidth() - getCompoundPaddingLeft() - getCompoundPaddingRight())) {
+//            return;
+//        }
+//
+//        if ((mMarquee == null || mMarquee.isStopped()) && (isFocused() || isSelected()) &&
+//                getLineCount() == 1 && canMarquee()) {
+//
+//            if (mMarquee == null) mMarquee = new Marquee(this);
+//            mMarquee.start(mMarqueeRepeatLimit);
+//        }
+//    }
+//
+//    private void stopMarquee() {
+//        if (mMarquee != null && !mMarquee.isStopped()) {
+//            mMarquee.stop();
+//        }
+//    }
+//
+//    private void startStopMarquee(boolean start) {
+//        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
+//            if (start) {
+//                startMarquee();
+//            } else {
+//                stopMarquee();
+//            }
+//        }
+//    }
 
-        if (compressText(getWidth() - getCompoundPaddingLeft() - getCompoundPaddingRight())) {
-            return;
-        }
-
-        if ((mMarquee == null || mMarquee.isStopped()) && (isFocused() || isSelected()) &&
-                getLineCount() == 1 && canMarquee()) {
-
-            if (mMarquee == null) mMarquee = new Marquee(this);
-            mMarquee.start(mMarqueeRepeatLimit);
-        }
-    }
-
-    private void stopMarquee() {
-        if (mMarquee != null && !mMarquee.isStopped()) {
-            mMarquee.stop();
-        }
-    }
-
-    private void startStopMarquee(boolean start) {
-        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
-            if (start) {
-                startMarquee();
-            } else {
-                stopMarquee();
-            }
-        }
-    }
-
-    private static final class Marquee extends Handler {
-        // TODO: Add an option to configure this
-        private static final float MARQUEE_DELTA_MAX = 0.07f;
-        private static final int MARQUEE_DELAY = 1200;
-        private static final int MARQUEE_RESTART_DELAY = 1200;
-        private static final int MARQUEE_RESOLUTION = 1000 / 30;
-        private static final int MARQUEE_PIXELS_PER_SECOND = 30;
-
-        private static final byte MARQUEE_STOPPED = 0x0;
-        private static final byte MARQUEE_STARTING = 0x1;
-        private static final byte MARQUEE_RUNNING = 0x2;
-
-        private static final int MESSAGE_START = 0x1;
-        private static final int MESSAGE_TICK = 0x2;
-        private static final int MESSAGE_RESTART = 0x3;
-
-        private final WeakReference<TextView> mView;
-
-        private byte mStatus = MARQUEE_STOPPED;
-        private final float mScrollUnit;
-        private float mMaxScroll;
-        float mMaxFadeScroll;
-        private float mGhostStart;
-        private float mGhostOffset;
-        private float mFadeStop;
-        private int mRepeatLimit;
-
-        float mScroll;
-
-        Marquee(TextView v) {
-            final float density = v.getContext().getResources().getDisplayMetrics().density;
-            mScrollUnit = (MARQUEE_PIXELS_PER_SECOND * density) / MARQUEE_RESOLUTION;
-            mView = new WeakReference<TextView>(v);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_START:
-                    mStatus = MARQUEE_RUNNING;
-                    tick();
-                    break;
-                case MESSAGE_TICK:
-                    tick();
-                    break;
-                case MESSAGE_RESTART:
-                    if (mStatus == MARQUEE_RUNNING) {
-                        if (mRepeatLimit >= 0) {
-                            mRepeatLimit--;
-                        }
-                        start(mRepeatLimit);
-                    }
-                    break;
-            }
-        }
-
-        void tick() {
-            if (mStatus != MARQUEE_RUNNING) {
-                return;
-            }
-
-            removeMessages(MESSAGE_TICK);
-
-            final TextView textView = mView.get();
-            if (textView != null && (textView.isFocused() || textView.isSelected())) {
-                mScroll += mScrollUnit;
-                if (mScroll > mMaxScroll) {
-                    mScroll = mMaxScroll;
-                    sendEmptyMessageDelayed(MESSAGE_RESTART, MARQUEE_RESTART_DELAY);
-                } else {
-                    sendEmptyMessageDelayed(MESSAGE_TICK, MARQUEE_RESOLUTION);
-                }
-                textView.invalidate();
-            }
-        }
-
-        void stop() {
-            mStatus = MARQUEE_STOPPED;
-            removeMessages(MESSAGE_START);
-            removeMessages(MESSAGE_RESTART);
-            removeMessages(MESSAGE_TICK);
-            resetScroll();
-        }
-
-        private void resetScroll() {
-            mScroll = 0.0f;
-            final TextView textView = mView.get();
-            if (textView != null) textView.invalidate();
-        }
-
-        void start(int repeatLimit) {
-            if (repeatLimit == 0) {
-                stop();
-                return;
-            }
-            mRepeatLimit = repeatLimit;
-            final TextView textView = mView.get();
-            if (textView != null && textView.mLayout != null) {
-                mStatus = MARQUEE_STARTING;
-                mScroll = 0.0f;
-                final int textWidth = textView.getWidth() - textView.getCompoundPaddingLeft() -
-                        textView.getCompoundPaddingRight();
-                final float lineWidth = textView.mLayout.getLineWidth(0);
-                final float gap = textWidth / 3.0f;
-                mGhostStart = lineWidth - textWidth + gap;
-                mMaxScroll = mGhostStart + textWidth;
-                mGhostOffset = lineWidth + gap;
-                mFadeStop = lineWidth + textWidth / 6.0f;
-                mMaxFadeScroll = mGhostStart + lineWidth + lineWidth;
-
-                textView.invalidate();
-                sendEmptyMessageDelayed(MESSAGE_START, MARQUEE_DELAY);
-            }
-        }
-
-        float getGhostOffset() {
-            return mGhostOffset;
-        }
-
-        boolean shouldDrawLeftFade() {
-            return mScroll <= mFadeStop;
-        }
-
-        boolean shouldDrawGhost() {
-            return mStatus == MARQUEE_RUNNING && mScroll > mGhostStart;
-        }
-
-        boolean isRunning() {
-            return mStatus == MARQUEE_RUNNING;
-        }
-
-        boolean isStopped() {
-            return mStatus == MARQUEE_STOPPED;
-        }
-    }
+// Jota Text Editor
+//    private static final class Marquee extends Handler {
+//        // TODO: Add an option to configure this
+//        private static final float MARQUEE_DELTA_MAX = 0.07f;
+//        private static final int MARQUEE_DELAY = 1200;
+//        private static final int MARQUEE_RESTART_DELAY = 1200;
+//        private static final int MARQUEE_RESOLUTION = 1000 / 30;
+//        private static final int MARQUEE_PIXELS_PER_SECOND = 30;
+//
+//        private static final byte MARQUEE_STOPPED = 0x0;
+//        private static final byte MARQUEE_STARTING = 0x1;
+//        private static final byte MARQUEE_RUNNING = 0x2;
+//
+//        private static final int MESSAGE_START = 0x1;
+//        private static final int MESSAGE_TICK = 0x2;
+//        private static final int MESSAGE_RESTART = 0x3;
+//
+//        private final WeakReference<TextView> mView;
+//
+//        private byte mStatus = MARQUEE_STOPPED;
+//        private final float mScrollUnit;
+//        private float mMaxScroll;
+//        float mMaxFadeScroll;
+//        private float mGhostStart;
+//        private float mGhostOffset;
+//        private float mFadeStop;
+//        private int mRepeatLimit;
+//
+//        float mScroll;
+//
+//        Marquee(TextView v) {
+//            final float density = v.getContext().getResources().getDisplayMetrics().density;
+//            mScrollUnit = (MARQUEE_PIXELS_PER_SECOND * density) / MARQUEE_RESOLUTION;
+//            mView = new WeakReference<TextView>(v);
+//        }
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what) {
+//                case MESSAGE_START:
+//                    mStatus = MARQUEE_RUNNING;
+//                    tick();
+//                    break;
+//                case MESSAGE_TICK:
+//                    tick();
+//                    break;
+//                case MESSAGE_RESTART:
+//                    if (mStatus == MARQUEE_RUNNING) {
+//                        if (mRepeatLimit >= 0) {
+//                            mRepeatLimit--;
+//                        }
+//                        start(mRepeatLimit);
+//                    }
+//                    break;
+//            }
+//        }
+//
+//        void tick() {
+//            if (mStatus != MARQUEE_RUNNING) {
+//                return;
+//            }
+//
+//            removeMessages(MESSAGE_TICK);
+//
+//            final TextView textView = mView.get();
+//            if (textView != null && (textView.isFocused() || textView.isSelected())) {
+//                mScroll += mScrollUnit;
+//                if (mScroll > mMaxScroll) {
+//                    mScroll = mMaxScroll;
+//                    sendEmptyMessageDelayed(MESSAGE_RESTART, MARQUEE_RESTART_DELAY);
+//                } else {
+//                    sendEmptyMessageDelayed(MESSAGE_TICK, MARQUEE_RESOLUTION);
+//                }
+//                textView.invalidate();
+//            }
+//        }
+//
+//        void stop() {
+//            mStatus = MARQUEE_STOPPED;
+//            removeMessages(MESSAGE_START);
+//            removeMessages(MESSAGE_RESTART);
+//            removeMessages(MESSAGE_TICK);
+//            resetScroll();
+//        }
+//
+//        private void resetScroll() {
+//            mScroll = 0.0f;
+//            final TextView textView = mView.get();
+//            if (textView != null) textView.invalidate();
+//        }
+//
+//        void start(int repeatLimit) {
+//            if (repeatLimit == 0) {
+//                stop();
+//                return;
+//            }
+//            mRepeatLimit = repeatLimit;
+//            final TextView textView = mView.get();
+//            if (textView != null && textView.mLayout != null) {
+//                mStatus = MARQUEE_STARTING;
+//                mScroll = 0.0f;
+//                final int textWidth = textView.getWidth() - textView.getCompoundPaddingLeft() -
+//                        textView.getCompoundPaddingRight();
+//                final float lineWidth = textView.mLayout.getLineWidth(0);
+//                final float gap = textWidth / 3.0f;
+//                mGhostStart = lineWidth - textWidth + gap;
+//                mMaxScroll = mGhostStart + textWidth;
+//                mGhostOffset = lineWidth + gap;
+//                mFadeStop = lineWidth + textWidth / 6.0f;
+//                mMaxFadeScroll = mGhostStart + lineWidth + lineWidth;
+//
+//                textView.invalidate();
+//                sendEmptyMessageDelayed(MESSAGE_START, MARQUEE_DELAY);
+//            }
+//        }
+//
+//        float getGhostOffset() {
+//            return mGhostOffset;
+//        }
+//
+//        boolean shouldDrawLeftFade() {
+//            return mScroll <= mFadeStop;
+//        }
+//
+//        boolean shouldDrawGhost() {
+//            return mStatus == MARQUEE_RUNNING && mScroll > mGhostStart;
+//        }
+//
+//        boolean isRunning() {
+//            return mStatus == MARQUEE_RUNNING;
+//        }
+//
+//        boolean isStopped() {
+//            return mStatus == MARQUEE_STOPPED;
+//        }
+//    }
 
     /**
      * This method is called when the text is changed, in case any
@@ -6788,7 +6795,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             hideControllers();
         }
 
-        startStopMarquee(hasWindowFocus);
+     // Jota Text Editor
+//        startStopMarquee(hasWindowFocus);
     }
 
 // Jota Text Editor
@@ -6822,17 +6830,19 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     @Override
     public void setSelected(boolean selected) {
-        boolean wasSelected = isSelected();
+     // Jota Text Editor
+//        boolean wasSelected = isSelected();
 
         super.setSelected(selected);
 
-        if (selected != wasSelected && mEllipsize == TextUtils.TruncateAt.MARQUEE) {
-            if (selected) {
-                startMarquee();
-            } else {
-                stopMarquee();
-            }
-        }
+// Jota Text Editor
+//        if (selected != wasSelected && mEllipsize == TextUtils.TruncateAt.MARQUEE) {
+//            if (selected) {
+//                startMarquee();
+//            } else {
+//                stopMarquee();
+//            }
+//        }
     }
 
     private void onTapUpEvent(int prevStart, int prevEnd) {
@@ -7093,52 +7103,54 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     @Override
     protected float getLeftFadingEdgeStrength() {
-        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
-            if (mMarquee != null && !mMarquee.isStopped()) {
-                final Marquee marquee = mMarquee;
-                if (marquee.shouldDrawLeftFade()) {
-                    return marquee.mScroll / getHorizontalFadingEdgeLength();
-                } else {
-                    return 0.0f;
-                }
-            } else if (getLineCount() == 1) {
-                switch (mGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-                    case Gravity.LEFT:
-                        return 0.0f;
-                    case Gravity.RIGHT:
-                        return (mLayout.getLineRight(0) - (mRight - mLeft) -
-                                getCompoundPaddingLeft() - getCompoundPaddingRight() -
-                                mLayout.getLineLeft(0)) / getHorizontalFadingEdgeLength();
-                    case Gravity.CENTER_HORIZONTAL:
-                        return 0.0f;
-                }
-            }
-        }
+     // Jota Text Editor
+//        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
+//            if (mMarquee != null && !mMarquee.isStopped()) {
+//                final Marquee marquee = mMarquee;
+//                if (marquee.shouldDrawLeftFade()) {
+//                    return marquee.mScroll / getHorizontalFadingEdgeLength();
+//                } else {
+//                    return 0.0f;
+//                }
+//            } else if (getLineCount() == 1) {
+//                switch (mGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+//                    case Gravity.LEFT:
+//                        return 0.0f;
+//                    case Gravity.RIGHT:
+//                        return (mLayout.getLineRight(0) - (mRight - mLeft) -
+//                                getCompoundPaddingLeft() - getCompoundPaddingRight() -
+//                                mLayout.getLineLeft(0)) / getHorizontalFadingEdgeLength();
+//                    case Gravity.CENTER_HORIZONTAL:
+//                        return 0.0f;
+//                }
+//            }
+//        }
         return super.getLeftFadingEdgeStrength();
     }
 
     @Override
     protected float getRightFadingEdgeStrength() {
-        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
-            if (mMarquee != null && !mMarquee.isStopped()) {
-                final Marquee marquee = mMarquee;
-                return (marquee.mMaxFadeScroll - marquee.mScroll) / getHorizontalFadingEdgeLength();
-            } else if (getLineCount() == 1) {
-                switch (mGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
-                    case Gravity.LEFT:
-                        final int textWidth = (mRight - mLeft) - getCompoundPaddingLeft() -
-                                getCompoundPaddingRight();
-                        final float lineWidth = mLayout.getLineWidth(0);
-                        return (lineWidth - textWidth) / getHorizontalFadingEdgeLength();
-                    case Gravity.RIGHT:
-                        return 0.0f;
-                    case Gravity.CENTER_HORIZONTAL:
-                        return (mLayout.getLineWidth(0) - ((mRight - mLeft) -
-                                getCompoundPaddingLeft() - getCompoundPaddingRight())) /
-                                getHorizontalFadingEdgeLength();
-                }
-            }
-        }
+     // Jota Text Editor
+//        if (mEllipsize == TextUtils.TruncateAt.MARQUEE) {
+//            if (mMarquee != null && !mMarquee.isStopped()) {
+//                final Marquee marquee = mMarquee;
+//                return (marquee.mMaxFadeScroll - marquee.mScroll) / getHorizontalFadingEdgeLength();
+//            } else if (getLineCount() == 1) {
+//                switch (mGravity & Gravity.HORIZONTAL_GRAVITY_MASK) {
+//                    case Gravity.LEFT:
+//                        final int textWidth = (mRight - mLeft) - getCompoundPaddingLeft() -
+//                                getCompoundPaddingRight();
+//                        final float lineWidth = mLayout.getLineWidth(0);
+//                        return (lineWidth - textWidth) / getHorizontalFadingEdgeLength();
+//                    case Gravity.RIGHT:
+//                        return 0.0f;
+//                    case Gravity.CENTER_HORIZONTAL:
+//                        return (mLayout.getLineWidth(0) - ((mRight - mLeft) -
+//                                getCompoundPaddingLeft() - getCompoundPaddingRight())) /
+//                                getHorizontalFadingEdgeLength();
+//                }
+//            }
+//        }
         return super.getRightFadingEdgeStrength();
     }
 
@@ -7321,158 +7333,159 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 hasText());
     }
 
-    /**
-     * Returns the offsets delimiting the 'word' located at position offset.
-     *
-     * @param offset An offset in the text.
-     * @return The offsets for the start and end of the word located at <code>offset</code>.
-     * The two ints offsets are packed in a long, with the starting offset shifted by 32 bits.
-     * Returns a negative value if no valid word was found.
-     */
-    private long getWordLimitsAt(int offset) {
-        /*
-         * Quick return if the input type is one where adding words
-         * to the dictionary doesn't make any sense.
-         */
-        int klass = mInputType & InputType.TYPE_MASK_CLASS;
-        if (klass == InputType.TYPE_CLASS_NUMBER ||
-            klass == InputType.TYPE_CLASS_PHONE ||
-            klass == InputType.TYPE_CLASS_DATETIME) {
-            return -1;
-        }
+// Jota Text Editor
+//    /**
+//     * Returns the offsets delimiting the 'word' located at position offset.
+//     *
+//     * @param offset An offset in the text.
+//     * @return The offsets for the start and end of the word located at <code>offset</code>.
+//     * The two ints offsets are packed in a long, with the starting offset shifted by 32 bits.
+//     * Returns a negative value if no valid word was found.
+//     */
+//    private long getWordLimitsAt(int offset) {
+//        /*
+//         * Quick return if the input type is one where adding words
+//         * to the dictionary doesn't make any sense.
+//         */
+//        int klass = mInputType & InputType.TYPE_MASK_CLASS;
+//        if (klass == InputType.TYPE_CLASS_NUMBER ||
+//            klass == InputType.TYPE_CLASS_PHONE ||
+//            klass == InputType.TYPE_CLASS_DATETIME) {
+//            return -1;
+//        }
+//
+//        int variation = mInputType & InputType.TYPE_MASK_VARIATION;
+//        if (variation == InputType.TYPE_TEXT_VARIATION_URI ||
+//            variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
+//            variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD ||
+//            variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS ||
+//            variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
+//            return -1;
+//        }
+//
+//        int len = mText.length();
+//        int end = Math.min(offset, len);
+//
+//        if (end < 0) {
+//            return -1;
+//        }
+//
+//        int start = end;
+//
+//        for (; start > 0; start--) {
+//            char c = mTransformed.charAt(start - 1);
+//            int type = Character.getType(c);
+//
+//            if (c != '\'' &&
+//                type != Character.UPPERCASE_LETTER &&
+//                type != Character.LOWERCASE_LETTER &&
+//                type != Character.TITLECASE_LETTER &&
+//                type != Character.MODIFIER_LETTER &&
+//                type != Character.DECIMAL_DIGIT_NUMBER) {
+//                break;
+//            }
+//        }
+//
+//        for (; end < len; end++) {
+//            char c = mTransformed.charAt(end);
+//            int type = Character.getType(c);
+//
+//            if (c != '\'' &&
+//                type != Character.UPPERCASE_LETTER &&
+//                type != Character.LOWERCASE_LETTER &&
+//                type != Character.TITLECASE_LETTER &&
+//                type != Character.MODIFIER_LETTER &&
+//                type != Character.DECIMAL_DIGIT_NUMBER) {
+//                break;
+//            }
+//        }
+//
+//        if (start == end) {
+//            return -1;
+//        }
+//
+//        if (end - start > 48) {
+//            return -1;
+//        }
+//
+//        boolean hasLetter = false;
+//        for (int i = start; i < end; i++) {
+//            if (Character.isLetter(mTransformed.charAt(i))) {
+//                hasLetter = true;
+//                break;
+//            }
+//        }
+//
+//        if (!hasLetter) {
+//            return -1;
+//        }
+//
+//        // Two ints packed in a long
+//        return packRangeInLong(start, end);
+//    }
+//
+//    private static long packRangeInLong(int start, int end) {
+//        return (((long) start) << 32) | end;
+//    }
+//
+//    private static int extractRangeStartFromLong(long range) {
+//        return (int) (range >>> 32);
+//    }
+//
+//    private static int extractRangeEndFromLong(long range) {
+//        return (int) (range & 0x00000000FFFFFFFFL);
+//    }
+//    private void selectCurrentWord() {
+//        // In case selection mode is started after an orientation change or after a select all,
+//        // use the current selection instead of creating one
+//        if (hasSelection()) {
+//            return;
+//        }
+//
+//        int minOffset, maxOffset;
+//
+//        if (mContextMenuTriggeredByKey) {
+//            minOffset = getSelectionStart();
+//            maxOffset = getSelectionEnd();
+//        } else {
+//            // hasSelectionController is true since we canSelectText.
+//            SelectionModifierCursorController selectionModifierCursorController =
+//                (SelectionModifierCursorController) getSelectionController();
+//            minOffset = selectionModifierCursorController.getMinTouchOffset();
+//            maxOffset = selectionModifierCursorController.getMaxTouchOffset();
+//        }
+//
+//        int selectionStart, selectionEnd;
+//
+//        long wordLimits = getWordLimitsAt(minOffset);
+//        if (wordLimits >= 0) {
+//            selectionStart = extractRangeStartFromLong(wordLimits);
+//        } else {
+//            selectionStart = Math.max(minOffset - 5, 0);
+//        }
+//
+//        wordLimits = getWordLimitsAt(maxOffset);
+//        if (wordLimits >= 0) {
+//            selectionEnd = extractRangeEndFromLong(wordLimits);
+//        } else {
+//            selectionEnd = Math.min(maxOffset + 5, mText.length());
+//        }
+//
+//        Selection.setSelection((Spannable) mText, selectionStart, selectionEnd);
+//    }
 
-        int variation = mInputType & InputType.TYPE_MASK_VARIATION;
-        if (variation == InputType.TYPE_TEXT_VARIATION_URI ||
-            variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
-            variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD ||
-            variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS ||
-            variation == InputType.TYPE_TEXT_VARIATION_FILTER) {
-            return -1;
-        }
-
-        int len = mText.length();
-        int end = Math.min(offset, len);
-
-        if (end < 0) {
-            return -1;
-        }
-
-        int start = end;
-
-        for (; start > 0; start--) {
-            char c = mTransformed.charAt(start - 1);
-            int type = Character.getType(c);
-
-            if (c != '\'' &&
-                type != Character.UPPERCASE_LETTER &&
-                type != Character.LOWERCASE_LETTER &&
-                type != Character.TITLECASE_LETTER &&
-                type != Character.MODIFIER_LETTER &&
-                type != Character.DECIMAL_DIGIT_NUMBER) {
-                break;
-            }
-        }
-
-        for (; end < len; end++) {
-            char c = mTransformed.charAt(end);
-            int type = Character.getType(c);
-
-            if (c != '\'' &&
-                type != Character.UPPERCASE_LETTER &&
-                type != Character.LOWERCASE_LETTER &&
-                type != Character.TITLECASE_LETTER &&
-                type != Character.MODIFIER_LETTER &&
-                type != Character.DECIMAL_DIGIT_NUMBER) {
-                break;
-            }
-        }
-
-        if (start == end) {
-            return -1;
-        }
-
-        if (end - start > 48) {
-            return -1;
-        }
-
-        boolean hasLetter = false;
-        for (int i = start; i < end; i++) {
-            if (Character.isLetter(mTransformed.charAt(i))) {
-                hasLetter = true;
-                break;
-            }
-        }
-
-        if (!hasLetter) {
-            return -1;
-        }
-
-        // Two ints packed in a long
-        return packRangeInLong(start, end);
-    }
-
-    private static long packRangeInLong(int start, int end) {
-        return (((long) start) << 32) | end;
-    }
-
-    private static int extractRangeStartFromLong(long range) {
-        return (int) (range >>> 32);
-    }
-
-    private static int extractRangeEndFromLong(long range) {
-        return (int) (range & 0x00000000FFFFFFFFL);
-    }
-
-    private void selectCurrentWord() {
-        // In case selection mode is started after an orientation change or after a select all,
-        // use the current selection instead of creating one
-        if (hasSelection()) {
-            return;
-        }
-
-        int minOffset, maxOffset;
-
-        if (mContextMenuTriggeredByKey) {
-            minOffset = getSelectionStart();
-            maxOffset = getSelectionEnd();
-        } else {
-            // hasSelectionController is true since we canSelectText.
-            SelectionModifierCursorController selectionModifierCursorController =
-                (SelectionModifierCursorController) getSelectionController();
-            minOffset = selectionModifierCursorController.getMinTouchOffset();
-            maxOffset = selectionModifierCursorController.getMaxTouchOffset();
-        }
-
-        int selectionStart, selectionEnd;
-
-        long wordLimits = getWordLimitsAt(minOffset);
-        if (wordLimits >= 0) {
-            selectionStart = extractRangeStartFromLong(wordLimits);
-        } else {
-            selectionStart = Math.max(minOffset - 5, 0);
-        }
-
-        wordLimits = getWordLimitsAt(maxOffset);
-        if (wordLimits >= 0) {
-            selectionEnd = extractRangeEndFromLong(wordLimits);
-        } else {
-            selectionEnd = Math.min(maxOffset + 5, mText.length());
-        }
-
-        Selection.setSelection((Spannable) mText, selectionStart, selectionEnd);
-    }
-
-    private String getWordForDictionary() {
-        int seedPosition = mContextMenuTriggeredByKey ? getSelectionStart() : getLastTapPosition();
-        long wordLimits = getWordLimitsAt(seedPosition);
-        if (wordLimits >= 0) {
-            int start = extractRangeStartFromLong(wordLimits);
-            int end = extractRangeEndFromLong(wordLimits);
-            return mTransformed.subSequence(start, end).toString();
-        } else {
-            return null;
-        }
-    }
+// Jota Text Editor
+//    private String getWordForDictionary() {
+//        int seedPosition = mContextMenuTriggeredByKey ? getSelectionStart() : getLastTapPosition();
+//        long wordLimits = getWordLimitsAt(seedPosition);
+//        if (wordLimits >= 0) {
+//            int start = extractRangeStartFromLong(wordLimits);
+//            int end = extractRangeEndFromLong(wordLimits);
+//            return mTransformed.subSequence(start, end).toString();
+//        } else {
+//            return null;
+//        }
+//    }
 
     @Override
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
@@ -7514,16 +7527,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     protected void onCreateContextMenu(ContextMenu menu) {
         super.onCreateContextMenu(menu);
         boolean added = false;
-        mContextMenuTriggeredByKey = mDPadCenterIsDown || mEnterKeyIsDown;
+//        mContextMenuTriggeredByKey = mDPadCenterIsDown || mEnterKeyIsDown;// Jota Text Editor
         // Problem with context menu on long press: the menu appears while the key in down and when
         // the key is released, the view does not receive the key_up event. This ensures that the
         // state is reset whenever the context menu action is displayed.
         // mContextMenuTriggeredByKey saved that state so that it is available in
         // onTextContextMenuItem. We cannot simply clear these flags in onTextContextMenuItem since
         // it may not be called (if the user/ discards the context menu with the back key).
-        mDPadCenterIsDown = mEnterKeyIsDown = false;
 
 // Jota Text Editor
+//        mDPadCenterIsDown = mEnterKeyIsDown = false;
 //        if (!isFocused()) {
 //            if (isFocusable() && mInput != null) {
 //                if (canCopy()) {
@@ -7646,7 +7659,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
 // Jota Text Editor
         if (canCopy()) {
-            int name;
             if (selection && mNameDirectIntent!=null ) {
                 menu.add(0, ID_DIRECTINTENT, 0, mNameDirectIntent).
                 setOnMenuItemClickListener(handler).
@@ -7698,7 +7710,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_COPY_URL = android.R.id.copyUrl;
     private static final int ID_UNDO = R.id.undo;// Jota Text Editor
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
-    private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;
+//    private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;// Jota Text Editor
 
     private class MenuHandler implements MenuItem.OnMenuItemClickListener {
         public boolean onMenuItemClick(MenuItem item) {
@@ -7802,15 +7814,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 }
                 return true;
 
-            case ID_ADD_TO_DICTIONARY:
-                String word = getWordForDictionary();
-                if (word != null) {
-                    Intent i = new Intent("com.android.settings.USER_DICTIONARY_INSERT");
-                    i.putExtra("word", word);
-                    i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getContext().startActivity(i);
-                }
-                return true;
+// Jota Text Editor
+//            case ID_ADD_TO_DICTIONARY:
+//                String word = getWordForDictionary();
+//                if (word != null) {
+//                    Intent i = new Intent("com.android.settings.USER_DICTIONARY_INSERT");
+//                    i.putExtra("word", word);
+//                    i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    getContext().startActivity(i);
+//                }
+//                return true;
 
             case ID_DIRECTINTENT:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
@@ -7825,48 +7838,49 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return false;
     }
 
-    /**
-     * Prepare text so that there are not zero or two spaces at beginning and end of region defined
-     * by [min, max] when replacing this region by paste.
-     */
-    private long prepareSpacesAroundPaste(int min, int max, CharSequence paste) {
-        // Paste adds/removes spaces before or after insertion as needed.
-        if (Character.isSpaceChar(paste.charAt(0))) {
-            if (min > 0 && Character.isSpaceChar(mTransformed.charAt(min - 1))) {
-                // Two spaces at beginning of paste: remove one
-                final int originalLength = mText.length();
-                ((Editable) mText).replace(min - 1, min, "");
-                // Due to filters, there is no garantee that exactly one character was
-                // removed. Count instead.
-                final int delta = mText.length() - originalLength;
-                min += delta;
-                max += delta;
-            }
-        } else {
-            if (min > 0 && !Character.isSpaceChar(mTransformed.charAt(min - 1))) {
-                // No space at beginning of paste: add one
-                final int originalLength = mText.length();
-                ((Editable) mText).replace(min, min, " ");
-                // Taking possible filters into account as above.
-                final int delta = mText.length() - originalLength;
-                min += delta;
-                max += delta;
-            }
-        }
-
-        if (Character.isSpaceChar(paste.charAt(paste.length() - 1))) {
-            if (max < mText.length() && Character.isSpaceChar(mTransformed.charAt(max))) {
-                // Two spaces at end of paste: remove one
-                ((Editable) mText).replace(max, max + 1, "");
-            }
-        } else {
-            if (max < mText.length() && !Character.isSpaceChar(mTransformed.charAt(max))) {
-                // No space at end of paste: add one
-                ((Editable) mText).replace(max, max, " ");
-            }
-        }
-        return packRangeInLong(min, max);
-    }
+ // Jota Text Editor
+//    /**
+//     * Prepare text so that there are not zero or two spaces at beginning and end of region defined
+//     * by [min, max] when replacing this region by paste.
+//     */
+//    private long prepareSpacesAroundPaste(int min, int max, CharSequence paste) {
+//        // Paste adds/removes spaces before or after insertion as needed.
+//        if (Character.isSpaceChar(paste.charAt(0))) {
+//            if (min > 0 && Character.isSpaceChar(mTransformed.charAt(min - 1))) {
+//                // Two spaces at beginning of paste: remove one
+//                final int originalLength = mText.length();
+//                ((Editable) mText).replace(min - 1, min, "");
+//                // Due to filters, there is no garantee that exactly one character was
+//                // removed. Count instead.
+//                final int delta = mText.length() - originalLength;
+//                min += delta;
+//                max += delta;
+//            }
+//        } else {
+//            if (min > 0 && !Character.isSpaceChar(mTransformed.charAt(min - 1))) {
+//                // No space at beginning of paste: add one
+//                final int originalLength = mText.length();
+//                ((Editable) mText).replace(min, min, " ");
+//                // Taking possible filters into account as above.
+//                final int delta = mText.length() - originalLength;
+//                min += delta;
+//                max += delta;
+//            }
+//        }
+//
+//        if (Character.isSpaceChar(paste.charAt(paste.length() - 1))) {
+//            if (max < mText.length() && Character.isSpaceChar(mTransformed.charAt(max))) {
+//                // Two spaces at end of paste: remove one
+//                ((Editable) mText).replace(max, max + 1, "");
+//            }
+//        } else {
+//            if (max < mText.length() && !Character.isSpaceChar(mTransformed.charAt(max))) {
+//                // No space at end of paste: add one
+//                ((Editable) mText).replace(max, max, " ");
+//            }
+//        }
+//        return packRangeInLong(min, max);
+//    }
 
     @Override
     public boolean performLongClick() {
@@ -8556,28 +8570,30 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             return false;
         }
 
-        /**
-         * @param event
-         */
-        private void updateMinAndMaxOffsets(MotionEvent event) {
-            int pointerCount = 1;
-//            int pointerCount = event.getPointerCount();
-            for (int index = 0; index < pointerCount; index++) {
-                final int x = (int) event.getX(/*index*/);
-                final int y = (int) event.getY(/*index*/);
-                int offset = getOffset(x, y);
-                if (offset < mMinTouchOffset) mMinTouchOffset = offset;
-                if (offset > mMaxTouchOffset) mMaxTouchOffset = offset;
-            }
-        }
+// Jota Text Editor
+//        /**
+//         * @param event
+//         */
+//        private void updateMinAndMaxOffsets(MotionEvent event) {
+//            int pointerCount = 1;
+////            int pointerCount = event.getPointerCount();
+//            for (int index = 0; index < pointerCount; index++) {
+//                final int x = (int) event.getX(/*index*/);
+//                final int y = (int) event.getY(/*index*/);
+//                int offset = getOffset(x, y);
+//                if (offset < mMinTouchOffset) mMinTouchOffset = offset;
+//                if (offset > mMaxTouchOffset) mMaxTouchOffset = offset;
+//            }
+//        }
 
         public int getMinTouchOffset() {
             return mMinTouchOffset;
         }
 
-        public int getMaxTouchOffset() {
-            return mMaxTouchOffset;
-        }
+// Jota Text Editor
+//        public int getMaxTouchOffset() {
+//            return mMaxTouchOffset;
+//        }
 
         public void resetTouchOffsets() {
             mMinTouchOffset = mMaxTouchOffset = -1;
@@ -8770,9 +8786,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private boolean                 mIsInTextSelectionMode = false;
     // These are needed to desambiguate a long click. If the long click comes from ones of these, we
     // select from the current cursor position. Otherwise, select from long pressed position.
-    private boolean                 mDPadCenterIsDown = false;
-    private boolean                 mEnterKeyIsDown = false;
-    private boolean                 mContextMenuTriggeredByKey = false;
+//    private boolean                 mDPadCenterIsDown = false;
+//    private boolean                 mEnterKeyIsDown = false;
+//    private boolean                 mContextMenuTriggeredByKey = false;
     // Created once and shared by different CursorController helper methods.
     // Only one cursor controller is active at any time which prevent race conditions.
     private static Rect             sCursorControllerTempRect = new Rect();
