@@ -225,7 +225,11 @@ public class Main
                     }
                 }else if ( ContentResolver.SCHEME_CONTENT.equals(scheme)){
                     ContentResolver cr = getContentResolver();
-                    Cursor cur = cr.query(data, null, null, null, null);
+                    Cursor cur = null;
+                    try{
+                        cur = cr.query(data, null, null, null, null);
+                    }
+                    catch( Exception e ){}
                     if ( cur != null ){
                         cur.moveToFirst();
                         try{

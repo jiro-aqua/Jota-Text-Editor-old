@@ -221,7 +221,9 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
     @Override
     protected void onPostExecute(SpannableStringBuilder result)
     {
-        mProgressDialog.dismiss();
+        try{
+            mProgressDialog.dismiss();
+        }catch(Exception e){}
         mProgressDialog = null;
         if ( result != null ){
             String[] linebreak =  mActivity.getResources().getStringArray(R.array.LineBreak);
