@@ -29,7 +29,6 @@ import jp.sblo.pandora.jota.text.style.UpdateAppearance;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -957,25 +956,46 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             TextChange lastChange;
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if ( lastChange !=null ){
-                    lastChange.newtext = s.subSequence(start, start + count);
-                    if ( start == lastChange.start &&
-                         (lastChange.oldtext.length() > 0 || lastChange.newtext.length() > 0 ) &&
-                         !lastChange.newtext.toString().equals(lastChange.oldtext.toString()) )
-                     {
-                        mUndoBuffer.push(lastChange);
-//                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
+                    if ( count < UndoBuffer.MAX_SIZE ){
+                        lastChange.newtext = s.subSequence(start, start + count);
+                        if ( start == lastChange.start &&
+                             (lastChange.oldtext.length() > 0 || lastChange.newtext.length() > 0 ) &&
+                             !equalsCharSequence(lastChange.newtext ,lastChange.oldtext ) )
+                         {
+                            mUndoBuffer.push(lastChange);
+    //                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
+                        }
+                    }else{
+                        mUndoBuffer.removeAll();
                     }
                     lastChange = null;
                 }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                lastChange = new TextChange();
-                lastChange.start = start;
-                lastChange.oldtext = s.subSequence(start, start + count);
+                if ( count < UndoBuffer.MAX_SIZE ){
+                    lastChange = new TextChange();
+                    lastChange.start = start;
+                    lastChange.oldtext = s.subSequence(start, start + count);
+                }else{
+                    mUndoBuffer.removeAll();
+                    lastChange = null;
+                }
             }
             public void afterTextChanged(Editable s) {
             }
         });
+
+    }
+
+    private boolean equalsCharSequence( CharSequence s1 , CharSequence s2)
+    {
+        if ( s1 == null || s2==null ){
+            return false;
+        }
+        if ( s1.length() != s2.length() ){
+            return false;
+        }
+        return s1.toString().equals(s2.toString());
 
     }
 
@@ -7931,7 +7951,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public void moveToLine(int line){
         int offset = mLayout.getLineStart(line);
         Selection.setSelection((Spannable) mText, offset,  offset );
-        Log.e( TAG , "offset="+offset);
+        //Log.e( TAG , "offset="+offset);
     }
 
 // Jota Text Editor
