@@ -63,7 +63,7 @@ extends Layout
                         boolean includepad,
                         TextUtils.TruncateAt ellipsize, int ellipsizedWidth) {
         super((ellipsize == null)
-                ? source 
+                ? source
                 : (source instanceof Spanned)
                     ? new SpannedEllipsizer(source)
                     : new Ellipsizer(source),
@@ -73,7 +73,7 @@ extends Layout
          * This is annoying, but we can't refer to the layout until
          * superclass construction is finished, and the superclass
          * constructor wants the reference to the display text.
-         * 
+         *
          * This will break if the superclass constructor ever actually
          * cares about the content instead of just holding the reference.
          */
@@ -93,8 +93,9 @@ extends Layout
 //        }
 
         mLines = new int[ArrayUtils.idealIntArraySize(2 * 1)];
-        mLineDirections = new Directions[
-                             ArrayUtils.idealIntArraySize(2 /** mColumns*/)];
+// Jota Text Editor
+//        mLineDirections = new Directions[
+//                             ArrayUtils.idealIntArraySize(2 /** mColumns*/)];
 
         generate(source, bufstart, bufend, paint, outerwidth, align,
                  spacingmult, spacingadd, includepad, includepad,
@@ -111,8 +112,9 @@ extends Layout
 
 		// Jota Text Editor
         mLines = new int[ArrayUtils.idealIntArraySize(2 )];
-        mLineDirections = new Directions[
-                             ArrayUtils.idealIntArraySize(2 /* * mColumns*/)];
+// Jota Text Editor
+//        mLineDirections = new Directions[
+//                             ArrayUtils.idealIntArraySize(2 /* * mColumns*/)];
     }
 
     /* package */ void generate(CharSequence source, int bufstart, int bufend,
@@ -347,19 +349,21 @@ extends Layout
                 int fmascent = fm.ascent;
                 int fmdescent = fm.descent;
 
-                if (false) {
-                    StringBuilder sb = new StringBuilder();
-                    for (int j = i; j < next; j++) {
-                        sb.append(widths[j - start + (end - start)]);
-                        sb.append(' ');
-                    }
-
-                    Log.e("text", sb.toString());
-                }
+// Jota Text Editor
+//                if (false) {
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int j = i; j < next; j++) {
+//                        sb.append(widths[j - start + (end - start)]);
+//                        sb.append(' ');
+//                    }
+//
+//                    Log.e("text", sb.toString());
+//                }
 
                 for (int j = i; j < next; j++) {
                     char c = chs[j - start];
-                    float before = w;
+// Jota Text Editor
+//                    float before = w;
 
                     if (c == '\n') {
                         ;
@@ -418,7 +422,7 @@ extends Layout
                         /*
                          * From the Unicode Line Breaking Algorithm:
                          * (at least approximately)
-                         *  
+                         *
                          * .,:; are class IS: breakpoints
                          *      except when adjacent to digits
                          * /    is class SY: a breakpoint
@@ -617,14 +621,14 @@ extends Layout
      * Runs the unicode bidi algorithm on the first n chars in chs, returning
      * the char dirs in chInfo and the base line direction of the first
      * paragraph.
-     * 
+     *
      * XXX change result from dirs to levels
-     *  
+     *
      * @param dir the direction flag, either DIR_REQUEST_LTR,
      * DIR_REQUEST_RTL, DIR_REQUEST_DEFAULT_LTR, or DIR_REQUEST_DEFAULT_RTL.
      * @param chs the text to examine
-     * @param chInfo on input, if hasInfo is true, override and other flags 
-     * representing out-of-band embedding information. On output, the generated 
+     * @param chInfo on input, if hasInfo is true, override and other flags
+     * representing out-of-band embedding information. On output, the generated
      * dirs of the text.
      * @param n the length of the text/information in chs and chInfo
      * @param hasInfo true if chInfo has input information, otherwise the
@@ -632,9 +636,9 @@ extends Layout
      * @return the resolved direction level of the first paragraph, either
      * DIR_LEFT_TO_RIGHT or DIR_RIGHT_TO_LEFT.
      */
-    /* package */ static int bidi(int dir, char[] chs, byte[] chInfo, int n, 
+    /* package */ static int bidi(int dir, char[] chs, byte[] chInfo, int n,
             boolean hasInfo) {
-        
+
         AndroidCharacter.getDirectionalities(chs, chInfo, n);
 
         /*
@@ -842,7 +846,7 @@ extends Layout
                 chInfo[j] = SOR;
             }
         }
-        
+
         return dir;
     }
 
@@ -951,27 +955,28 @@ extends Layout
     }
 */
 
-    private static int getFit(TextPaint paint,
-                              TextPaint workPaint,
-                       CharSequence text, int start, int end,
-                       float wid) {
-        int high = end + 1, low = start - 1, guess;
-
-        while (high - low > 1) {
-            guess = (high + low) / 2;
-
-            if (measureText(paint, workPaint,
-                            text, start, guess, null, true, null) > wid)
-                high = guess;
-            else
-                low = guess;
-        }
-
-        if (low < start)
-            return start;
-        else
-            return low;
-    }
+// Jota Text Editor
+//    private static int getFit(TextPaint paint,
+//                              TextPaint workPaint,
+//                       CharSequence text, int start, int end,
+//                       float wid) {
+//        int high = end + 1, low = start - 1, guess;
+//
+//        while (high - low > 1) {
+//            guess = (high + low) / 2;
+//
+//            if (measureText(paint, workPaint,
+//                            text, start, guess, null, true, null) > wid)
+//                high = guess;
+//            else
+//                low = guess;
+//        }
+//
+//        if (low < start)
+//            return start;
+//        else
+//            return low;
+//    }
 
     private int out(CharSequence text, int start, int end,
                       int above, int below, int top, int bottom, int v,
@@ -988,7 +993,8 @@ extends Layout
 		// Jota Text Editor
         int off = j * 1;
         int want = off + 1 + TOP;
-        int want2 = j + TOP;
+// Jota Text Editor
+//        int want2 = j + TOP;
         int[] lines = mLines;
 
         // Log.e("text", "line " + start + " to " + end + (last ? "===" : ""));
@@ -1001,13 +1007,13 @@ extends Layout
             lines = grow;
         }
 		// Jota Text Editor
-        if (want2 >= mLineDirections.length ){
-            int nlen2 = ArrayUtils.idealIntArraySize(want2 + 1);
-            Directions[] grow2 = new Directions[nlen2];
-            System.arraycopy(mLineDirections, 0, grow2, 0,
-                             mLineDirections.length);
-            mLineDirections = grow2;
-        }
+//        if (want2 >= mLineDirections.length ){
+//            int nlen2 = ArrayUtils.idealIntArraySize(want2 + 1);
+//            Directions[] grow2 = new Directions[nlen2];
+//            System.arraycopy(mLineDirections, 0, grow2, 0,
+//                             mLineDirections.length);
+//            mLineDirections = grow2;
+//        }
 
         if (chooseht != null) {
             fm.ascent = above;
@@ -1093,37 +1099,38 @@ extends Layout
                 }
             }
 
-            Directions linedirs;
+// Jota Text Editor
+//            Directions linedirs;
+//
+//            if (count == 0) {
+//                linedirs = DIRS_ALL_LEFT_TO_RIGHT;
+//            } else {
+//                short[] ld = new short[count + 1];
+//
+//                cur = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
+//                count = 0;
+//                int here = start;
+//
+//                for (int k = start; k < end; k++) {
+//                    if (chdirs[k - pstart] != cur) {
+//                        // XXX check to make sure we don't
+//                        //     overflow short
+//                        ld[count++] = (short) (k - here);
+//                        cur = chdirs[k - pstart];
+//                        here = k;
+//                    }
+//                }
+//
+//                ld[count] = (short) (end - here);
+//
+//                if (count == 1 && ld[0] == 0) {
+//                    linedirs = DIRS_ALL_RIGHT_TO_LEFT;
+//                } else {
+//                    linedirs = new Directions(ld);
+//                }
+//            }
 
-            if (count == 0) {
-                linedirs = DIRS_ALL_LEFT_TO_RIGHT;
-            } else {
-                short[] ld = new short[count + 1];
-
-                cur = Character.DIRECTIONALITY_LEFT_TO_RIGHT;
-                count = 0;
-                int here = start;
-
-                for (int k = start; k < end; k++) {
-                    if (chdirs[k - pstart] != cur) {
-                        // XXX check to make sure we don't
-                        //     overflow short
-                        ld[count++] = (short) (k - here);
-                        cur = chdirs[k - pstart];
-                        here = k;
-                    }
-                }
-
-                ld[count] = (short) (end - here);
-
-                if (count == 1 && ld[0] == 0) {
-                    linedirs = DIRS_ALL_RIGHT_TO_LEFT;
-                } else {
-                    linedirs = new Directions(ld);
-                }
-            }
-
-            mLineDirections[j] = linedirs;
+//            mLineDirections[j] = linedirs;
 
             // If ellipsize is in marquee mode, do not apply ellipsis on the first line
 		// Jota Text Editor
@@ -1229,7 +1236,8 @@ extends Layout
         int high = mLineCount;
         int low = -1;
         int guess;
-        int[] lines = mLines;
+// Jota Text Editor
+//        int[] lines = mLines;
         while (high - low > 1) {
             guess = (high + low) >> 1;
             if ( guess * mHeight > vertical){		// Jota Text Editor
@@ -1272,7 +1280,9 @@ extends Layout
     }
 
     public final Directions getLineDirections(int line) {
-        return mLineDirections[line];
+        // Jota Text Editor
+        return DIRS_ALL_LEFT_TO_RIGHT;
+        //return mLineDirections[line];
     }
 
     public int getTopPadding() {
@@ -1313,18 +1323,21 @@ extends Layout
 //    private int mColumns;		// Jota Text Editor
     private int mEllipsizedWidth;
 
-    private static final int COLUMNS_NORMAL = 3;
-    private static final int COLUMNS_ELLIPSIZE = 5;
+// Jota Text Editor
+//    private static final int COLUMNS_NORMAL = 3;
+//    private static final int COLUMNS_ELLIPSIZE = 5;
     private static final int START = 0;
     private static final int DIR = START;
     private static final int TAB = START;
     private static final int TOP = 1;
-    private static final int DESCENT = 2;
-    private static final int ELLIPSIS_START = 3;
-    private static final int ELLIPSIS_COUNT = 4;
+// Jota Text Editor
+//    private static final int DESCENT = 2;
+//    private static final int ELLIPSIS_START = 3;
+//    private static final int ELLIPSIS_COUNT = 4;
 
     private int[] mLines;
-    private Directions[] mLineDirections;
+// Jota Text Editor
+//    private Directions[] mLineDirections;
 
     private static final int START_MASK = 0x1FFFFFFF;
     private static final int DIR_MASK   = 0xC0000000;

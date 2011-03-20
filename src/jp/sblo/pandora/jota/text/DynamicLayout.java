@@ -81,27 +81,32 @@ extends Layout
                          float spacingmult, float spacingadd,
                          boolean includepad,
                          TextUtils.TruncateAt ellipsize, int ellipsizedWidth) {
-        super((ellipsize == null)
+        super(
+                display,/* Jota Text Editor
+                (ellipsize == null)
                 ? display
                 : (display instanceof Spanned)
                     ? new SpannedEllipsizer(display)
-                    : new Ellipsizer(display),
+                    : new Ellipsizer(display),*/
+
               paint, width, align, spacingmult, spacingadd);
 
         mBase = base;
         mDisplay = display;
 
-        if (ellipsize != null) {
-            mInts = new PackedIntVector(COLUMNS_ELLIPSIZE);
-            mEllipsizedWidth = ellipsizedWidth;
-            mEllipsizeAt = ellipsize;
-        } else {
+// Jota Text Editor
+//        if (ellipsize != null) {
+//            mInts = new PackedIntVector(COLUMNS_ELLIPSIZE);
+//            mEllipsizedWidth = ellipsizedWidth;
+//            mEllipsizeAt = ellipsize;
+//        } else {
             mInts = new PackedIntVector(COLUMNS_NORMAL);
             mEllipsizedWidth = width;
             mEllipsizeAt = ellipsize;
-        }
+//        }
 
-        mObjects = new PackedObjectVector<Directions>(1);
+// Jota Text Editor
+//        mObjects = new PackedObjectVector<Directions>(1);
 
         mIncludePad = includepad;
 
@@ -113,14 +118,15 @@ extends Layout
          * This will break if the superclass constructor ever actually
          * cares about the content instead of just holding the reference.
          */
-        if (ellipsize != null) {
-            Ellipsizer e = (Ellipsizer) getText();
-
-            e.mLayout = this;
-            e.mWidth = ellipsizedWidth;
-            e.mMethod = ellipsize;
-            mEllipsize = true;
-        }
+// Jota Text Editor
+//        if (ellipsize != null) {
+//            Ellipsizer e = (Ellipsizer) getText();
+//
+//            e.mLayout = this;
+//            e.mWidth = ellipsizedWidth;
+//            e.mMethod = ellipsize;
+//            mEllipsize = true;
+//        }
 
         // Initial state is a single line with 0 characters (0 to 0),
         // with top at 0 and bottom at whatever is natural, and
@@ -134,22 +140,25 @@ extends Layout
         } else {
             start = new int[COLUMNS_NORMAL];
         }
-
-        Directions[] dirs = new Directions[] { DIRS_ALL_LEFT_TO_RIGHT };
+// Jota Text Editor
+//        Directions[] dirs = new Directions[] { DIRS_ALL_LEFT_TO_RIGHT };
 
         Paint.FontMetricsInt fm = paint.getFontMetricsInt();
         int asc = fm.ascent;
         int desc = fm.descent;
 
         start[DIR] = DIR_LEFT_TO_RIGHT << DIR_SHIFT;
-        start[TOP] = 0;
-        start[DESCENT] = desc;
+// Jota Text Editor
+//        start[TOP] = 0;
+//        start[DESCENT] = desc;
+//      start[TOP] = desc - asc;
+        mHeight = desc-asc;
+        mDescent = desc;
+
         mInts.insertAt(0, start);
-
-        start[TOP] = desc - asc;
         mInts.insertAt(1, start);
-
-        mObjects.insertAt(0, dirs);
+// Jota Text Editor
+//        mObjects.insertAt(0, dirs);
 
         // Update from 0 characters to whatever the real text is
 
@@ -267,7 +276,7 @@ extends Layout
         reflowed.generate(text, where, where + after,
                                       getPaint(), getWidth(), getAlignment(),
                                       getSpacingMultiplier(), getSpacingAdd(),
-                                      false, true, mEllipsize,
+                                      false, true, false,       // Jota Text Editor
                                       mEllipsizedWidth, mEllipsizeAt);
         int n = reflowed.getLineCount();
 
@@ -282,7 +291,8 @@ extends Layout
         // remove affected lines from old layout
 
         mInts.deleteAt(startline, endline - startline);
-        mObjects.deleteAt(startline, endline - startline);
+// Jota Text Editor
+//        mObjects.deleteAt(startline, endline - startline);
 
         // adjust offsets in layout for new height and offsets
 
@@ -301,18 +311,21 @@ extends Layout
         }
 
         mInts.adjustValuesBelow(startline, START, after - before);
-        mInts.adjustValuesBelow(startline, TOP, startv - endv + ht);
+
+        // Jota Text Editor
+//        mInts.adjustValuesBelow(startline, TOP, startv - endv + ht);
 
         // insert new layout
 
         int[] ints;
 
-        if (mEllipsize) {
-            ints = new int[COLUMNS_ELLIPSIZE];
-            ints[ELLIPSIS_START] = ELLIPSIS_UNDEFINED;
-        } else {
+        // Jota Text Editor
+//        if (mEllipsize) {
+//            ints = new int[COLUMNS_ELLIPSIZE];
+//            ints[ELLIPSIS_START] = ELLIPSIS_UNDEFINED;
+//        } else {
             ints = new int[COLUMNS_NORMAL];
-        }
+//        }
 
         Directions[] objects = new Directions[1];
 
@@ -325,22 +338,27 @@ extends Layout
             int top = reflowed.getLineTop(i) + startv;
             if (i > 0)
                 top -= toppad;
-            ints[TOP] = top;
+// Jota Text Editor
+//            ints[TOP] = top;
 
             int desc = reflowed.getLineDescent(i);
             if (i == n - 1)
                 desc += botpad;
 
-            ints[DESCENT] = desc;
+// Jota Text Editor
+//            ints[DESCENT] = desc;
+            mDescent = desc;
             objects[0] = reflowed.getLineDirections(i);
 
-            if (mEllipsize) {
-                ints[ELLIPSIS_START] = reflowed.getEllipsisStart(i);
-                ints[ELLIPSIS_COUNT] = reflowed.getEllipsisCount(i);
-            }
+            // Jota Text Editor
+//            if (mEllipsize) {
+//                ints[ELLIPSIS_START] = reflowed.getEllipsisStart(i);
+//                ints[ELLIPSIS_COUNT] = reflowed.getEllipsisCount(i);
+//            }
 
             mInts.insertAt(startline + i, ints);
-            mObjects.insertAt(startline + i, objects);
+            // Jota Text Editor
+            // mObjects.insertAt(startline + i, objects);
         }
 
         synchronized (sLock) {
@@ -370,11 +388,15 @@ extends Layout
     }
 
     public int getLineTop(int line) {
-        return mInts.getValue(line, TOP);
+        // Jota Text Editor
+        return mHeight * line ;
+//        return mInts.getValue(line, TOP);
     }
 
     public int getLineDescent(int line) {
-        return mInts.getValue(line, DESCENT);
+        // Jota Text Editor
+        return mDescent;
+        //        return mInts.getValue(line, DESCENT);
     }
 
     public int getLineStart(int line) {
@@ -390,7 +412,9 @@ extends Layout
     }
 
     public final Directions getLineDirections(int line) {
-        return mObjects.getValue(line, 0);
+        // Jota Text Editor
+//        return mObjects.getValue(line, 0);
+        return DIRS_ALL_LEFT_TO_RIGHT;
     }
 
     public int getTopPadding() {
@@ -458,19 +482,21 @@ extends Layout
     }
 
     public int getEllipsisStart(int line) {
-        if (mEllipsizeAt == null) {
+// Jota Text Editor
+//        if (mEllipsizeAt == null) {
             return 0;
-        }
-
-        return mInts.getValue(line, ELLIPSIS_START);
+//        }
+//
+//        return mInts.getValue(line, ELLIPSIS_START);
     }
 
     public int getEllipsisCount(int line) {
-        if (mEllipsizeAt == null) {
+// Jota Text Editor
+//        if (mEllipsizeAt == null) {
             return 0;
-        }
-
-        return mInts.getValue(line, ELLIPSIS_COUNT);
+//        }
+//
+//        return mInts.getValue(line, ELLIPSIS_COUNT);
     }
 
 
@@ -479,7 +505,8 @@ extends Layout
     private CharSequence mDisplay;
     private ChangeWatcher mWatcher;
     private boolean mIncludePad;
-    private boolean mEllipsize;
+// Jota Text Editor
+//    private boolean mEllipsize;
     private int mEllipsizedWidth;
     private TextUtils.TruncateAt mEllipsizeAt;
 
@@ -494,9 +521,11 @@ extends Layout
     private static final int START = 0;
     private static final int DIR = START;
     private static final int TAB = START;
-    private static final int TOP = 1;
-    private static final int DESCENT = 2;
-    private static final int COLUMNS_NORMAL = 3;
+ // Jota Text Editor
+//    private static final int TOP = 1;
+//    private static final int DESCENT = 2;
+//    private static final int COLUMNS_NORMAL = 3;
+    private static final int COLUMNS_NORMAL = 1;
 
     private static final int ELLIPSIS_START = 3;
     private static final int ELLIPSIS_COUNT = 4;
@@ -508,4 +537,8 @@ extends Layout
     private static final int TAB_MASK   = 0x20000000;
 
     private static final int ELLIPSIS_UNDEFINED = 0x80000000;
+
+ // Jota Text Editor
+    private int mHeight;
+    private int mDescent;
 }
