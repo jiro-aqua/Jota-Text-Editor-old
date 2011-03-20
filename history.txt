@@ -88,6 +88,7 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 
 ★grep(テキストファイルの串刺し検索)が必要な方は、拙作「aGrep」もお試しください。
 
+★ファイルが読めなくて困ってる人は、作者までメールしてください！
 --------------------------------------------------------------------------------
 Jota Text Editor
 
@@ -159,6 +160,7 @@ Functions
 ・Create a shortcut icon on HOME app.
 ・Customizable shortcut key bind.
 ・Text selector like Gingerbread.
+(Double tap to select the word , then touch selected area to show marker.)
 
 ・Support Android OS 1.6 or later.
 ・Support both touch-screen device and qwerty-keyboard device.
@@ -172,14 +174,16 @@ CAUTION
 
 
 ★If you need a reply from me , DON'T put it in Market's Review .
-  Instead please let me know by E-mail or Twiter(@jiro_aqua)
-  You can send a message to me from Jota's Preferences Screen.
+Instead please let me know by E-mail or Twiter(@jiro_aqua)
+You can send a message to me from Jota's Preferences Screen.
 
 ★In landscape orientation, you can't edit correctly because software keyboard will cover all of the screen.
-  This is a issue of the software keyboard.
-  I recommend to use 3rd party's Keyboard app like Grafitti.
+This is a issue of the software keyboard.
+I recommend to use 3rd party's Keyboard app like Grafitti.
 
 ★If you need grep (search from multiple text files), try my app "aGrep".
+
+★If you couldn't load text file, please contact me!
 
 --------------------------------------------------------------------------------
 [2011/01/23 v.0.0.1α]
@@ -308,12 +312,15 @@ Bug fix
 細かいバグ修正
 RTL言語の対応を廃止
 
+★もしこのアプリを気に入って頂けたなら、震災被害者のために何かをしてください。
+
+
 [2011/03/20 v.0.0.6α]
 
 added text selector.(2-floating-marker like Gingerbread)
 reduced memory usage.
 fixed minor bugs.
+no longer Jota supports RTL languages.
 
-* No longer Jota supports RTL languages.
-
+★If you liked this app, please do something for the earthquake victims in Japan.
 
