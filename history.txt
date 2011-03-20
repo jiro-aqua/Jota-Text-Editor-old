@@ -4,12 +4,15 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 「イオタ」と読んでください。
 
 ★現在αテスト中です。以下の条件で構わない人だけダウンロードしてください。
-　・落ちても泣かない
-　・バグっぽい挙動を見つけたら、作者に連絡する
-　・欲しい機能があったら、作者に連絡する
+・落ちても泣かない
+・バグっぽい挙動を見つけたら、作者に連絡する
+・欲しい機能があったら、作者に連絡する
 
 
 機能
+
+・100万文字程度までのテキストファイルに対応(Alphabetで1MBytes/ShiftJISで2MBytes)
+
 ・文字コード自動判定（以下の文字コードを自動判定）
   UTF-8
   UTF-16BE
@@ -62,23 +65,26 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 ・色のカスタマイズ対応
 ・テキストファイルのショートカットアイコン作成機能
 ・ファイルエクスプローラ系アプリ、コンテンツプロバイダ系アプリからの呼出に対応
+・テキスト選択用のマーカー機能搭載
+（テキストを選択したエリアをタップすることで表示されます）
 
-・対応OS Android 1.6/2.1/2.2
-  (IS01,HTC Desire,005SHで動作確認）
+
+・対応OS Android 1.6/2.1/2.2/2.3
+  (IS01,HTC Desire,005SH,Nexus One で動作確認）
 
 ・今後も含め、有料化および広告付与は行いません。
 ・安定したらオープンソースとして配布する予定です。
 
 
 注意
-　近い将来のバージョンアップでRTL言語への対応を廃止する予定です。
+　RTL言語への対応を廃止しました。
 
 
 ★不具合等発見された方、または、作者からの返事が必要な方は、メールまたはTwitter(@jiro_aqua)にてご連絡ください。
-　レビューコメントには、基本的に返事できません。
+レビューコメントには、基本的に返事できません。困ったことがあれば一人で納得しないで作者に連絡してください。
 
 ★タッチパネル機でiWnn/ATOKをお使いの場合、横向き(ランドスケープモード）ではIMEによってエディタ画面が隠され、編集が行えません。
-　これはIMEの問題です。Simeji,Open Wnn Flick,Grafitti等のIMEをご利用ください。
+これはIMEの問題です。Simeji,Open Wnn Flick,Grafitti等のIMEをご利用ください。
 
 ★grep(テキストファイルの串刺し検索)が必要な方は、拙作「aGrep」もお試しください。
 
@@ -89,12 +95,14 @@ Jota is a text editor designed for a long text file.
 It's pronouced as "i-o-ta".
 
 ★Jota is currently in Alpha-test phase. 
-  Only in the case you can agreed below statement, you can use this.
-  - Don't cry when Jota crashed and lost your text.
-  - Mail me when you found a bug.
-  - Mail me new feature you want.
+Only in the case you can agreed below statement, you can use this.
+- Don't cry when Jota crashed and lost your text.
+- Mail me when you found a bug.
+- Mail me new feature you want.
 
 Functions
+・Support until 1 million characters.
+
 ・Auto-Detect multiple character codes.
   UTF-8
   UTF-16BE
@@ -150,6 +158,7 @@ Functions
 ・Customize colors.
 ・Create a shortcut icon on HOME app.
 ・Customizable shortcut key bind.
+・Text selector like Gingerbread.
 
 ・Support Android OS 1.6 or later.
 ・Support both touch-screen device and qwerty-keyboard device.
@@ -159,7 +168,7 @@ Functions
 
 
 CAUTION
-  At near future version, RTL-Language and bi-directional text won't be supported.
+  RTL-Language and bi-directional text isn't be supported.
 
 
 ★If you need a reply from me , DON'T put it in Market's Review .
@@ -173,7 +182,6 @@ CAUTION
 ★If you need grep (search from multiple text files), try my app "aGrep".
 
 --------------------------------------------------------------------------------
-
 [2011/01/23 v.0.0.1α]
 
 変更
@@ -291,5 +299,21 @@ Bug fix
 ・Fixed the bug that BOM is not outputed in UTF-16/32.
 ・Fixed the bug that unnecessary character is outputed with CR.
 ・Fixed some minor bugs.
+
+
+[2011/03/20 v.0.0.6α]
+
+テキスト選択用のマーカーを追加
+メモリ使用量を削減
+細かいバグ修正
+RTL言語の対応を廃止
+
+[2011/03/20 v.0.0.6α]
+
+added text selector.(2-floating-marker like Gingerbread)
+reduced memory usage.
+fixed minor bugs.
+
+* No longer Jota supports RTL languages.
 
 
