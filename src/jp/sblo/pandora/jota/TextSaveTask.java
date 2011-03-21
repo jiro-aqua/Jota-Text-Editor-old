@@ -10,7 +10,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-public     class TextSaveTask extends AsyncTask<String, Integer, String>{
+public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
 
     Runnable mPreProc=null;
     Runnable mPostProc=null;
@@ -41,12 +41,12 @@ public     class TextSaveTask extends AsyncTask<String, Integer, String>{
         mActivity = null;
     }
     @Override
-    protected String doInBackground(String... params)
+    protected String doInBackground(CharSequence... params)
     {
-        String filename = params[0] ;
-        String charset = params[1] ;
-        String lb = params[2] ;
-        String text = params[3];
+        String filename = (String)params[0] ;
+        String charset = (String)params[1] ;
+        String lb = (String)params[2] ;
+        CharSequence text = params[3];
         boolean createBackup = "true".equals(params[4]);
 
         File f = new File(filename);
@@ -72,18 +72,29 @@ public     class TextSaveTask extends AsyncTask<String, Integer, String>{
                 bw.write(bom);
             }
 
-            int pos0 = 0;
-            int len = text.length();
-            while( pos0<len ){
-                int pos1 = text.indexOf('\n',pos0) ;
-                if ( pos1 ==  -1 ){
-                    pos1 = len;
+            int totallen = text.length();
+            final int BUFSIZE=4096;
+            int processed = 0;
+            while( processed < totallen ){
+                int len = Math.min(BUFSIZE, totallen - processed);
+                String temptext = text.subSequence(processed, processed + len).toString();
+                int pos0 = 0;
+                while( pos0<len ){
+                    int pos1 = temptext.indexOf('\n',pos0) ;
+                    if ( pos1 ==  -1 ){
+                        pos1 = len;
+                        if ( pos0!=pos1 ){
+                            bw.write(temptext, pos0, pos1-pos0);
+                        }
+                    }else{
+                        if ( pos0!=pos1 ){
+                            bw.write(temptext, pos0, pos1-pos0);
+                        }
+                        bw.write(lb);
+                    }
+                    pos0 = pos1 + 1;
                 }
-                if ( pos0!=pos1 ){
-                    bw.write(text, pos0, pos1-pos0);
-                }
-                bw.write(lb);
-                pos0 = pos1 + 1;
+                processed += len;
             }
             bw.close();
         } catch (Exception e) {

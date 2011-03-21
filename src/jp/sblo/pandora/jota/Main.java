@@ -53,6 +53,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class Main
@@ -628,7 +629,7 @@ public class Main
         if ( filename != null ){
 //            charset= mInstanceState.charset;
 //            linebreak = mInstanceState.linebreak;
-            String text = mEditor.getText().toString();
+            CharSequence text = mEditor.getText();
             String lb = "\n";
             if (linebreak == LineBreak.CR) {
                 lb = "\r";
@@ -1225,6 +1226,10 @@ public class Main
                         startsel = endsel;
                         endsel = temp;
                     }
+                    if ( endsel - startsel > jp.sblo.pandora.jota.text.TextView.MAX_PARCELABLE ){
+                        Toast.makeText(Main.this, R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     substr = text.subSequence(startsel, endsel).toString();
                 }
                 intent.putExtra("replace_key", substr);
@@ -1264,6 +1269,10 @@ public class Main
                     startsel = endsel;
                     endsel = temp;
                 }
+                if ( endsel - startsel > jp.sblo.pandora.jota.text.TextView.MAX_PARCELABLE ){
+                    Toast.makeText(Main.this, R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 substr = text.subSequence(startsel, endsel).toString();
             }
 
@@ -1271,7 +1280,12 @@ public class Main
                 if ( substr != null){
                     intent.putExtra(Intent.EXTRA_TEXT, substr );
                 }else{
-                    intent.putExtra(Intent.EXTRA_TEXT, text.toString() );
+                    if ( text.length() <= jp.sblo.pandora.jota.text.TextView.MAX_PARCELABLE){
+                        intent.putExtra(Intent.EXTRA_TEXT, text.toString() );
+                    }else{
+                        Toast.makeText(Main.this, R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                        return;
+                    }
                 }
                 try{
                     startActivity(intent);
@@ -1317,6 +1331,10 @@ public class Main
                     int temp = startsel ;
                     startsel = endsel;
                     endsel = temp;
+                }
+                if ( endsel - startsel > jp.sblo.pandora.jota.text.TextView.MAX_PARCELABLE ){
+                    Toast.makeText(Main.this, R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                    return ;
                 }
                 substr = text.subSequence(startsel, endsel).toString();
                 searchWord( substr );
@@ -1411,20 +1429,31 @@ public class Main
             int endsel = mEditor.getSelectionEnd();
             Editable text = mEditor.getText();
 
-            String substr = text.toString();
+            String substr = null;
             if ( startsel != endsel ){
                 if ( endsel < startsel ){
                     int temp = startsel ;
                     startsel = endsel;
                     endsel = temp;
                 }
+                if ( endsel - startsel > jp.sblo.pandora.jota.text.TextView.MAX_PARCELABLE ){
+                    Toast.makeText(Main.this, R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                    return;
+                }
                 substr = text.subSequence(startsel, endsel).toString();
             }
-            intent.putExtra(Intent.EXTRA_TEXT, substr );
+            if ( substr == null ){
+                if ( text.length() <= jp.sblo.pandora.jota.text.TextView.MAX_PARCELABLE ){
+                    substr = text.toString();
+                }
+            }
+            if ( substr != null ){
+                intent.putExtra(Intent.EXTRA_TEXT, substr );
 
-            try{
-                startActivity(intent);
-            } catch (ActivityNotFoundException e) {
+                try{
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                }
             }
         }
     };

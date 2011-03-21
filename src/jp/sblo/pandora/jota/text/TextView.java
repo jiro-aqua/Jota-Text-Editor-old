@@ -103,6 +103,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
 import android.widget.Scroller;
+import android.widget.Toast;
 import android.widget.RemoteViews.RemoteView;
 
 import com.android.internal.util.FastMath;
@@ -7797,16 +7798,24 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
                 return true;
             case ID_CUT:
-                clip.setText(mTransformed.subSequence(min, max));
-                ((Editable) mText).delete(min, max);
-                stopTextSelectionMode();
+                // Jota Text Editor
+                if ( max - min > MAX_PARCELABLE ){
+                    Toast.makeText(getContext(), R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                }else{
+                    clip.setText(mTransformed.subSequence(min, max));
+                    ((Editable) mText).delete(min, max);
+                    stopTextSelectionMode();
+                }
                 return true;
-
             case ID_COPY:
-                clip.setText(mTransformed.subSequence(min, max));
-                stopTextSelectionMode();
+                // Jota Text Editor
+                if ( max - min > MAX_PARCELABLE ){
+                    Toast.makeText(getContext(), R.string.toast_overflow_of_limit, Toast.LENGTH_LONG).show();
+                }else{
+                    clip.setText(mTransformed.subSequence(min, max));
+                    stopTextSelectionMode();
+                }
                 return true;
-
             case ID_PASTE:
                 CharSequence paste = clip.getText();
 
@@ -7941,7 +7950,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     private void stopTextSelectionMode() {
         if (mIsInTextSelectionMode) {
-            Selection.setSelection((Spannable) mText, getSelectionEnd());
+//            Selection.setSelection((Spannable) mText, getSelectionEnd()); // Jota Text Editor
             hideSelectionModifierCursorController();
             mIsInTextSelectionMode = false;
         }
@@ -8875,4 +8884,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     private int mUnderlineColor=0;
     private boolean mUnderline=false;
+    public static final int MAX_PARCELABLE = 99 * 1024;
 }
