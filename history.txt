@@ -312,7 +312,14 @@ Bug fix
 細かいバグ修正
 RTL言語の対応を廃止
 
-★もしこのアプリを気に入って頂けたなら、震災被害者のために何かをしてください。
+[2011/03/21 v.0.0.7α]
+クリップボード・Intentの上限を99KBにするように変更
+保存処理を小さいバッファで処理するように修正
+マーカー表示中にメニューキーを押すと選択が解除されるバグを修正
+タイトルバーを非表示にする設定を追加
+IS01/Lynxのソフトキー領域を非表示にする設定を追加
+
+★もしこのアプリを気に入って頂けたなら、震災被害者のために何かして頂けると嬉しいです。
 
 
 [2011/03/20 v.0.0.6α]
@@ -322,5 +329,14 @@ reduced memory usage.
 fixed minor bugs.
 no longer Jota supports RTL languages.
 
+[2011/03/21 v.0.0.7α]
+added the limit of Clipboard and Intent text to 99KB.
+changed to use smaller buffer when a file is saved.
+fixed the bug that cancelled the selection area when Menu key is pushed in the state selection marker is shown.
+added the option to hide title bar.
+
 ★If you liked this app, please do something for the earthquake victims in Japan.
+
+
+
 

@@ -55,6 +55,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_CHARSET_OPEN            = "CHARSET_OPEN";
     private static final String KEY_CHARSET_SAVE            = "CHARSET_SAVE";
     private static final String KEY_LINEBREAK_SAVE          = "LINEBREAK_SAVE";
+    private static final String KEY_HIDETITLEBAR            = "HIDETITLEBAR";
+    private static final String KEY_HIDESOFTKEY_IS01        = "HIDESOFTKEY_IS01";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -218,7 +220,22 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setOnPreferenceClickListener(mProcUnderlineColor);
                     cat.addPreference(pr);
                 }
-
+                {
+                    // hide titlebar
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_HIDETITLEBAR );
+                    pr.setTitle(R.string.label_hide_titlebar);
+                    pr.setSummary(R.string.summary_need_restart);
+                    cat.addPreference(pr);
+                }
+                if ( IS01FullScreen.isIS01orLynx() ){
+                    // hide softkey
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_HIDESOFTKEY_IS01);
+                    pr.setTitle(R.string.label_hide_softkey_is01);
+                    pr.setSummary(R.string.summary_need_restart);
+                    cat.addPreference(pr);
+                }
             }
 
             {
@@ -808,7 +825,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         String intentname2;
 	}
 
-	private static Settings sSettings;
+	public static class BootSettings {
+        boolean hideTitleBar;
+        boolean hideSoftkeyIS01;
+	}
+
+    private static Settings sSettings;
+    private static BootSettings sBootSettings;
 
 	public	static Settings readSettings(Context ctx)
 	{
@@ -869,6 +892,17 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         return ret;
 	}
 
+    public  static BootSettings readBootSettings(Context ctx)
+    {
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
+        BootSettings ret = new BootSettings();
+
+        ret.hideTitleBar = sp.getBoolean(KEY_HIDETITLEBAR , false);
+        ret.hideSoftkeyIS01 = sp.getBoolean(KEY_HIDESOFTKEY_IS01 , false);
+        sBootSettings = ret;
+        return ret;
+    }
+
 	public static boolean isVersionUp(Context ctx)
 	{
 		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -919,6 +953,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putString(KEY_LINEBREAK_SAVE, "-1");
                     editor.putString(KEY_DIRECT_INTENT2, DI_INSERT);
                     editor.putString(KEY_DIRECT_INTENT_INTENT2, "");
+                }
+                if ( lastversion < 8 ){
+                    editor.putBoolean(KEY_HIDETITLEBAR, false);
+                    editor.putBoolean(KEY_HIDESOFTKEY_IS01, false);
                 }
 				editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);

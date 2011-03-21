@@ -10,6 +10,7 @@ public class JotaTextEditor extends Application {
         super.onCreate();
 
         SettingsActivity.isVersionUp(this);
+        IS01FullScreen.createInstance();
     }
 
 }

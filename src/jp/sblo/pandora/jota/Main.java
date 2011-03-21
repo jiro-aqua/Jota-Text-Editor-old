@@ -103,6 +103,7 @@ public class Main
     private boolean mSearchForward;
 
     private SettingsActivity.Settings mSettings;
+    private SettingsActivity.BootSettings mBootSettings;
 
     class InstanceState {
         String  filename;
@@ -119,6 +120,7 @@ public class Main
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        applyBootSetting();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.textviewer);
 
@@ -1586,6 +1588,23 @@ public class Main
         mEditor.setUnderlineColor( mSettings.underlinecolor );
         mEditor.setShortcutSettings( mSettings.shortcuts );
 
+    }
+    void applyBootSetting()
+    {
+        mBootSettings = SettingsActivity.readBootSettings(this);
+
+        if ( mBootSettings.hideTitleBar ){
+            setTheme( R.style.Theme_NoTitleBar);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if ( mBootSettings.hideSoftkeyIS01 ){
+            IS01FullScreen.setFullScreenOnIS01();
+        }
     }
 
 }
