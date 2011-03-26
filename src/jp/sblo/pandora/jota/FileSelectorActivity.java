@@ -331,6 +331,17 @@ public class FileSelectorActivity extends ListActivity {
 		if( files == null ) {
 			Toast.makeText(FileSelectorActivity.this, getString(R.string.fs_access_denied),
 				       Toast.LENGTH_SHORT).show();
+
+			// up to parent direcotry
+            if( m_strDirPath.lastIndexOf("/") <= 0 ) {
+                // root
+                m_strDirPath = m_strDirPath.substring(0, m_strDirPath.lastIndexOf("/") + 1 );
+            } else {
+                // sub directory
+                m_strDirPath = m_strDirPath.substring(0, m_strDirPath.lastIndexOf("/"));
+            }
+			fillList();
+
 			return;
 		}
 

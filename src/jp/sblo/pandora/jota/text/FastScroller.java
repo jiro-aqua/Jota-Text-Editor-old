@@ -46,7 +46,7 @@ class FastScroller {
     private static final int STATE_DRAGGING = 3;
     // Scroll thumb fading out due to inactivity timeout
     private static final int STATE_EXIT = 4;
-    
+
     private Drawable mThumbDrawable;
 //    private Drawable mOverlayDrawable;// Jota Text Editor
 
@@ -62,15 +62,15 @@ class FastScroller {
 //    private int mListOffset;// Jota Text Editor
     private int mItemCount = -1;
     private boolean mLongList;
-    
+
     private Object [] mSections;
 // Jota Text Editor
 //    private String mSectionText;
 //    private boolean mDrawOverlay;
     private ScrollFade mScrollFade;
-    
+
     private int mState;
-    
+
     private Handler mHandler = new Handler();
 
 //    private BaseAdapter mListAdapter;// Jota Text Editor
@@ -105,11 +105,11 @@ class FastScroller {
         }
         mState = state;
     }
-    
+
     public int getState() {
         return mState;
     }
-    
+
     private void resetThumbPos() {
         final int viewWidth = mList.getWidth();
         // Bounds are always top right. Y coordinate get's translated during draw
@@ -118,7 +118,7 @@ class FastScroller {
 // Jota Text Editor
 //        mList.invalidate(viewWidth - mThumbW, mThumbY, viewWidth, mThumbY + mThumbH);
     }
-    
+
     private void useThumbDrawable(Context context, Drawable drawable) {
         mThumbDrawable = drawable;
         mThumbW = context.getResources().getDimensionPixelSize(
@@ -156,20 +156,20 @@ class FastScroller {
         int textColorNormal = textColor.getDefaultColor();
         mPaint.setColor(textColorNormal);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        
+
         mState = STATE_NONE;
     }
-    
+
     void stop() {
         setState(STATE_NONE);
     }
-    
+
     boolean isVisible() {
         return !(mState == STATE_NONE);
     }
-    
+
     public void draw(Canvas canvas) {
-        
+
         if (mState == STATE_NONE) {
             // No need to draw anything
             return;
@@ -179,6 +179,7 @@ class FastScroller {
         final int y = mThumbY + mList.getScrollY();
         final int viewWidth = mList.getWidth();
         final FastScroller.ScrollFade scrollFade = mScrollFade;
+        final int x = mList.getScrollX();
 
         int alpha = -1;
         if (mState == STATE_EXIT) {
@@ -191,9 +192,9 @@ class FastScroller {
             mChangedBounds = true;
         }
 
-        canvas.translate(0, y);
+        canvas.translate(x, y);
         mThumbDrawable.draw(canvas);
-        canvas.translate(0, -y);
+        canvas.translate(-x, -y);
 
         // If user is dragging the scroll bar, draw the alphabet overlay
 // Jota Text Editor
@@ -361,7 +362,7 @@ class FastScroller {
         mList.onTouchEvent(cancelFling);
         cancelFling.recycle();
     }
-    
+
     boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mState > STATE_NONE && ev.getAction() == MotionEvent.ACTION_DOWN) {
             if (isPointInside(ev.getX(), ev.getY())) {
@@ -440,18 +441,18 @@ class FastScroller {
     }
 
     public class ScrollFade implements Runnable {
-        
+
         long mStartTime;
         long mFadeDuration;
         static final int ALPHA_MAX = 208;
         static final long FADE_DURATION = 200;
-        
+
         void startFade() {
             mFadeDuration = FADE_DURATION;
             mStartTime = SystemClock.uptimeMillis();
             setState(STATE_EXIT);
         }
-        
+
         int getAlpha() {
             if (getState() != STATE_EXIT) {
                 return ALPHA_MAX;
@@ -461,17 +462,17 @@ class FastScroller {
             if (now > mStartTime + mFadeDuration) {
                 alpha = 0;
             } else {
-                alpha = (int) (ALPHA_MAX - ((now - mStartTime) * ALPHA_MAX) / mFadeDuration); 
+                alpha = (int) (ALPHA_MAX - ((now - mStartTime) * ALPHA_MAX) / mFadeDuration);
             }
             return alpha;
         }
-        
+
         public void run() {
             if (getState() != STATE_EXIT) {
                 startFade();
                 return;
             }
-            
+
             if (getAlpha() > 0) {
                 mList.invalidate();
             } else {

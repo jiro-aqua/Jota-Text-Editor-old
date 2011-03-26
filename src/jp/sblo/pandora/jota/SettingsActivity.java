@@ -166,13 +166,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 final PreferenceCategory cat = new PreferenceCategory(this);
                 cat.setTitle(R.string.label_view);
                 mPs.addPreference(cat);
-//                if (false) {
-//                    // word wrap
-//                    final CheckBoxPreference pr = new CheckBoxPreference(this);
-//                    pr.setKey(KEY_WORD_WRAP);
-//                    pr.setTitle(R.string.label_word_wrap);
-//                    cat.addPreference(pr);
-//                }
+                {
+                    // word wrap
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_WORD_WRAP);
+                    pr.setTitle(R.string.label_word_wrap);
+                    cat.addPreference(pr);
+                }
                 {
                     // show underline
                     final CheckBoxPreference pr = new CheckBoxPreference(this);

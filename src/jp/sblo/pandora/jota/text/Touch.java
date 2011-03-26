@@ -314,9 +314,10 @@ public class Touch {
 
         void start(TextView parent , int initialVelocity) {
             mWidget = parent;
+            int initialX = parent.getScrollX(); //initialVelocity < 0 ? Integer.MAX_VALUE : 0;
             int initialY = parent.getScrollY(); //initialVelocity < 0 ? Integer.MAX_VALUE : 0;
             mLastFlingY = initialY;
-            mScroller.fling(0, initialY, 0, initialVelocity,
+            mScroller.fling(initialX, initialY, 0, initialVelocity,
                     0, Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
             mTouchMode = TOUCH_MODE_FLING;
 

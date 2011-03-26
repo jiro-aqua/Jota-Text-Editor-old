@@ -1001,12 +1001,12 @@ public abstract class Layout {
             if (line == 0)
                 return best;
             else
-                return getOffsetForHorizontal(line - 1, 10000);
+                return getOffsetForHorizontal(line - 1, VERY_WIDE);
         } else {
             if (line == getLineCount() - 1)
                 return best;
             else
-                return getOffsetForHorizontal(line + 1, 10000);
+                return getOffsetForHorizontal(line + 1, VERY_WIDE);
         }
     }
 
@@ -1101,12 +1101,12 @@ public abstract class Layout {
             if (line == getLineCount() - 1)
                 return best;
             else
-                return getOffsetForHorizontal(line + 1, -10000);
+                return getOffsetForHorizontal(line + 1, -VERY_WIDE);
         } else {
             if (line == 0)
                 return best;
             else
-                return getOffsetForHorizontal(line - 1, -10000);
+                return getOffsetForHorizontal(line - 1, -VERY_WIDE);
         }
     }
 
@@ -1985,5 +1985,6 @@ public abstract class Layout {
     /* package */ static final Directions DIRS_ALL_RIGHT_TO_LEFT =
                                        new Directions(new short[] { 0, 32767 });
 
+    final private static int VERY_WIDE = 16384*4;
 }
 

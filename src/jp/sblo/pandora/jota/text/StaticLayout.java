@@ -868,6 +868,17 @@ extends Layout
         if (c == '\u3000') {
             return true; // IDEOGRAPHIC SPACE
         }
+        // Jota Text Editor
+        if (c >= '\u3001' && c <= '\u303F') {
+            if (!includeNonStarters) {
+                switch (c) {
+                case '\u3001': //  # IDEOGRAPHIC COMMA
+                case '\u3002': //  # IDEOGRAPHIC FULL STOP
+                    return false;
+                }
+            }
+            return true; // Japanese Symbols
+        }
         if (c >= '\u3040' && c <= '\u309F') {
             if (!includeNonStarters) {
                 switch (c) {

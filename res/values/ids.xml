@@ -1,4 +1,5 @@
 <resources>
   <item type="id" name="undo" />
   <item type="id" name="directintent" />
+  <item type="id" name="cancelselection" />
 </resources>

@@ -7595,10 +7595,18 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     setOnMenuItemClickListener(handler);
                 added = true;
             } else {
-                menu.add(0, ID_START_SELECTING_TEXT, 0,
-                        R.string.selectText).// Jota Text Editor
-                    setOnMenuItemClickListener(handler);
-                added = true;
+                // Jota Text Editor
+                if ( selection ){
+                    menu.add(0, ID_CANCEL_SELECTION , 0,
+                            R.string.cancel_selection).
+                        setOnMenuItemClickListener(handler);
+                    added = true;
+                }else{
+                    menu.add(0, ID_START_SELECTING_TEXT, 0,
+                            R.string.selectText).// Jota Text Editor
+                        setOnMenuItemClickListener(handler);
+                    added = true;
+                }
             }
         }
 
@@ -7732,6 +7740,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_UNDO = R.id.undo;// Jota Text Editor
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
 //    private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;// Jota Text Editor
+    private static final int ID_CANCEL_SELECTION = R.id.cancelselection;
+
 
     private class MenuHandler implements MenuItem.OnMenuItemClickListener {
         public boolean onMenuItemClick(MenuItem item) {
@@ -7779,6 +7789,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
             case ID_STOP_SELECTING_TEXT:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
+//                Selection.setSelection((Spannable) mText, getSelectionEnd()); // Jota Text Editor
+                return true;
+
+            // Jota Text Editor
+            case ID_CANCEL_SELECTION:
                 Selection.setSelection((Spannable) mText, getSelectionEnd());
                 return true;
 
@@ -8857,7 +8872,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final RectF      sTempRect = new RectF();
 
     // XXX should be much larger
-    private static final int        VERY_WIDE = 16384;
+    private static final int        VERY_WIDE = 16384*4;
 
     private static final int        BLINK = 500;
 
