@@ -36,7 +36,6 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -367,7 +366,7 @@ public class Main
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        Log.e(TAG,"onSaveInstanceState=========================================================>");
+//        Log.e(TAG,"onSaveInstanceState=========================================================>");
 //        mInstanceState.text = mEditor.getText().toString();
 //        mInstanceState.selstart = mEditor.getSelectionStart();
 //        mInstanceState.selend = mEditor.getSelectionEnd();
@@ -403,7 +402,7 @@ public class Main
 
     @Override
     public void onLowMemory() {
-        Log.e(TAG,"onLowMemory()");
+//        Log.e(TAG,"onLowMemory()");
         super.onLowMemory();
     }
 
@@ -523,6 +522,8 @@ public class Main
     public void onChanged()
     {
         boolean changed = mEditor.isChanged();
+
+        mSearchResult = null;
 
         String name = getString(R.string.hint_message );
         if ( mInstanceState.filename != null ){
@@ -1539,10 +1540,10 @@ public class Main
                 }
             }
 
-            Log.e(TAG , "found="+cursorpos);
-            for( Record record : mSearchResult ){
-                Log.e(TAG , ""+record.start + "," + record.end );
-            }
+//            Log.e(TAG , "found="+cursorpos);
+//            for( Record record : mSearchResult ){
+//                Log.e(TAG , ""+record.start + "," + record.end );
+//            }
         }
         public void onSearchFinished(ArrayList<Record> data) {
             mSearchResult = data;
