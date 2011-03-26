@@ -57,6 +57,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_LINEBREAK_SAVE          = "LINEBREAK_SAVE";
     private static final String KEY_HIDETITLEBAR            = "HIDETITLEBAR";
     private static final String KEY_HIDESOFTKEY_IS01        = "HIDESOFTKEY_IS01";
+    private static final String KEY_VIEWER_MODE             = "VIEWER_MODE";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -370,6 +371,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 category.setTitle(R.string.label_input);
 
                 mPs.addPreference(category);
+                {
+                    // viewer mode
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_VIEWER_MODE );
+                    pr.setTitle(R.string.label_viewer_mode);
+                    pr.setSummary(R.string.summary_viewer_mode);
+                    category.addPreference(pr);
+                }
                 {
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_SHORTCUT_ALT_LEFT);
@@ -828,6 +837,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	public static class BootSettings {
         boolean hideTitleBar;
         boolean hideSoftkeyIS01;
+        boolean viewerMode;
 	}
 
     private static Settings sSettings;
@@ -899,6 +909,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
         ret.hideTitleBar = sp.getBoolean(KEY_HIDETITLEBAR , false);
         ret.hideSoftkeyIS01 = sp.getBoolean(KEY_HIDESOFTKEY_IS01 , false);
+        ret.viewerMode = sp.getBoolean(KEY_VIEWER_MODE, false);
         sBootSettings = ret;
         return ret;
     }
@@ -958,7 +969,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putBoolean(KEY_HIDETITLEBAR, false);
                     editor.putBoolean(KEY_HIDESOFTKEY_IS01, false);
                 }
-				editor.commit();
+                if ( lastversion < 9 ){
+                    editor.putBoolean(KEY_VIEWER_MODE, false);
+                }
+                editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
 			}
 

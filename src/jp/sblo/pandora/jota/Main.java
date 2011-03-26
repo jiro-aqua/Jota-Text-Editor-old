@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -357,7 +358,9 @@ public class Main
             }
             mLine = -1;
             saveHistory();
-
+            if ( mBootSettings.viewerMode ){
+                mEditor.showIme( false );
+            }
         }
     }
 
@@ -977,6 +980,9 @@ public class Main
             mEditor.setText("");
             mEditor.setChanged(false);
             mEditor.setSelection(0,0);
+            if ( mBootSettings.viewerMode ){
+                mEditor.showIme( true );
+            }
 
             mLlSearch.setVisibility(View.GONE);
             mLlReplace.setVisibility(View.GONE);

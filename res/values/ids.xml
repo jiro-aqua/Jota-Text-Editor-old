@@ -2,4 +2,5 @@
   <item type="id" name="undo" />
   <item type="id" name="directintent" />
   <item type="id" name="cancelselection" />
+  <item type="id" name="showime" />
 </resources>

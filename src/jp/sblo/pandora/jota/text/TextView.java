@@ -6965,7 +6965,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             return superResult;
         }
 
-        if ((mMovement != null || onCheckIsTextEditor()) && mText instanceof Spannable && mLayout != null) {
+        if ((mMovement != null /*|| onCheckIsTextEditor()*/) && mText instanceof Spannable && mLayout != null) { // Jota Text Editor
             boolean handled = false;
 
             // Save previous selection, in case this event is used to show the IME.
@@ -7000,12 +7000,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
                     handled |= imm.showSoftInput(this, 0, csr) && (csr != null);
 
-                    // Cannot be done by CommitSelectionReceiver, which might not always be called,
-                    // for instance when dealing with an ExtractEditText.
-                    onTapUpEvent(oldSelStart, oldSelEnd);
                 }
             }
-
+            // Jota Text Editor
+            if (action == MotionEvent.ACTION_UP && isFocused() && !mScrolled) {
+                // Cannot be done by CommitSelectionReceiver, which might not always be called,
+                // for instance when dealing with an ExtractEditText.
+                onTapUpEvent(oldSelStart, oldSelEnd);
+            }
             if (handled) {
                 return true;
             }
@@ -7588,6 +7590,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
         boolean selection = getSelectionStart() != getSelectionEnd();
 
+        // Jota Text Editor
+        if ( getInputType() == InputType.TYPE_NULL ){
+            menu.add(0, ID_SHOW_IME, 0,R.string.show_ime).
+                setOnMenuItemClickListener(handler);
+            added = true;
+        }
+
         if (canSelectText()) {
             if (MetaKeyKeyListener.getMetaState(mText, MetaKeyKeyListener.META_SELECTING) != 0) {
                 menu.add(0, ID_STOP_SELECTING_TEXT, 0,
@@ -7740,7 +7749,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_UNDO = R.id.undo;// Jota Text Editor
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
 //    private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;// Jota Text Editor
-    private static final int ID_CANCEL_SELECTION = R.id.cancelselection;
+    private static final int ID_CANCEL_SELECTION = R.id.cancelselection;// Jota Text Editor
+    private static final int ID_SHOW_IME = R.id.showime;// Jota Text Editor
 
 
     private class MenuHandler implements MenuItem.OnMenuItemClickListener {
@@ -7797,6 +7807,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 Selection.setSelection((Spannable) mText, getSelectionEnd());
                 return true;
 
+			// Jota Text Editor
+            case ID_SHOW_IME:
+            {
+                showIme( true );
+                return true;
+            }
             case ID_UNDO:
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
 
@@ -7852,12 +7868,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 return true;
 
             case ID_SWITCH_INPUT_METHOD:
+            {
                 InputMethodManager imm = InputMethodManager.peekInstance();
                 if (imm != null) {
                     imm.showInputMethodPicker();
                 }
                 return true;
-
+            }
 // Jota Text Editor
 //            case ID_ADD_TO_DICTIONARY:
 //                String word = getWordForDictionary();
@@ -7956,9 +7973,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 // Jota Text Editor
 //            selectCurrentWord();
             getSelectionController().show();
-            final InputMethodManager imm = (InputMethodManager)
-                    getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(this, 0, null);
+// Jota Text Editor
+//            final InputMethodManager imm = (InputMethodManager)
+//                    getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//            imm.showSoftInput(this, 0, null);
             mIsInTextSelectionMode = true;
         }
     }
@@ -8098,6 +8116,23 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public void setNameDirectIntent(String name)
     {
         mNameDirectIntent = name;
+    }
+
+// Jota Text Editor
+    public void showIme( boolean show )
+    {
+        InputMethodManager imm = InputMethodManager.peekInstance();
+        if ( show ){
+            setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            if (imm != null){
+                imm.showSoftInput(this, 0);
+            }
+        }else{
+            setRawInputType(0);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(getWindowToken(), 0);
+            }
+        }
     }
 
     /**
