@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
 
@@ -38,7 +39,6 @@ public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
-        mActivity = null;
     }
     @Override
     protected String doInBackground(CharSequence... params)
@@ -99,8 +99,9 @@ public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
             bw.close();
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+        return filename;
     }
 
     @Override
@@ -108,8 +109,18 @@ public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
     {
         mProgressDialog.dismiss();
         mProgressDialog = null;
-        if ( mPostProc!= null ){
-            mPostProc.run();
+
+        if ( result != null ){
+            if ( mPostProc!= null ){
+                String name = new File(result).getName();
+                String message = mActivity.getString(R.string.toast_saved_message ,name );
+                Toast.makeText(mActivity, message , Toast.LENGTH_LONG).show();
+
+                mPostProc.run();
+            }
+        }else{
+            Toast.makeText(mActivity, R.string.toast_save_failed, Toast.LENGTH_LONG).show();
         }
+        mActivity = null;
     }
 }

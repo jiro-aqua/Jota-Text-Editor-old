@@ -186,7 +186,7 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
 
             BufferedReader br=null;
             try {
-                br = new BufferedReader( new InputStreamReader( is , encode ) , 8192 );
+                br = new BufferedReader( new InputStreamReader( is , encode ) , 8192*2 );
 
                 int line=0;
                 String text;

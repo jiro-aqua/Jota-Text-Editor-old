@@ -2407,6 +2407,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         boolean frozenWithFocus;
         CharSequence error;
         UndoBuffer undoBuffer;// Jota Text Editor
+        boolean imeShown; // Jota Text Editor
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -2427,6 +2428,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 TextUtils.writeToParcel(error, out, flags);
             }
             out.writeParcelable(undoBuffer, 0);// Jota Text Editor
+            out.writeInt( imeShown?1:0 );// Jota Text Editor
         }
 
         @Override
@@ -2462,6 +2464,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 error = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
             }
             undoBuffer = in.readParcelable(UndoBuffer.class.getClassLoader());// Jota Text Editor
+            imeShown = in.readInt() != 0;// Jota Text Editor
         }
     }
 
@@ -2516,6 +2519,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
             ss.error = mError;
             ss.undoBuffer = mUndoBuffer;// Jota Text Editor
+            ss.imeShown = isImeShown();// Jota Text Editor
             return ss;
         }
 
@@ -2572,7 +2576,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             });
         }
         mUndoBuffer = ss.undoBuffer;// Jota Text Editor
-
+        showIme( ss.imeShown );
     }
 
     /**
@@ -8134,6 +8138,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
         }
     }
+
+ // Jota Text Editor
+    public boolean isImeShown()
+    {
+        return mInputType != 0;
+    }
+
 
     /**
      * A CursorController instance can be used to control a cursor in the text.
