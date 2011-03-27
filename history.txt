@@ -90,7 +90,7 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 
 ★ファイルが読めなくて困ってる人は、作者までメールしてください！
 
-★GalaxySユーザーの方で、長いファイルが途中で打ち切られる現象が出ている人がいたら、作者まで連絡してください。
+★GalaxySで、長いファイルが途中で打ち切られる現象が報告されています。
 
 --------------------------------------------------------------------------------
 Jota Text Editor
@@ -338,5 +338,27 @@ fixed the bug that cancelled selection area when Menu key is pushed when selecti
 added the option to hide title bar.
 
 ★If you liked this app, please do something for the earthquake victims in Japan.
+
+
+[2011/03/27 v.0.0.8α]
+コンテキストメニューに選択解除機能を追加
+ワードラップの有無設定を追加
+閲覧モードの設定を追加
+LifeTouch NOTEのctrlキー対応を追加
+日本語の禁則処理を修正
+ディレクトリブラウザでaccess denied の後の挙動を修正
+テキスト検索時のバグを修正
+保存失敗時のエラーメッセージを表示
+
+★がんばれ日本！
+
+[2011/03/27 v.0.0.8α]
+added "Select Cancel" onto the context menu.
+added a option "Word Wrap".
+added the option "Viewer mode".(This is not read-only mode. This only hides IME.)
+Fixed minor bugs.
+
+★From Japan, we are with you !
+
 
 
