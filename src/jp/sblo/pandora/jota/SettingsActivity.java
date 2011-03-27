@@ -46,6 +46,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_SHORTCUT_ALT_LEFT       = "SHORTCUT_ALT_LEFT";
     private static final String KEY_SHORTCUT_ALT_RIGHT      = "SHORTCUT_ALT_RIGHT";
     private static final String KEY_SHORTCUT_CTRL           = "SHORTCUT_CTRL";
+    private static final String KEY_SHORTCUT_CTRL_LTN       = "SHORTCUT_CTRL_LTN";
     private static final String KEY_REMEMBER_LAST_FILE      = "REMEMBER_LAST_FILE";
     private static final String KEY_WORD_WRAP               = "WORD_WRAP";
     private static final String KEY_THEME                   = "THEME";
@@ -395,6 +396,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_SHORTCUT_CTRL);
                     pr.setTitle(R.string.label_shortcut_ctrl);
+                    pr.setSummary(R.string.summary_ctrl_daz);
+                    category.addPreference(pr);
+                }
+                {
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_SHORTCUT_CTRL_LTN);
+                    pr.setTitle(R.string.label_shortcut_ctrl);
+                    pr.setSummary(R.string.summary_ctrl_ltn);
                     category.addPreference(pr);
                 }
                 {
@@ -817,6 +826,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         boolean shortcutaltleft;
         boolean shortcutaltright;
         boolean shortcutctrl;
+        boolean shortcutctrlltn;
         boolean rememberlastfile;
         boolean wordwrap;
         String theme;
@@ -885,6 +895,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.shortcutaltleft = sp.getBoolean( KEY_SHORTCUT_ALT_LEFT, false);
         ret.shortcutaltright = sp.getBoolean( KEY_SHORTCUT_ALT_RIGHT, false);
         ret.shortcutctrl = sp.getBoolean( KEY_SHORTCUT_CTRL, false);
+        ret.shortcutctrlltn = sp.getBoolean( KEY_SHORTCUT_CTRL_LTN, false);
         ret.rememberlastfile = sp.getBoolean( KEY_REMEMBER_LAST_FILE, false);
         ret.wordwrap = sp.getBoolean( KEY_WORD_WRAP, true);
         ret.theme = sp.getString(KEY_THEME, THEME_DEFAULT);
@@ -971,6 +982,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
                 if ( lastversion < 9 ){
                     editor.putBoolean(KEY_VIEWER_MODE, false);
+                    editor.putBoolean(KEY_SHORTCUT_CTRL_LTN, false);
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);

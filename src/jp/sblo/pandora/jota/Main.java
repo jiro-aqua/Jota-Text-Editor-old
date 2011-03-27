@@ -1579,6 +1579,7 @@ public class Main
                 (mSettings.shortcutaltleft?KeyEvent.META_ALT_LEFT_ON:0)
                 | (mSettings.shortcutaltright?KeyEvent.META_ALT_RIGHT_ON:0)
                 | (mSettings.shortcutctrl?8:0)            // ctrl key on Dynabook AZ
+                | (mSettings.shortcutctrlltn?0x1000:0)    // ctrl key on Lifetouch Note
         );
         mEditor.setHorizontallyScrolling(!mSettings.wordwrap);
 
