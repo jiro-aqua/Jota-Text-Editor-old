@@ -29,6 +29,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -126,6 +127,7 @@ public class Main
 
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
 
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         mEditor = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.textedit);
         applySetting();
@@ -1595,6 +1597,7 @@ public class Main
         mEditor.enableUnderline( mSettings.underline );
         mEditor.setUnderlineColor( mSettings.underlinecolor );
         mEditor.setShortcutSettings( mSettings.shortcuts );
+        mEditor.setUseVolumeKey( mSettings.useVolumeKey );
 
     }
     void applyBootSetting()

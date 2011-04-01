@@ -8127,7 +8127,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     {
         InputMethodManager imm = InputMethodManager.peekInstance();
         if ( show ){
-            setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE );
             if (imm != null){
                 imm.showSoftInput(this, 0);
             }

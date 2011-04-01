@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class UndoBuffer implements Parcelable {
 
@@ -24,8 +25,8 @@ public class UndoBuffer implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         for( TextChange item : mBuffer ){
             out.writeInt(item.start);
-            String [] strs = new String[]{item.oldtext.toString(),item.newtext.toString()};
-            out.writeStringArray(strs);
+            out.writeString(item.oldtext.toString());
+            out.writeString(item.newtext.toString());
         }
     }
 
@@ -45,9 +46,8 @@ public class UndoBuffer implements Parcelable {
         while( in.dataAvail() > 0 ){
             TextChange item = new TextChange();
             item.start = in.readInt();
-            String[] strs = in.readStringArray();
-            item.oldtext = strs[0];
-            item.newtext = strs[1];
+            item.oldtext = in.readString();
+            item.newtext = in.readString();
             if ( item.newtext == null ){
                 item.newtext = "";
             }

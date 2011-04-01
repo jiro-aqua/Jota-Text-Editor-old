@@ -243,10 +243,14 @@ implements MovementMethod
             }
             break;
         case KeyEvent.KEYCODE_VOLUME_UP:
-            handled |= volup(widget, buffer);
+            if ( sUseVolumeKey ){
+                handled |= volup(widget, buffer);
+            }
             break;
         case KeyEvent.KEYCODE_VOLUME_DOWN:
-            handled |= voldown(widget, buffer);
+            if ( sUseVolumeKey ){
+                handled |= voldown(widget, buffer);
+            }
             break;
         }
 
@@ -261,9 +265,15 @@ implements MovementMethod
     public boolean onKeyUp(TextView widget, Spannable buffer, int keyCode, KeyEvent event) {
         switch (keyCode) {
         case KeyEvent.KEYCODE_VOLUME_UP:
-            return true;
+            if ( sUseVolumeKey ){
+                return true;
+            }
+            break;
         case KeyEvent.KEYCODE_VOLUME_DOWN:
-            return true;
+            if ( sUseVolumeKey ){
+                return true;
+            }
+            break;
         }
         return false;
     }
@@ -631,7 +641,12 @@ implements MovementMethod
         return sInstance;
     }
 
+    public static void setUseVolumeKey( boolean useVolumeKey )
+    {
+        sUseVolumeKey = useVolumeKey;
+    }
 
+    private static boolean sUseVolumeKey = true;
     private static Method sMethod;
     private static final Object LAST_TAP_DOWN = new Object();
     private static ArrowKeyMovementMethod sInstance;

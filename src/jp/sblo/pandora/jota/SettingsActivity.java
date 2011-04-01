@@ -59,6 +59,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_HIDETITLEBAR            = "HIDETITLEBAR";
     private static final String KEY_HIDESOFTKEY_IS01        = "HIDESOFTKEY_IS01";
     private static final String KEY_VIEWER_MODE             = "VIEWER_MODE";
+    private static final String KEY_USE_VOLUMEKEY           = "USE_VOLUMEKEY";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -378,6 +379,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setKey(KEY_VIEWER_MODE );
                     pr.setTitle(R.string.label_viewer_mode);
                     pr.setSummary(R.string.summary_viewer_mode);
+                    category.addPreference(pr);
+                }
+                {
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_USE_VOLUMEKEY);
+                    pr.setTitle(R.string.label_use_volumekey);
+                    pr.setSummary(R.string.summary_use_volumekey);
                     category.addPreference(pr);
                 }
                 {
@@ -842,6 +850,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         int LinebreakSave;
         Intent directintent2;
         String intentname2;
+        boolean useVolumeKey;
 	}
 
 	public static class BootSettings {
@@ -909,6 +918,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.CharsetOpen = sp.getString(KEY_CHARSET_OPEN, "");
         ret.CharsetSave = sp.getString(KEY_CHARSET_SAVE, "");
         ret.LinebreakSave = Integer.parseInt( sp.getString(KEY_LINEBREAK_SAVE, "-1") );
+        ret.useVolumeKey = sp.getBoolean(KEY_USE_VOLUMEKEY, true);
         sSettings = ret;
         return ret;
 	}
@@ -983,6 +993,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 if ( lastversion < 9 ){
                     editor.putBoolean(KEY_VIEWER_MODE, false);
                     editor.putBoolean(KEY_SHORTCUT_CTRL_LTN, false);
+                }
+                if ( lastversion < 10 ){
+                    editor.putBoolean(KEY_USE_VOLUMEKEY, true);
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);

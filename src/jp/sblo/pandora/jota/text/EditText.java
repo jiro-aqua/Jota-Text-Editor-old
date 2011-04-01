@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 
 public class EditText extends TextView{
 
@@ -54,6 +55,8 @@ public class EditText extends TextView{
         // set my Editable
         setEditableFactory( JotaEditableFactory.getInstance() );
 
+        // set IME options
+        setImeOptions(EditorInfo.IME_ACTION_DONE|EditorInfo.IME_FLAG_NO_FULLSCREEN|EditorInfo.IME_FLAG_NO_EXTRACT_UI);
     }
 
 
@@ -242,5 +245,10 @@ public class EditText extends TextView{
     public void setShortcutSettings( HashMap<Integer,ShortcutSettings> s )
     {
         mShortcuts = s;
+    }
+
+    public void setUseVolumeKey( boolean useVolumeKey )
+    {
+        ArrowKeyMovementMethod.setUseVolumeKey(useVolumeKey);
     }
 }
