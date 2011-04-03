@@ -67,7 +67,10 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 ・ファイルエクスプローラ系アプリ、コンテンツプロバイダ系アプリからの呼出に対応
 ・テキスト選択用のマーカー機能搭載
 （テキストを選択したエリアをタップすることで表示されます）
-
+・ワードラップのON/OFF設定および折り返し文字数設定
+・タブ幅設定
+・閲覧モード
+・横画面表示に正式に対応しました。
 
 ・対応OS Android 1.6/2.1/2.2/2.3
   (IS01,HTC Desire,005SH,Nexus One で動作確認）
@@ -83,14 +86,11 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 ★不具合等発見された方、または、作者からの返事が必要な方は、メールまたはTwitter(@jiro_aqua)にてご連絡ください。
 レビューコメントには、基本的に返事できません。困ったことがあれば一人で納得しないで作者に連絡してください。
 
-★タッチパネル機でiWnn/ATOKをお使いの場合、横向き(ランドスケープモード）ではIMEによってエディタ画面が隠され、編集が行えません。
-これはIMEの問題です。Simeji,Open Wnn Flick,Grafitti等のIMEをご利用ください。
-
 ★grep(テキストファイルの串刺し検索)が必要な方は、拙作「aGrep」もお試しください。
 
 ★ファイルが読めなくて困ってる人は、作者までメールしてください！
 
-★GalaxySで、長いファイルが途中で打ち切られる現象が報告されています。
+★GalaxySで長いファイルが途中で打ち切られる現象が報告されています。
 
 --------------------------------------------------------------------------------
 Jota Text Editor
@@ -164,6 +164,10 @@ Functions
 ・Customizable shortcut key bind.
 ・Text selector like Gingerbread.
 (Double tap to select the word , then touch selected area to show marker.)
+・Word wrap ON/OFF and set word wrap width.
+・Set tab width.
+・Viewer Mode.
+・Support Landscape Mode correctly.
 
 ・Support Android OS 1.6 or later.
 ・Support both touch-screen device and qwerty-keyboard device.
@@ -173,20 +177,15 @@ Functions
 
 
 CAUTION
-  RTL-Language and bi-directional text isn't be supported.
+  RTL-Language and bi-directional text is not supported.
 
 
 ★If you need a reply from me , DON'T put it in Market's Review .
 Instead please let me know by E-mail or Twiter(@jiro_aqua)
 You can send a message to me from Jota's Preferences Screen.
 
-★In landscape orientation, you can't edit correctly because software keyboard will cover all of the screen.
-This is a issue of the software keyboard.
-I recommend to use 3rd party's Keyboard app like Grafitti.
-
 ★If you need grep (search from multiple text files), try my app "aGrep".
 
-★If you couldn't load text file, please contact me!
 
 --------------------------------------------------------------------------------
 [2011/01/23 v.0.0.1α]
@@ -361,4 +360,25 @@ Fixed minor bugs.
 ★From Japan, we are with you !
 
 
+
+[2011/04/03 v.0.0.9α]
+・LandscapeモードでIMEが全画面表示にならないように修正
+・折り返し文字数の設定を追加
+・タブ幅の設定を追加
+・ボリュームキーの有効無効設定を追加
+・DPAD_CENTERの動作を選択する設定を追加
+・ショートカットキーを追加
+・画面回転時にクラッシュする問題を修正
+・履歴のソートが正しく行われない問題を修正
+
+
+[2011/04/03 v.0.0.9α]
+Officially supported landscape mode.
+Added a option to set wrap width.
+Added a option to set tab width.
+Added a option to disable volume key.
+Added a option to select DPAD_CENTER action.
+Added shortcut keys.
+Fixed a bug that crashed when orientation changed.
+Fixed a bug of History sorting.
 
