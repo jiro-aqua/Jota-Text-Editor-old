@@ -26,6 +26,10 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener,OnSharedPreferenceChangeListener {
 
@@ -60,6 +64,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_HIDESOFTKEY_IS01        = "HIDESOFTKEY_IS01";
     private static final String KEY_VIEWER_MODE             = "VIEWER_MODE";
     private static final String KEY_USE_VOLUMEKEY           = "USE_VOLUMEKEY";
+    private static final String KEY_WRAPWIDTH_P             = "WRAPWIDTH_P";
+    private static final String KEY_WRAPWIDTH_L             = "WRAPWIDTH_L";
+    private static final String KEY_WRAPCHAR_P              = "WRAPCHAR_P";
+    private static final String KEY_WRAPCHAR_L              = "WRAPCHAR_L";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -88,6 +96,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final int REQUEST_CODE_PICK_MUSHROOM2 = 8;
     private static final int REQUEST_CODE_PICK_VIEW2 = 9;
 
+    public static final String DEFAULT_WRAP_WIDTH_CHAR = "m";
+
 	private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
 
@@ -98,6 +108,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private ListPreference mPrefLinebreakSave;
     private ListPreference mPrefDirectIntent;
     private ListPreference mPrefInsert;
+    private Preference mPrefWrapWidthP;
+    private Preference mPrefWrapWidthL;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,6 +187,24 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setKey(KEY_WORD_WRAP);
                     pr.setTitle(R.string.label_word_wrap);
                     cat.addPreference(pr);
+                }
+                {
+                    // Wrap width portrait
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_wrapwidth_p);
+                    pr.setSummary(R.string.summary_wrapwidth_p);
+                    pr.setOnPreferenceClickListener(mProcWrapWidthPortrait);
+                    cat.addPreference(pr);
+                    mPrefWrapWidthP = pr;
+                }
+                {
+                    // Wrap width landscape
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_wrapwidth_l);
+                    pr.setSummary(R.string.summary_wrapwidth_l);
+                    pr.setOnPreferenceClickListener(mProcWrapWidthLandscape);
+                    cat.addPreference(pr);
+                    mPrefWrapWidthL = pr;
                 }
                 {
                     // show underline
@@ -631,6 +661,67 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
+    private void showWrapWidthDialog( final String chrkey ,final String numkey , int title , int message )
+    {
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.wrapwidth, null);
+
+        final TextView msgText = (TextView)view.findViewById(R.id.message);
+        msgText.setText( message );
+
+        final EditText numInput = (EditText)view.findViewById(R.id.number);
+        numInput.setText( ""+sp.getInt(numkey,0) );
+
+        final EditText chrInput = (EditText)view.findViewById(R.id.character);
+        chrInput.setText( sp.getString(chrkey,DEFAULT_WRAP_WIDTH_CHAR) );
+
+        new AlertDialog.Builder(SettingsActivity.this)
+        .setTitle(title)
+        .setView( view )
+        .setPositiveButton( R.string.label_ok , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Editor editor = sp.edit();
+
+                String text = numInput.getText().toString();
+                int val = 0;
+                try {
+                    val = Integer.parseInt(text);
+                }catch(Exception e){}
+                if ( val < 0 || val >256 ){
+                    val = 0;
+                    Toast.makeText(SettingsActivity.this, R.string.toast_error_wrap_width, Toast.LENGTH_LONG);
+                }
+                editor.putInt(numkey, val);
+
+                text = chrInput.getText().toString();
+                if ( text.length() != 1 ){
+                    text = DEFAULT_WRAP_WIDTH_CHAR;
+                    Toast.makeText(SettingsActivity.this, R.string.toast_error_wrap_width, Toast.LENGTH_LONG);
+                }
+                editor.putString(chrkey, text);
+
+                editor.commit();
+            }
+        })
+        .setNegativeButton( R.string.label_cancel , null )
+        .show();
+    }
+
+
+    private OnPreferenceClickListener mProcWrapWidthPortrait= new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            showWrapWidthDialog(KEY_WRAPCHAR_P,KEY_WRAPWIDTH_P,R.string.label_wrapwidth_p , R.string.comment_wrapwidth );
+            return true;
+        }
+    };
+
+    private OnPreferenceClickListener mProcWrapWidthLandscape= new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            showWrapWidthDialog(KEY_WRAPCHAR_L,KEY_WRAPWIDTH_L,R.string.label_wrapwidth_l , R.string.comment_wrapwidth );
+            return true;
+        }
+    };
 
     private OnPreferenceChangeListener mProcDirectIntent = new OnPreferenceChangeListener() {
         public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -851,6 +942,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         Intent directintent2;
         String intentname2;
         boolean useVolumeKey;
+        int WrapWidthP;
+        int WrapWidthL;
+        String WrapCharP;
+        String WrapCharL;
 	}
 
 	public static class BootSettings {
@@ -919,6 +1014,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.CharsetSave = sp.getString(KEY_CHARSET_SAVE, "");
         ret.LinebreakSave = Integer.parseInt( sp.getString(KEY_LINEBREAK_SAVE, "-1") );
         ret.useVolumeKey = sp.getBoolean(KEY_USE_VOLUMEKEY, true);
+        ret.WrapWidthP =  sp.getInt(KEY_WRAPWIDTH_P, 0);
+        ret.WrapWidthL =  sp.getInt(KEY_WRAPWIDTH_L, 0);
+        ret.WrapCharP =  sp.getString(KEY_WRAPCHAR_P, DEFAULT_WRAP_WIDTH_CHAR);
+        ret.WrapCharL =  sp.getString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
         sSettings = ret;
         return ret;
 	}
@@ -996,6 +1095,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
                 if ( lastversion < 10 ){
                     editor.putBoolean(KEY_USE_VOLUMEKEY, true);
+                    editor.putInt(KEY_WRAPWIDTH_P, 0);
+                    editor.putInt(KEY_WRAPWIDTH_L, 0);
+                    editor.putString(KEY_WRAPCHAR_P, DEFAULT_WRAP_WIDTH_CHAR);
+                    editor.putString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
@@ -1070,6 +1173,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         if ( entry != null ){
             mPrefFontSize.setSummary(entry);
         }
+
+        mPrefWrapWidthP.setEnabled(sSettings.wordwrap);
+        mPrefWrapWidthL.setEnabled(sSettings.wordwrap);
 
 	}
 

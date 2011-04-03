@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -1127,7 +1128,12 @@ public class Main
 
         Collections.sort(fl, new Comparator<FileInfo>(){
             public int compare(FileInfo object1, FileInfo object2) {
-                return (int)(object2.lastaccess - object1.lastaccess);
+                if ( object2.lastaccess < object1.lastaccess ){
+                    return -1;
+                }else if ( object2.lastaccess > object1.lastaccess ){
+                    return 1;
+                }
+                return 0;
             }
         });
 
@@ -1599,6 +1605,11 @@ public class Main
         mEditor.setShortcutSettings( mSettings.shortcuts );
         mEditor.setUseVolumeKey( mSettings.useVolumeKey );
 
+        if ( getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT ){
+            mEditor.setWrapWidth(mSettings.WrapCharP,mSettings.WrapWidthP);
+        }else{
+            mEditor.setWrapWidth(mSettings.WrapCharL,mSettings.WrapWidthL);
+        }
     }
     void applyBootSetting()
     {

@@ -43,6 +43,9 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         R.string.paste,
         R.string.menu_direct,
         R.string.menu_file_save,
+        R.string.enter,
+        R.string.tab,
+        R.string.backspace,
     };
 
     public String getFunctionName(int func)
@@ -61,12 +64,12 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         new DefineShortcut( KeyEvent.KEYCODE_E ,"E" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_F ,"F" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_G ,"G" , false , EditText.FUNCTION_NONE ),
-        new DefineShortcut( KeyEvent.KEYCODE_H ,"H" , false , EditText.FUNCTION_NONE ),
-        new DefineShortcut( KeyEvent.KEYCODE_I ,"I" , false , EditText.FUNCTION_NONE ),
+        new DefineShortcut( KeyEvent.KEYCODE_H ,"H" , true  , EditText.FUNCTION_DEL ),
+        new DefineShortcut( KeyEvent.KEYCODE_I ,"I" , true  , EditText.FUNCTION_TAB ),
         new DefineShortcut( KeyEvent.KEYCODE_J ,"J" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_K ,"K" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_L ,"L" , false , EditText.FUNCTION_NONE ),
-        new DefineShortcut( KeyEvent.KEYCODE_M ,"M" , false , EditText.FUNCTION_NONE ),
+        new DefineShortcut( KeyEvent.KEYCODE_M ,"M" , true  , EditText.FUNCTION_ENTER ),
         new DefineShortcut( KeyEvent.KEYCODE_N ,"N" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_O ,"O" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_P ,"P" , false , EditText.FUNCTION_NONE ),

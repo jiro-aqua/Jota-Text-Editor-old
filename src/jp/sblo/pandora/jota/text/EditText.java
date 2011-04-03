@@ -21,6 +21,9 @@ public class EditText extends TextView{
     public final static int FUNCTION_PASTE=4;
     public final static int FUNCTION_DIRECTINTENT=5;
     public final static int FUNCTION_SAVE=6;
+    public final static int FUNCTION_ENTER=7;
+    public final static int FUNCTION_TAB=8;
+    public final static int FUNCTION_DEL=9;
 
     private JotaTextWatcher mTextWatcher;
     private WeakReference<ShortcutListener> mShortcutListener;
@@ -189,6 +192,13 @@ public class EditText extends TextView{
                         return sl.onCommand(KeyEvent.KEYCODE_D);
                     }
                     break;
+
+                case FUNCTION_ENTER:
+                    return onKeyDown(KeyEvent.KEYCODE_ENTER ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER));
+                case FUNCTION_TAB:
+                    return onKeyDown(KeyEvent.KEYCODE_TAB ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_TAB));
+                case FUNCTION_DEL:
+                    return onKeyDown(KeyEvent.KEYCODE_DEL ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DEL));
 
                 case FUNCTION_NONE:
                     return false;

@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import jp.sblo.pandora.jota.R;
+import jp.sblo.pandora.jota.SettingsActivity;
 import jp.sblo.pandora.jota.text.UndoBuffer.TextChange;
 import jp.sblo.pandora.jota.text.style.ParagraphStyle;
 import jp.sblo.pandora.jota.text.style.URLSpan;
@@ -4348,10 +4349,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         int which = doKeyDown(keyCode, event, null);
-        if (which == 0) {
-            // Go through default dispatching.
-            return super.onKeyDown(keyCode, event);
-        }
+// Jota Text Editor
+//        if (which == 0) {
+//            // Go through default dispatching.
+//            return super.onKeyDown(keyCode, event);
+//        }
 
         return true;
     }
@@ -4553,9 +4555,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (!isEnabled()) {
-            return super.onKeyUp(keyCode, event);
-        }
+// Jota Text Editor
+//        if (!isEnabled()) {
+//            return super.onKeyUp(keyCode, event);
+//        }
 
         hideControllers();
         stopTextSelectionMode();
@@ -4580,7 +4583,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                         imm.showSoftInput(this, 0);
                     }
                 }
-                return super.onKeyUp(keyCode, event);
+// Jota Text Editor
+                return false;
+//                return super.onKeyUp(keyCode, event);
 
             case KeyEvent.KEYCODE_ENTER:
 //                mEnterKeyIsDown = false;// Jota Text Editor
@@ -4620,7 +4625,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                              * will return false because there was no click
                              * listener.
                              */
-                            super.onKeyUp(keyCode, event);
+// Jota Text Editor
+//                            super.onKeyUp(keyCode, event);
                             return true;
                         } else if ((event.getFlags()
                                 & KeyEvent.FLAG_EDITOR_ACTION) != 0) {
@@ -4633,7 +4639,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                         }
                     }
 
-                    return super.onKeyUp(keyCode, event);
+// Jota Text Editor
+//                    return super.onKeyUp(keyCode, event);
+                    return false;
                 }
                 break;
         }
@@ -5400,6 +5408,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
 
         int want = width - getCompoundPaddingLeft() - getCompoundPaddingRight();
+
+        // Jota Text Editor
+        if ( mWrapWidthNumber > 0 ){
+            float[] widths = new float [1];
+            mTextPaint.getTextWidths(mWrapWidthChar , widths );
+            want =  mWrapWidthNumber * (int)widths[0] ;
+        }
+
         int unpaddedWidth = want;
         int hintWant = want;
 
@@ -8145,6 +8161,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return mInputType != 0;
     }
 
+// Jota Text Editor
+    public void setWrapWidth(String wrapWidthChar , int wrapWidthNumber )
+    {
+        mWrapWidthChar = wrapWidthChar;
+        mWrapWidthNumber = wrapWidthNumber;
+    }
 
     /**
      * A CursorController instance can be used to control a cursor in the text.
@@ -8946,4 +8968,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private int mUnderlineColor=0;
     private boolean mUnderline=false;
     public static final int MAX_PARCELABLE = 99 * 1024;
+    private int mWrapWidthNumber=0;
+    private String mWrapWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
 }
