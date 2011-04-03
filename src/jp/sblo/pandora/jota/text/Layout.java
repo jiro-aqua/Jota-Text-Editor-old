@@ -1952,6 +1952,11 @@ public abstract class Layout {
         }
     }
 
+    public static void setTabSize( int tabsize )
+    {
+        TAB_INCREMENT = tabsize;
+    }
+
     private CharSequence mText;
     private TextPaint mPaint;
     /* package */ TextPaint mWorkPaint;
@@ -1978,7 +1983,8 @@ public abstract class Layout {
         // XXX ALIGN_RIGHT,
     }
 
-    private static final int TAB_INCREMENT = 20;
+    // Jota Text Editor
+    private static int TAB_INCREMENT = 20;
 
     /* package */ static final Directions DIRS_ALL_LEFT_TO_RIGHT =
                                        new Directions(new short[] { 32767 });

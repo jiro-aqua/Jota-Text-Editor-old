@@ -35,10 +35,10 @@
         android:layout_height="wrap_content"
     >
 	    <TextView
+		android:id="@+id/numberlabel"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_weight="3"
-		android:text="@string/label_number"
 	    />
 	    <EditText
 		android:id="@+id/number"
@@ -46,7 +46,8 @@
 		android:layout_height="wrap_content"
 		android:inputType="numberDecimal"
 		android:singleLine="true"
-		android:maxLength="3"
+		android:maxLength="2"
+		android:numeric="decimal"
 		android:layout_weight="7"
 	    />
     </LinearLayout>

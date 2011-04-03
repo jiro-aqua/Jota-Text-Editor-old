@@ -4349,11 +4349,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         int which = doKeyDown(keyCode, event, null);
-// Jota Text Editor
-//        if (which == 0) {
-//            // Go through default dispatching.
-//            return super.onKeyDown(keyCode, event);
-//        }
+        if (which == 0) {
+            // Go through default dispatching.
+            return super.onKeyDown(keyCode, event);
+        }
 
         return true;
     }
@@ -5414,6 +5413,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             float[] widths = new float [1];
             mTextPaint.getTextWidths(mWrapWidthChar , widths );
             want =  mWrapWidthNumber * (int)widths[0] ;
+        }
+        if ( mTabWidthNumber > 0 ){
+            float[] widths = new float [1];
+            mTextPaint.getTextWidths(mTabWidthChar , widths );
+            Layout.setTabSize(mTabWidthNumber * (int)widths[0] );
         }
 
         int unpaddedWidth = want;
@@ -8161,11 +8165,17 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return mInputType != 0;
     }
 
-// Jota Text Editor
+ // Jota Text Editor
     public void setWrapWidth(String wrapWidthChar , int wrapWidthNumber )
     {
         mWrapWidthChar = wrapWidthChar;
         mWrapWidthNumber = wrapWidthNumber;
+    }
+ // Jota Text Editor
+    public void setTabWidth(String tabWidthChar , int tabWidthNumber )
+    {
+        mTabWidthChar = tabWidthChar;
+        mTabWidthNumber = tabWidthNumber;
     }
 
     /**
@@ -8970,4 +8980,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public static final int MAX_PARCELABLE = 99 * 1024;
     private int mWrapWidthNumber=0;
     private String mWrapWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
+    private int mTabWidthNumber=0;
+    private String mTabWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
 }

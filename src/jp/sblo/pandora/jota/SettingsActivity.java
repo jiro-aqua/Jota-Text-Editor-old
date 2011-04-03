@@ -68,6 +68,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_WRAPWIDTH_L             = "WRAPWIDTH_L";
     private static final String KEY_WRAPCHAR_P              = "WRAPCHAR_P";
     private static final String KEY_WRAPCHAR_L              = "WRAPCHAR_L";
+    private static final String KEY_TAB_WIDTH               = "TAB_WIDTH";
+    private static final String KEY_TAB_CHAR                = "TAB_CHAR";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -205,6 +207,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setOnPreferenceClickListener(mProcWrapWidthLandscape);
                     cat.addPreference(pr);
                     mPrefWrapWidthL = pr;
+                }
+                {
+                    // Tab width
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_tabwidth);
+                    pr.setOnPreferenceClickListener(mProcTabWidthLandscape);
+                    cat.addPreference(pr);
                 }
                 {
                     // show underline
@@ -661,19 +670,22 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         }
     };
 
-    private void showWrapWidthDialog( final String chrkey ,final String numkey , int title , int message )
+    private void showWrapWidthDialog( final String chrkey ,final String numkey , int title , int message , final int min, final int max)
     {
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
         View view = getLayoutInflater().inflate(R.layout.wrapwidth, null);
 
-        final TextView msgText = (TextView)view.findViewById(R.id.message);
+        TextView msgText = (TextView)view.findViewById(R.id.message);
         msgText.setText( message );
+        TextView msgNumber = (TextView)view.findViewById(R.id.numberlabel);
+        msgNumber.setText( getString(R.string.label_number ,  min, max ));
 
         final EditText numInput = (EditText)view.findViewById(R.id.number);
         numInput.setText( ""+sp.getInt(numkey,0) );
 
         final EditText chrInput = (EditText)view.findViewById(R.id.character);
         chrInput.setText( sp.getString(chrkey,DEFAULT_WRAP_WIDTH_CHAR) );
+
 
         new AlertDialog.Builder(SettingsActivity.this)
         .setTitle(title)
@@ -688,8 +700,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 try {
                     val = Integer.parseInt(text);
                 }catch(Exception e){}
-                if ( val < 0 || val >256 ){
-                    val = 0;
+                if ( val < min || val >max ){
+                    val = min;
                     Toast.makeText(SettingsActivity.this, R.string.toast_error_wrap_width, Toast.LENGTH_LONG);
                 }
                 editor.putInt(numkey, val);
@@ -711,14 +723,21 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     private OnPreferenceClickListener mProcWrapWidthPortrait= new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
-            showWrapWidthDialog(KEY_WRAPCHAR_P,KEY_WRAPWIDTH_P,R.string.label_wrapwidth_p , R.string.comment_wrapwidth );
+            showWrapWidthDialog(KEY_WRAPCHAR_P,KEY_WRAPWIDTH_P,R.string.label_wrapwidth_p , R.string.comment_wrapwidth ,0,99);
             return true;
         }
     };
 
     private OnPreferenceClickListener mProcWrapWidthLandscape= new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
-            showWrapWidthDialog(KEY_WRAPCHAR_L,KEY_WRAPWIDTH_L,R.string.label_wrapwidth_l , R.string.comment_wrapwidth );
+            showWrapWidthDialog(KEY_WRAPCHAR_L,KEY_WRAPWIDTH_L,R.string.label_wrapwidth_l , R.string.comment_wrapwidth ,0,99);
+            return true;
+        }
+    };
+
+    private OnPreferenceClickListener mProcTabWidthLandscape= new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            showWrapWidthDialog(KEY_TAB_CHAR,KEY_TAB_WIDTH,R.string.label_tabwidth , R.string.comment_tabwidth ,1,99);
             return true;
         }
     };
@@ -946,6 +965,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         int WrapWidthL;
         String WrapCharP;
         String WrapCharL;
+        int TabWidth;
+        String TabChar;
 	}
 
 	public static class BootSettings {
@@ -1018,6 +1039,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.WrapWidthL =  sp.getInt(KEY_WRAPWIDTH_L, 0);
         ret.WrapCharP =  sp.getString(KEY_WRAPCHAR_P, DEFAULT_WRAP_WIDTH_CHAR);
         ret.WrapCharL =  sp.getString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
+        ret.TabWidth =  sp.getInt(KEY_TAB_WIDTH, 4);
+        ret.TabChar =  sp.getString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
         sSettings = ret;
         return ret;
 	}
@@ -1097,8 +1120,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putBoolean(KEY_USE_VOLUMEKEY, true);
                     editor.putInt(KEY_WRAPWIDTH_P, 0);
                     editor.putInt(KEY_WRAPWIDTH_L, 0);
+                    editor.putInt(KEY_TAB_WIDTH, 4);
                     editor.putString(KEY_WRAPCHAR_P, DEFAULT_WRAP_WIDTH_CHAR);
                     editor.putString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
+                    editor.putString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);

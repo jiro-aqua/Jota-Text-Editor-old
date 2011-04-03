@@ -1610,6 +1610,7 @@ public class Main
         }else{
             mEditor.setWrapWidth(mSettings.WrapCharL,mSettings.WrapWidthL);
         }
+        mEditor.setTabWidth(mSettings.TabChar, mSettings.TabWidth);
     }
     void applyBootSetting()
     {
