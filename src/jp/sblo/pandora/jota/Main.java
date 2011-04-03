@@ -1611,6 +1611,14 @@ public class Main
             mEditor.setWrapWidth(mSettings.WrapCharL,mSettings.WrapWidthL);
         }
         mEditor.setTabWidth(mSettings.TabChar, mSettings.TabWidth);
+        if ( mSettings.TrackballButton.equals(SettingsActivity.TB_CENTERING)){
+            mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CENTERING );
+        }else if ( mSettings.TrackballButton.equals(SettingsActivity.TB_ENTER)){
+            mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_ENTER );
+        }else{
+            mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CENTERING );
+        }
+
     }
     void applyBootSetting()
     {

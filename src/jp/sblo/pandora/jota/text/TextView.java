@@ -7914,7 +7914,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
 
                 if (min != max) {
-                    ((EditText)this).doShortcut(KeyEvent.KEYCODE_D, new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_D) );
+                    ((EditText)this).doShortcut(KeyEvent.KEYCODE_D);
                 }
 
                 return true;

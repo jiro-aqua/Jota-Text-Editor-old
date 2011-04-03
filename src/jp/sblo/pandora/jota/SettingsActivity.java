@@ -70,6 +70,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_WRAPCHAR_L              = "WRAPCHAR_L";
     private static final String KEY_TAB_WIDTH               = "TAB_WIDTH";
     private static final String KEY_TAB_CHAR                = "TAB_CHAR";
+    private static final String KEY_TRACKBALL_BUTTON        = "TRACKBALL_BUTTON";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -100,7 +101,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     public static final String DEFAULT_WRAP_WIDTH_CHAR = "m";
 
-	private PreferenceScreen mPs = null;
+    public static final String TB_CENTERING = "CENTERING";
+    public static final String TB_ENTER = "ENTER";
+
+    private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
 
     private ListPreference mPrefFont;
@@ -110,6 +114,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private ListPreference mPrefLinebreakSave;
     private ListPreference mPrefDirectIntent;
     private ListPreference mPrefInsert;
+    private ListPreference mPrefTrackball;
     private Preference mPrefWrapWidthP;
     private Preference mPrefWrapWidthL;
 
@@ -426,6 +431,16 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setTitle(R.string.label_use_volumekey);
                     pr.setSummary(R.string.summary_use_volumekey);
                     category.addPreference(pr);
+                }
+                {
+                    // Font Typeface
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_TRACKBALL_BUTTON );
+                    pr.setTitle(R.string.label_trackball_button);
+                    pr.setEntries(new String[]{ getString(R.string.trackball_centering) , getString(R.string.trackball_enter) } );
+                    pr.setEntryValues( new CharSequence[] { TB_CENTERING , TB_ENTER } );
+                    category.addPreference(pr);
+                    mPrefTrackball = pr;
                 }
                 {
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
@@ -967,6 +982,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         String WrapCharL;
         int TabWidth;
         String TabChar;
+        String TrackballButton;
 	}
 
 	public static class BootSettings {
@@ -1041,6 +1057,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.WrapCharL =  sp.getString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
         ret.TabWidth =  sp.getInt(KEY_TAB_WIDTH, 4);
         ret.TabChar =  sp.getString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
+        ret.TrackballButton = sp.getString(KEY_TRACKBALL_BUTTON, TB_CENTERING);
         sSettings = ret;
         return ret;
 	}
@@ -1124,6 +1141,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putString(KEY_WRAPCHAR_P, DEFAULT_WRAP_WIDTH_CHAR);
                     editor.putString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
                     editor.putString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
+                    editor.putString(KEY_TRACKBALL_BUTTON, TB_CENTERING);
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
@@ -1197,6 +1215,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         entry = mPrefFontSize.getEntry();
         if ( entry != null ){
             mPrefFontSize.setSummary(entry);
+        }
+        entry = mPrefTrackball.getEntry();
+        if ( entry != null ){
+            mPrefTrackball.setSummary(entry);
         }
 
         mPrefWrapWidthP.setEnabled(sSettings.wordwrap);

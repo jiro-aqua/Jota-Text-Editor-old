@@ -24,11 +24,14 @@ public class EditText extends TextView{
     public final static int FUNCTION_ENTER=7;
     public final static int FUNCTION_TAB=8;
     public final static int FUNCTION_DEL=9;
+    public final static int FUNCTION_CENTERING=10;
+
 
     private JotaTextWatcher mTextWatcher;
     private WeakReference<ShortcutListener> mShortcutListener;
     private int mShortcutMetaKey = 0;
     private HashMap<Integer,ShortcutSettings> mShortcuts;;
+    private int mDpadCenterFunction = FUNCTION_CENTERING;
 
     public EditText(Context context) {
         this(context, null);
@@ -128,7 +131,7 @@ public class EditText extends TextView{
         if ( event.getAction() == KeyEvent.ACTION_DOWN ){
             switch(keycode){
                 case KeyEvent.KEYCODE_DPAD_CENTER:
-                    return centerCursor();
+                    return doFunction(mDpadCenterFunction);
             }
         }
 
@@ -147,7 +150,7 @@ public class EditText extends TextView{
         boolean alt = (meta & mShortcutMetaKey)!=0 ; // || (altstate!=0);      // one of meta keies is pressed , or , Alt key is locked
 
         if ( alt && event.getAction() == KeyEvent.ACTION_DOWN ){
-            if (doShortcut(keycode, event)){
+            if (doShortcut(keycode)){
 //                if ( altstate == 1 ){
 //                    TextKeyListener.clearMetaKeyState(cs,KeyEvent.META_ALT_ON);
 //                }
@@ -158,51 +161,60 @@ public class EditText extends TextView{
         return super.dispatchKeyEventPreIme(event);
     }
 
-    public boolean doShortcut(int keycode, KeyEvent event) {
+    public boolean doFunction( int function ){
+        ShortcutListener sl = mShortcutListener.get();
+
+        switch ( function) {
+            case FUNCTION_SELECT_ALL:
+                return onKeyShortcut(KeyEvent.KEYCODE_A, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_A));
+
+            case FUNCTION_CUT:
+                return onKeyShortcut(KeyEvent.KEYCODE_X, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_X));
+
+            case FUNCTION_COPY:
+                return onKeyShortcut(KeyEvent.KEYCODE_C, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_C));
+
+            case FUNCTION_UNDO:
+                return onKeyShortcut(KeyEvent.KEYCODE_Z, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_Z));
+
+            case FUNCTION_PASTE:
+                return onKeyShortcut(KeyEvent.KEYCODE_V, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_V));
+
+            case FUNCTION_SAVE:
+                if (sl != null) {
+                    return sl.onCommand(KeyEvent.KEYCODE_S);
+                }
+                break;
+
+            case FUNCTION_DIRECTINTENT:
+                if (sl != null) {
+                    return sl.onCommand(KeyEvent.KEYCODE_D);
+                }
+                break;
+
+            case FUNCTION_ENTER:
+                return onKeyDown(KeyEvent.KEYCODE_ENTER ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER));
+            case FUNCTION_TAB:
+                return onKeyDown(KeyEvent.KEYCODE_TAB ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_TAB));
+            case FUNCTION_DEL:
+                return onKeyDown(KeyEvent.KEYCODE_DEL ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DEL));
+
+            case FUNCTION_CENTERING:
+                return centerCursor();
+
+            case FUNCTION_NONE:
+                return false;
+        }
+        return false;
+    }
+
+
+    public boolean doShortcut(int keycode) {
 
         ShortcutSettings ss = mShortcuts.get(keycode);
 
         if (ss != null && ss.enabled) {
-            ShortcutListener sl = mShortcutListener.get();
-
-            switch (ss.function) {
-                case FUNCTION_SELECT_ALL:
-                    return onKeyShortcut(KeyEvent.KEYCODE_A, event);
-
-                case FUNCTION_CUT:
-                    return onKeyShortcut(KeyEvent.KEYCODE_X, event);
-
-                case FUNCTION_COPY:
-                    return onKeyShortcut(KeyEvent.KEYCODE_C, event);
-
-                case FUNCTION_UNDO:
-                    return onKeyShortcut(KeyEvent.KEYCODE_Z, event);
-
-                case FUNCTION_PASTE:
-                    return onKeyShortcut(KeyEvent.KEYCODE_V, event);
-
-                case FUNCTION_SAVE:
-                    if (sl != null) {
-                        return sl.onCommand(KeyEvent.KEYCODE_S);
-                    }
-                    break;
-
-                case FUNCTION_DIRECTINTENT:
-                    if (sl != null) {
-                        return sl.onCommand(KeyEvent.KEYCODE_D);
-                    }
-                    break;
-
-                case FUNCTION_ENTER:
-                    return onKeyDown(KeyEvent.KEYCODE_ENTER ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_ENTER));
-                case FUNCTION_TAB:
-                    return onKeyDown(KeyEvent.KEYCODE_TAB ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_TAB));
-                case FUNCTION_DEL:
-                    return onKeyDown(KeyEvent.KEYCODE_DEL ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DEL));
-
-                case FUNCTION_NONE:
-                    return false;
-            }
+            return doFunction( ss.function );
         }
         return false;
     }
@@ -260,5 +272,10 @@ public class EditText extends TextView{
     public void setUseVolumeKey( boolean useVolumeKey )
     {
         ArrowKeyMovementMethod.setUseVolumeKey(useVolumeKey);
+    }
+
+    public void setDpadCenterFunction( int function )
+    {
+        mDpadCenterFunction = function;
     }
 }

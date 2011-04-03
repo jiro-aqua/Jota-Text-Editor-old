@@ -46,6 +46,7 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         R.string.enter,
         R.string.tab,
         R.string.backspace,
+        R.string.trackball_centering,
     };
 
     public String getFunctionName(int func)
@@ -68,7 +69,7 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         new DefineShortcut( KeyEvent.KEYCODE_I ,"I" , true  , EditText.FUNCTION_TAB ),
         new DefineShortcut( KeyEvent.KEYCODE_J ,"J" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_K ,"K" , false , EditText.FUNCTION_NONE ),
-        new DefineShortcut( KeyEvent.KEYCODE_L ,"L" , false , EditText.FUNCTION_NONE ),
+        new DefineShortcut( KeyEvent.KEYCODE_L ,"L" , true  , EditText.FUNCTION_CENTERING ),
         new DefineShortcut( KeyEvent.KEYCODE_M ,"M" , true  , EditText.FUNCTION_ENTER ),
         new DefineShortcut( KeyEvent.KEYCODE_N ,"N" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_O ,"O" , false , EditText.FUNCTION_NONE ),
