@@ -382,3 +382,9 @@ Added shortcut keys.
 Fixed a bug that crashed when orientation changed.
 Fixed a bug of History sorting.
 
+[2011/04/05 v.0.0.10ƒ¿]
+GalaxyS‚Åƒtƒ@ƒCƒ‹“Ç‚ª“r’†‚Å‘Å‚¿Ø‚ç‚ê‚é–â‘è‚É‘Îˆ
+
+[2011/04/05 v.0.0.10ƒ¿]
+Fixed the issue that long file was truncated on Galaxy S.
+
