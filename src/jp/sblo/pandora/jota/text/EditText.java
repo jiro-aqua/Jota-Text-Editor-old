@@ -25,6 +25,11 @@ public class EditText extends TextView{
     public final static int FUNCTION_TAB=8;
     public final static int FUNCTION_DEL=9;
     public final static int FUNCTION_CENTERING=10;
+    public final static int FUNCTION_SEARCH=11;
+    public final static int FUNCTION_OPEN=12;
+    public final static int FUNCTION_NEWFILE=13;
+    public final static int FUNCTION_REDO=14;
+    public final static int FUNCTION_CONTEXTMENU=15;
 
 
     private JotaTextWatcher mTextWatcher;
@@ -177,6 +182,9 @@ public class EditText extends TextView{
             case FUNCTION_UNDO:
                 return onKeyShortcut(KeyEvent.KEYCODE_Z, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_Z));
 
+            case FUNCTION_REDO:
+                return onKeyShortcut(KeyEvent.KEYCODE_Y, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_Y));
+
             case FUNCTION_PASTE:
                 return onKeyShortcut(KeyEvent.KEYCODE_V, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_V));
 
@@ -202,6 +210,28 @@ public class EditText extends TextView{
             case FUNCTION_CENTERING:
                 return centerCursor();
 
+            case FUNCTION_OPEN:
+                if (sl != null) {
+                    return sl.onCommand(KeyEvent.KEYCODE_O);
+                }
+                break;
+
+            case FUNCTION_NEWFILE:
+                if (sl != null) {
+                    return sl.onCommand(KeyEvent.KEYCODE_N);
+                }
+                break;
+
+            case FUNCTION_SEARCH:
+                if (sl != null) {
+                    return sl.onCommand(KeyEvent.KEYCODE_F);
+                }
+                break;
+
+
+            case FUNCTION_CONTEXTMENU:
+                showContextMenu();
+                return true;
             case FUNCTION_NONE:
                 return false;
         }

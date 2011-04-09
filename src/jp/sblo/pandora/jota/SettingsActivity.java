@@ -103,6 +103,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     public static final String TB_CENTERING = "CENTERING";
     public static final String TB_ENTER = "ENTER";
+    public static final String TB_CONTEXTMENU = "CONTEXTMENU";
 
     private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
@@ -437,8 +438,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final ListPreference pr = new ListPreference(this);
                     pr.setKey( KEY_TRACKBALL_BUTTON );
                     pr.setTitle(R.string.label_trackball_button);
-                    pr.setEntries(new String[]{ getString(R.string.trackball_centering) , getString(R.string.trackball_enter) } );
-                    pr.setEntryValues( new CharSequence[] { TB_CENTERING , TB_ENTER } );
+                    pr.setEntries(new String[]{ getString(R.string.trackball_centering) , getString(R.string.trackball_enter) , getString(R.string.trackball_contextmenu) } );
+                    pr.setEntryValues( new CharSequence[] { TB_CENTERING , TB_ENTER , TB_CONTEXTMENU } );
                     category.addPreference(pr);
                     mPrefTrackball = pr;
                 }

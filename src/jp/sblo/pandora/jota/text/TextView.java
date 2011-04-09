@@ -953,6 +953,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
 		// Jota Text Editor
         mUndoBuffer.removeAll();
+        mRedoBuffer.removeAll();
 
         addTextChangedListener(new TextWatcher() {
             TextChange lastChange;
@@ -965,22 +966,29 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                              !equalsCharSequence(lastChange.newtext ,lastChange.oldtext ) )
                          {
                             mUndoBuffer.push(lastChange);
+                            mRedoBuffer.removeAll();
     //                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
                         }
                     }else{
                         mUndoBuffer.removeAll();
+                        mRedoBuffer.removeAll();
                     }
                     lastChange = null;
                 }
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if ( count < UndoBuffer.MAX_SIZE ){
-                    lastChange = new TextChange();
-                    lastChange.start = start;
-                    lastChange.oldtext = s.subSequence(start, start + count);
+                if ( mUndoRedo ){
+                    mUndoRedo = false;
                 }else{
-                    mUndoBuffer.removeAll();
-                    lastChange = null;
+                    if ( count < UndoBuffer.MAX_SIZE ){
+                        lastChange = new TextChange();
+                        lastChange.start = start;
+                        lastChange.oldtext = s.subSequence(start, start + count);
+                    }else{
+                        mUndoBuffer.removeAll();
+                        mRedoBuffer.removeAll();
+                        lastChange = null;
+                    }
                 }
             }
             public void afterTextChanged(Editable s) {
@@ -2408,6 +2416,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         boolean frozenWithFocus;
         CharSequence error;
         UndoBuffer undoBuffer;// Jota Text Editor
+        UndoBuffer redoBuffer;// Jota Text Editor
         boolean imeShown; // Jota Text Editor
 
         SavedState(Parcelable superState) {
@@ -2520,6 +2529,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
             ss.error = mError;
             ss.undoBuffer = mUndoBuffer;// Jota Text Editor
+            ss.redoBuffer = mRedoBuffer;// Jota Text Editor
             ss.imeShown = isImeShown();// Jota Text Editor
             return ss;
         }
@@ -2577,6 +2587,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             });
         }
         mUndoBuffer = ss.undoBuffer;// Jota Text Editor
+        mRedoBuffer = ss.redoBuffer;// Jota Text Editor
         showIme( ss.imeShown );
     }
 
@@ -7307,6 +7318,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             if (canUndo()) {
                 return onTextContextMenuItem(ID_UNDO);
             }
+ // Jota Text Editor
+        case KeyEvent.KEYCODE_Y:
+            if (canRedo()) {
+                return onTextContextMenuItem(ID_REDO);
+            }
 
             break;
         }
@@ -7331,6 +7347,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 // Jota Text Editor
     private boolean canUndo() {
         return  mUndoBuffer.canUndo();
+    }
+
+    private boolean canRedo() {
+        return  mRedoBuffer.canUndo();
     }
 
     private boolean textCanBeSelected() {
@@ -7643,13 +7663,23 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             }
         }
 
-// Jota Text Editor
+     // Jota Text Editor
         if (canUndo()) {
             int name;
             name = R.string.menu_edit_undo;
             menu.add(0, ID_UNDO, 0, name).
             setOnMenuItemClickListener(handler).
-            setAlphabeticShortcut('x');
+            setAlphabeticShortcut('z');
+            added = true;
+
+        }
+     // Jota Text Editor
+        if (canRedo()) {
+            int name;
+            name = R.string.label_redo;
+            menu.add(0, ID_REDO, 0, name).
+            setOnMenuItemClickListener(handler).
+            setAlphabeticShortcut('y');
             added = true;
 
         }
@@ -7771,6 +7801,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private static final int ID_DIRECTINTENT = R.id.directintent;// Jota Text Editor
     private static final int ID_COPY_URL = android.R.id.copyUrl;
     private static final int ID_UNDO = R.id.undo;// Jota Text Editor
+    private static final int ID_REDO = R.id.redo;// Jota Text Editor
     private static final int ID_SWITCH_INPUT_METHOD = android.R.id.switchInputMethod;
 //    private static final int ID_ADD_TO_DICTIONARY = android.R.id.addToDictionary;// Jota Text Editor
     private static final int ID_CANCEL_SELECTION = R.id.cancelselection;// Jota Text Editor
@@ -7845,9 +7876,26 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     TextChange textchange = mUndoBuffer.pop();
                     if ( textchange != null ){
                         Editable text = (Editable)getText();
+                        mUndoRedo = true;
                         text.replace( textchange.start , textchange.start + textchange.newtext.length() , textchange.oldtext );
                         Selection.setSelection( text, textchange.start + textchange.oldtext.length());
-                        mUndoBuffer.pop(); // discard newest record
+                        mRedoBuffer.push(textchange);
+                    }
+                }
+
+                return true;
+            case ID_REDO:
+                MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
+
+                // REDO
+                {
+                    TextChange textchange = mRedoBuffer.pop();
+                    if ( textchange != null ){
+                        Editable text = (Editable)getText();
+                        mUndoRedo = true;
+                        text.replace( textchange.start , textchange.start + textchange.oldtext.length() , textchange.newtext );
+                        Selection.setSelection( text, textchange.start + textchange.newtext.length());
+                        mUndoBuffer.push(textchange);
                     }
                 }
 
@@ -8133,6 +8181,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public void setChanged( boolean changed ){
         if ( changed == false ){
             mUndoBuffer.removeAll();
+            mRedoBuffer.removeAll();
         }
     }
 
@@ -8972,6 +9021,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     boolean mFastScrollEnabled;
 
     private UndoBuffer mUndoBuffer = new UndoBuffer();
+    private UndoBuffer mRedoBuffer = new UndoBuffer();
     private Paint mUnderLinePaint = new Paint();
     private String mNameDirectIntent = null;
 
@@ -8982,4 +9032,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private String mWrapWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
     private int mTabWidthNumber=0;
     private String mTabWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
+    private boolean mUndoRedo = false;
 }

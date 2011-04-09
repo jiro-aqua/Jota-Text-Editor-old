@@ -873,6 +873,10 @@ public class Main
                 mProcCreateShortcut.run();
             }
             return true;
+            case R.id.menu_file_property:{
+                mProcProperty.run();
+            }
+            return true;
             case R.id.menu_file_quit:{
                 confirmSave(mProcQuit);
             }
@@ -937,6 +941,15 @@ public class Main
                 return true;
             case KeyEvent.KEYCODE_D:
                 mProcDirect.run();
+                return true;
+            case KeyEvent.KEYCODE_O:
+                confirmSave(mProcOpen);
+                return true;
+            case KeyEvent.KEYCODE_N:
+                confirmSave(mProcNew);
+                return true;
+            case KeyEvent.KEYCODE_F:
+                mProcSearch.run();
                 return true;
         }
         return false;
@@ -1224,6 +1237,30 @@ public class Main
     };
 
 
+    private Runnable mProcProperty =  new Runnable() {
+        String[] items;
+
+        public void run() {
+            WordCounter.Result result = WordCounter.count(mEditor);
+
+            TextView tv = new TextView(Main.this);
+
+            String resstr =  String.format( getString(R.string.result_word_count)
+                    , result.charactrers , result.lines , result.logicallines , result.words
+                     ,mInstanceState.filename
+                    );
+
+
+            tv.setText( resstr  );
+
+            new AlertDialog.Builder(Main.this)
+            .setMessage(R.string.menu_file_property)
+            .setView(tv)
+            .setPositiveButton(R.string.label_ok, null)
+            .show();
+        }
+
+    };
 
     private Runnable mProcInsert =  new Runnable() {
         public void run() {
@@ -1615,6 +1652,8 @@ public class Main
             mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CENTERING );
         }else if ( mSettings.TrackballButton.equals(SettingsActivity.TB_ENTER)){
             mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_ENTER );
+        }else if ( mSettings.TrackballButton.equals(SettingsActivity.TB_CONTEXTMENU)){
+            mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CONTEXTMENU );
         }else{
             mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CENTERING );
         }

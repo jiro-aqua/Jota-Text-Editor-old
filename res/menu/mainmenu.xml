@@ -25,6 +25,7 @@
 	/>
         <item android:id="@+id/menu_file_new" 		
 		android:title="@string/menu_file_new"		
+		android:alphabeticShortcut = "N"
 	 />
         <item android:id="@+id/menu_file_view" 		
 		android:title="@string/menu_file_view"		
@@ -38,6 +39,10 @@
 	/>
         <item android:id="@+id/menu_file_shortcut" 
 		android:title="@string/menu_file_shortcut" 
+	/>
+        <item android:id="@+id/menu_file_property" 
+		android:title="@string/menu_file_property" 
+		android:alphabeticShortcut = "T"
 	/>
         <item android:id="@+id/menu_file_quit" 
 		android:title="@string/menu_file_quit" 
@@ -57,6 +62,10 @@
         <item android:id="@+id/menu_edit_undo" 	
 		android:title="@string/menu_edit_undo" 
 		android:alphabeticShortcut = "Z"
+	/>
+        <item android:id="@+id/menu_edit_undo" 	
+		android:title="@string/label_redo" 
+		android:alphabeticShortcut = "Y"
 	/>
         <item android:id="@+id/menu_edit_cut" 	
 		android:title="@string/cut" 
