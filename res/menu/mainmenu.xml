@@ -79,6 +79,10 @@
 		android:title="@string/paste" 
 		android:alphabeticShortcut = "V"
 	/>
+        <item android:id="@+id/menu_edit_jump" 	
+		android:title="@string/menu_edit_jump" 
+		android:alphabeticShortcut = "J"
+	/>
         <item android:id="@+id/menu_search_byintent" 	
 		android:title="@string/menu_search_byintent" 
 		android:alphabeticShortcut = "R"

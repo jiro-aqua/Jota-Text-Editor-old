@@ -52,6 +52,7 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         R.string.label_new_file,
         R.string.label_redo,
         R.string.trackball_contextmenu,
+        R.string.menu_edit_jump,
 
     };
 
@@ -73,7 +74,7 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         new DefineShortcut( KeyEvent.KEYCODE_G ,"G" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_H ,"H" , true  , EditText.FUNCTION_DEL ),
         new DefineShortcut( KeyEvent.KEYCODE_I ,"I" , true  , EditText.FUNCTION_TAB ),
-        new DefineShortcut( KeyEvent.KEYCODE_J ,"J" , false , EditText.FUNCTION_NONE ),
+        new DefineShortcut( KeyEvent.KEYCODE_J ,"J" , true  , EditText.FUNCTION_JUMP ),
         new DefineShortcut( KeyEvent.KEYCODE_K ,"K" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_L ,"L" , true  , EditText.FUNCTION_CENTERING ),
         new DefineShortcut( KeyEvent.KEYCODE_M ,"M" , true  , EditText.FUNCTION_ENTER ),

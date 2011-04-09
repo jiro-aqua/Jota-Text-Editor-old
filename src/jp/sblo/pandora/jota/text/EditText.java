@@ -30,6 +30,7 @@ public class EditText extends TextView{
     public final static int FUNCTION_NEWFILE=13;
     public final static int FUNCTION_REDO=14;
     public final static int FUNCTION_CONTEXTMENU=15;
+    public final static int FUNCTION_JUMP=16;
 
 
     private JotaTextWatcher mTextWatcher;
@@ -188,6 +189,7 @@ public class EditText extends TextView{
             case FUNCTION_PASTE:
                 return onKeyShortcut(KeyEvent.KEYCODE_V, new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_V));
 
+
             case FUNCTION_SAVE:
                 if (sl != null) {
                     return sl.onCommand(KeyEvent.KEYCODE_S);
@@ -228,6 +230,11 @@ public class EditText extends TextView{
                 }
                 break;
 
+            case FUNCTION_JUMP:
+                if (sl != null) {
+                    return sl.onCommand(KeyEvent.KEYCODE_J);
+                }
+                break;
 
             case FUNCTION_CONTEXTMENU:
                 showContextMenu();

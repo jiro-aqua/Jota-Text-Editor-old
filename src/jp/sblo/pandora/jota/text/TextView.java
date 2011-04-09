@@ -361,6 +361,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 //                getResources().getCompatibilityInfo().applicationScale);
 
         mMovement = getDefaultMovementMethod();
+
+		// Jota Text Editor
+        mLineNumberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLineNumberPaint.setTextSize(10);
+        mLineNumberPaint.setTypeface(Typeface.MONOSPACE);
+        mLineNumberPaint.setStrokeWidth(1);
+
         mTransformation = null;
 
         TypedArray a =
@@ -4237,7 +4244,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 // Jota Text Editor
         int selLine = layout.getLineForOffset(selEnd);
 
-        layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText,selLine , mUnderLinePaint );
+		// Jota Text Editor
+        layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText,selLine , mUnderLinePaint , mLineNumberWidth , mLineNumberPaint);
 
 // Jota Text Editor
 //        if (mMarquee != null && mMarquee.shouldDrawGhost()) {
@@ -5416,8 +5424,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 width = Math.min(widthSize, width);
             }
         }
-
-        int want = width - getCompoundPaddingLeft() - getCompoundPaddingRight();
+        // Jota Text Editor
+        if ( mShowLineNumber ){
+            mLineNumberWidth = (int)mLineNumberPaint.measureText("888888|");
+        }else{
+            mLineNumberWidth = 0;
+        }
+        ArrowKeyMovementMethod.setLineNumberWidth(mLineNumberWidth);
+        Touch.setLineNumberWidth(mLineNumberWidth);
+		// Jota Text Editor
+        int want = width - getCompoundPaddingLeft() - getCompoundPaddingRight() - mLineNumberWidth;
 
         // Jota Text Editor
         if ( mWrapWidthNumber > 0 ){
@@ -5741,7 +5757,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         final int bottom = mLayout.getLineTop(line + 1);
 
         int left = (int) FloatMath.floor(mLayout.getLineLeft(line));
-        int right = (int) FloatMath.ceil(mLayout.getLineRight(line));
+        int right = (int) FloatMath.ceil(mLayout.getLineRight(line)+mLineNumberWidth); // Jota Text Editor
         int ht = mLayout.getHeight();
 
         int grav;
@@ -8483,7 +8499,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             case MotionEvent.ACTION_MOVE: {
                 final float rawX = ev.getRawX();
                 final float rawY = ev.getRawY();
-                final float newPosX = rawX - mTouchToWindowOffsetX + mHotspotX;
+                final float newPosX = rawX - mTouchToWindowOffsetX + mHotspotX - mLineNumberWidth;			// Jota Text Editor
                 final float newPosY = rawY - mTouchToWindowOffsetY + mHotspotY + mTouchOffsetY;
 
                 mController.updatePosition(this, Math.round(newPosX), Math.round(newPosY));
@@ -8511,7 +8527,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
             final Rect bounds = sCursorControllerTempRect;
             bounds.left = (int) (mLayout.getPrimaryHorizontal(offset) - mHotspotX)
-                + TextView.this.mScrollX;
+                + TextView.this.mScrollX + mLineNumberWidth;			// Jota Text Editor
             bounds.top = (bottom ? lineBottom : lineTop - mHeight) + TextView.this.mScrollY;
 
             bounds.right = bounds.left + width;
@@ -9033,4 +9049,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private int mTabWidthNumber=0;
     private String mTabWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
     private boolean mUndoRedo = false;
+    private boolean mShowLineNumber=true;
+    private int mLineNumberWidth=0;
+    private Paint mLineNumberPaint;
 }

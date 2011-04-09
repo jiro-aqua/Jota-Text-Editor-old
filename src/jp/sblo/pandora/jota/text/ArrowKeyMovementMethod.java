@@ -313,7 +313,7 @@ implements MovementMethod
                               KeyEvent.META_SHIFT_ON) == 1) ||
                             (MetaKeyKeyListener.getMetaState(buffer,
                               MetaKeyKeyListener.META_SELECTING) != 0);
-              int x = (int) event.getX();
+              int x = (int) event.getX() - sLineNumberWidth;	// Jota Text Editor
               int y = (int) event.getY();
               int offset = getOffset(x, y, widget);
 
@@ -369,7 +369,7 @@ implements MovementMethod
                     // Update selection as we're moving the selection area.
 
                     // Get the current touch position
-                    int x = (int) event.getX();
+                    int x = (int) event.getX()- sLineNumberWidth;	// Jota Text Editor
                     int y = (int) event.getY();
                     int offset = getOffset(x, y, widget);
 
@@ -415,7 +415,7 @@ implements MovementMethod
                     return true;
                 }
 
-                int x = (int) event.getX();
+                int x = (int) event.getX()- sLineNumberWidth;	// Jota Text Editor
                 int y = (int) event.getY();
                 int off = getOffset(x, y, widget);
 
@@ -641,12 +641,19 @@ implements MovementMethod
         return sInstance;
     }
 
+	// Jota Text Editor
     public static void setUseVolumeKey( boolean useVolumeKey )
     {
         sUseVolumeKey = useVolumeKey;
     }
+	// Jota Text Editor
+    public static void setLineNumberWidth( int lineNumberWidth )
+    {
+        sLineNumberWidth = lineNumberWidth;
+    }
 
-    private static boolean sUseVolumeKey = true;
+    private static int sLineNumberWidth;	// Jota Text Editor
+    private static boolean sUseVolumeKey = true;	// Jota Text Editor
     private static Method sMethod;
     private static final Object LAST_TAP_DOWN = new Object();
     private static ArrowKeyMovementMethod sInstance;

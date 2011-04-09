@@ -158,13 +158,13 @@ public abstract class Layout {
      */
     public void draw(Canvas c) {
 		// Jota Text Editor
-        draw(c, null, null, 0 , -1, null);
+        draw(c, null, null, 0 , -1, null , 0 , null );
     }
 
 	// Jota Text Editor
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
             int cursorOffsetVertical  ) {
-        draw(c, highlight, highlightPaint, cursorOffsetVertical , -1 , null);
+        draw(c, highlight, highlightPaint, cursorOffsetVertical , -1 , null, 0 , null);
     }
 
     /**
@@ -179,7 +179,8 @@ public abstract class Layout {
      */
 	// Jota Text Editor
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
-                     int cursorOffsetVertical , int selLine, Paint underlinePaint ) {
+                     int cursorOffsetVertical , int selLine, Paint underlinePaint ,
+                     int lineNumWidth , Paint lineNumPaint) {
         int dtop, dbottom;
 
         synchronized (sTempRect) {
@@ -260,6 +261,10 @@ public abstract class Layout {
         // There can be a highlight even without spans if we are drawing
         // a non-spanned transformation of a spanned editing buffer.
         if (highlight != null) {
+			// Jota Text Editor
+            if ( lineNumWidth != 0 ){
+                c.translate(lineNumWidth, 0);
+            }
             if (cursorOffsetVertical != 0) {
                 c.translate(0, cursorOffsetVertical);
             }
@@ -268,6 +273,10 @@ public abstract class Layout {
 
             if (cursorOffsetVertical != 0) {
                 c.translate(0, -cursorOffsetVertical);
+            }
+			// Jota Text Editor
+            if ( lineNumWidth != 0 ){
+                c.translate(-lineNumWidth, 0);
             }
         }
 
@@ -381,7 +390,20 @@ public abstract class Layout {
 			// Jota Text Editor
             if ( selLine == i && underlinePaint != null){
                 int underlinepos = getLineBaseline(i) + 1;
-                c.drawLine(0 , underlinepos, getWidth() , underlinepos, underlinePaint );
+                c.drawLine(0 , underlinepos, getWidth()+lineNumWidth , underlinepos, underlinePaint );
+            }
+			// Jota Text Editor
+            if ( lineNumWidth != 0 ){
+                String linenum = "      "+(i+1);
+                c.drawText( linenum , linenum.length() - 5  ,linenum.length()  , x, lbaseline, lineNumPaint);
+                int linebottom=0;
+                if ( i < getLineCount() - 1){
+                    linebottom = getLineTop(i+1);
+                }else{
+                    linebottom = getLineBottom(i);
+                }
+                c.drawLine(lineNumWidth-4, getLineTop(i), lineNumWidth-4, linebottom, lineNumPaint);
+                c.translate(lineNumWidth, 0);
             }
 
             Directions directions = getLineDirections(i);
@@ -398,6 +420,10 @@ public abstract class Layout {
                 drawText(c, buf, start, end, dir, directions,
                     x, ltop, lbaseline, lbottom, paint, mWorkPaint,
                     hasTab, spans);
+            }
+			// Jota Text Editor
+            if ( lineNumWidth != 0 ){
+                c.translate(-lineNumWidth, 0);
             }
         }
     }

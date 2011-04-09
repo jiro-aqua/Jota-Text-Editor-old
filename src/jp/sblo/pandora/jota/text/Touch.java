@@ -29,6 +29,7 @@ import android.widget.Scroller;
 
 public class Touch {
 
+    private static int sLineNumberWidth;    // Jota Text Editor
 
     private Touch() {
     }
@@ -51,7 +52,7 @@ public class Touch {
 
         for (int i = top; i <= bottom; i++) {
             left = (int) Math.min(left, layout.getLineLeft(i));
-            right = (int) Math.max(right, layout.getLineRight(i));
+            right = (int) Math.max(right, layout.getLineRight(i)+sLineNumberWidth);    // Jota Text Editor
 
             if (a == null) {
                 a = layout.getParagraphAlignment(i);
@@ -88,7 +89,7 @@ public class Touch {
         int right = 0;
         for (int i = top; i <= bottom; i++) {
             left = (int) Math.min(left, layout.getLineLeft(i));
-            right = (int) Math.max(right, layout.getLineRight(i));
+            right = (int) Math.max(right, layout.getLineRight(i)+sLineNumberWidth);    // Jota Text Editor
         }
         return right - left - widget.getWidth() - widget.getTotalPaddingLeft()
                 - widget.getTotalPaddingRight();
@@ -428,6 +429,11 @@ public class Touch {
             }
 
         }
+    }
+    // Jota Text Editor
+    public static void setLineNumberWidth( int lineNumberWidth )
+    {
+        sLineNumberWidth = lineNumberWidth;
     }
 
 }

@@ -14,6 +14,7 @@ import jp.sblo.pandora.jota.Search.OnSearchFinishedListener;
 import jp.sblo.pandora.jota.Search.Record;
 import jp.sblo.pandora.jota.TextLoadTask.OnFileLoadListener;
 import jp.sblo.pandora.jota.text.JotaDocumentWatcher;
+import jp.sblo.pandora.jota.text.Layout;
 import jp.sblo.pandora.jota.text.SpannableStringBuilder;
 import jp.sblo.pandora.jota.text.EditText.ShortcutListener;
 import android.app.Activity;
@@ -897,6 +898,10 @@ public class Main
                 mEditor.onKeyShortcut( KeyEvent.KEYCODE_V , new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_V) );
             }
             return true;
+            case R.id.menu_edit_jump:{
+                mProcJump.run();
+            }
+            return true;
             case R.id.menu_search_byintent:{
                 mProcSearchByIntent.run();
             }
@@ -950,6 +955,9 @@ public class Main
                 return true;
             case KeyEvent.KEYCODE_F:
                 mProcSearch.run();
+                return true;
+            case KeyEvent.KEYCODE_J:
+                mProcJump.run();
                 return true;
         }
         return false;
@@ -1370,6 +1378,65 @@ public class Main
             }
         }
     }
+
+    private Runnable mProcJump =  new Runnable() {
+        private EditText mEditText;
+
+        @Override
+        public void run() {
+            mEditText= (EditText)getLayoutInflater().inflate(R.layout.jump, null);
+
+            final AlertDialog dialog = new AlertDialog.Builder(Main.this)
+            .setTitle(R.string.menu_edit_jump)
+            .setMessage(R.string.message_edit_jump)
+            .setView(mEditText)
+            .setPositiveButton(R.string.label_ok, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialogAction();
+                }
+            })
+            .create();
+
+            mEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_GO ||
+                        ( event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER )) {
+                        dialogAction();
+                        dialog.dismiss();
+                    }
+
+                    return true;
+                }
+            });
+
+            dialog.show();
+
+        }
+
+        private void dialogAction()
+        {
+            String val = mEditText.getText().toString();
+            try{
+                int line = Integer.parseInt(val) - 1;
+                if ( line >= mEditor.getLineCount() ){
+                    line = mEditor.getLineCount() - 1;
+                }
+                if ( line < 0 ){
+                    line = 0;
+                }
+                Layout layout = mEditor.getLayout();
+                int pos = layout.getLineStart(line);
+                mEditor.setSelection(pos);
+            }
+            catch( Exception e ){
+            }
+        }
+
+
+    };
 
 
     private Runnable mProcSearchByIntent =  new Runnable() {
