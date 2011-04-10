@@ -60,7 +60,7 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 
 ・サムをドラッグすることによるファイル内移動
 ・フリックによる高速スクロール
-・アンドゥ
+・アンドゥ／リドゥ
 ・左右Alt/Ctrlキー同時押しによるショートカットキー(キー毎に割り当て有無を設定可能)
 ・色のカスタマイズ対応
 ・テキストファイルのショートカットアイコン作成機能
@@ -70,6 +70,8 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 ・ワードラップのON/OFF設定および折り返し文字数設定
 ・タブ幅設定
 ・閲覧モード
+・行番号表示
+・文字数・行数カウント機能
 ・横画面表示に正式に対応しました。
 
 ・対応OS Android 1.6/2.1/2.2/2.3
@@ -157,7 +159,7 @@ Functions
 
 ・Scroll with Thumb-drag.
 ・Scroll with Flick.
-・Undo
+・Undo/Redo
 ・Support a Shortcut key with ALT/CTRL Key.
 ・Customize colors.
 ・Create a shortcut icon on HOME app.
@@ -167,6 +169,8 @@ Functions
 ・Word wrap ON/OFF and set word wrap width.
 ・Set tab width.
 ・Viewer Mode.
+・Show Line numbers.
+・Word Counter.
 ・Support Landscape Mode correctly.
 
 ・Support Android OS 1.6 or later.
@@ -406,4 +410,10 @@ Added a dialog that jump by line number.
 Added a word counter.
 Added some keyboard shortcuts.
 Fixed minor bugs.
+
+[2011/04/10 v.0.0.12α]
+・背景が黒地の時に行番号が見えないバグを修正
+
+[2011/04/10 v.0.0.12α]
+Fixed the bug that line number is hidden in black background.
 

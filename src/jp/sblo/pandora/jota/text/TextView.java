@@ -1833,6 +1833,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     @android.view.RemotableViewMethod
     public void setTextColor(int color) {
         mTextColor = ColorStateList.valueOf(color);
+        mLineNumberPaint.setColor(color);
         updateTextColors();
     }
 
@@ -8250,6 +8251,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     {
         mShowLineNumber = show;
     }
+
 
 
     /**
