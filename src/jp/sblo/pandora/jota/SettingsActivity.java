@@ -71,6 +71,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_TAB_WIDTH               = "TAB_WIDTH";
     private static final String KEY_TAB_CHAR                = "TAB_CHAR";
     private static final String KEY_TRACKBALL_BUTTON        = "TRACKBALL_BUTTON";
+    private static final String KEY_SHOW_LINENUMBERS        = "SHOW_LINENUMBERS";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -226,6 +227,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_UNDERLINE);
                     pr.setTitle(R.string.label_underline);
+                    cat.addPreference(pr);
+                }
+                {
+                    // show line numbers
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_SHOW_LINENUMBERS);
+                    pr.setTitle(R.string.label_show_linenumbers);
                     cat.addPreference(pr);
                 }
                 {   // theme
@@ -984,6 +992,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         int TabWidth;
         String TabChar;
         String TrackballButton;
+        boolean showLineNumbers;
 	}
 
 	public static class BootSettings {
@@ -1059,6 +1068,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.TabWidth =  sp.getInt(KEY_TAB_WIDTH, 4);
         ret.TabChar =  sp.getString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
         ret.TrackballButton = sp.getString(KEY_TRACKBALL_BUTTON, TB_CENTERING);
+        ret.showLineNumbers = sp.getBoolean( KEY_SHOW_LINENUMBERS, false);
         sSettings = ret;
         return ret;
 	}
@@ -1143,6 +1153,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putString(KEY_WRAPCHAR_L, DEFAULT_WRAP_WIDTH_CHAR);
                     editor.putString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
                     editor.putString(KEY_TRACKBALL_BUTTON, TB_CENTERING);
+                }
+                if ( lastversion < 12 ){
+                    editor.putBoolean(KEY_SHOW_LINENUMBERS, false );
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);

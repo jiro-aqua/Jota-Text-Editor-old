@@ -90,7 +90,7 @@ Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
 
 ★ファイルが読めなくて困ってる人は、作者までメールしてください！
 
-★GalaxySで長いファイルが途中で打ち切られる現象が報告されています。
+★GalaxySで長いファイルが途中で打ち切られる現象は解決しました。
 
 --------------------------------------------------------------------------------
 Jota Text Editor
@@ -186,6 +186,7 @@ You can send a message to me from Jota's Preferences Screen.
 
 ★If you need grep (search from multiple text files), try my app "aGrep".
 
+★Large file is no longer truncated on GalaxyS.
 
 --------------------------------------------------------------------------------
 [2011/01/23 v.0.0.1α]
@@ -387,4 +388,22 @@ GalaxySでファイル読込が途中で打ち切られる問題に対処
 
 [2011/04/05 v.0.0.10α]
 Fixed the issue that long file was truncated on Galaxy S.
+
+
+[2011/04/10 v.0.0.11α]
+・リドゥ機能を追加
+・行番号表示機能を追加
+・行番号指定ジャンプ機能を追加
+・ワードカウンタを追加
+・キーボードショートカット追加
+・細かいバグ修正
+
+
+[2011/04/10 v.0.0.11α]
+Added "Redo".
+Added a option to show line numbers.
+Added a dialog that jump by line number.
+Added a word counter.
+Added some keyboard shortcuts.
+Fixed minor bugs.
 

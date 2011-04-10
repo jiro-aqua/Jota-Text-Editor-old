@@ -529,7 +529,7 @@ public class Main
 
         mSearchResult = null;
 
-        String name = getString(R.string.hint_message );
+        String name = getString(R.string.app_name );
         if ( mInstanceState.filename != null ){
             File f = new File(mInstanceState.filename );
             name = f.getName();
@@ -1724,7 +1724,7 @@ public class Main
         }else{
             mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CENTERING );
         }
-
+        mEditor.setSHowLineNumbers(mSettings.showLineNumbers);
     }
     void applyBootSetting()
     {

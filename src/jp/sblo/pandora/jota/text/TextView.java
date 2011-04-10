@@ -2445,6 +2445,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 TextUtils.writeToParcel(error, out, flags);
             }
             out.writeParcelable(undoBuffer, 0);// Jota Text Editor
+            out.writeParcelable(redoBuffer, 0);// Jota Text Editor
             out.writeInt( imeShown?1:0 );// Jota Text Editor
         }
 
@@ -2481,6 +2482,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 error = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
             }
             undoBuffer = in.readParcelable(UndoBuffer.class.getClassLoader());// Jota Text Editor
+            redoBuffer = in.readParcelable(UndoBuffer.class.getClassLoader());// Jota Text Editor
             imeShown = in.readInt() != 0;// Jota Text Editor
         }
     }
@@ -8243,6 +8245,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mTabWidthNumber = tabWidthNumber;
     }
 
+    // Jota Text Editor
+    public void setSHowLineNumbers( boolean show )
+    {
+        mShowLineNumber = show;
+    }
+
+
     /**
      * A CursorController instance can be used to control a cursor in the text.
      * It is not used outside of {@link TextView}.
@@ -9049,7 +9058,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private int mTabWidthNumber=0;
     private String mTabWidthChar=SettingsActivity.DEFAULT_WRAP_WIDTH_CHAR;
     private boolean mUndoRedo = false;
-    private boolean mShowLineNumber=true;
+    private boolean mShowLineNumber=false;
     private int mLineNumberWidth=0;
     private Paint mLineNumberPaint;
 }
