@@ -226,10 +226,14 @@ public     class TextLoadTask extends AsyncTask<String, Integer, SpannableString
         }catch(Exception e){}
         mProgressDialog = null;
         if ( result != null ){
-            String[] linebreak =  mActivity.getResources().getStringArray(R.array.LineBreak);
-            String name = new File(mFilename).getName();
-            String message = mActivity.getString(R.string.toast_opening_message ,mCharset , linebreak[mLinebreak] ,name );
-            Toast.makeText(mActivity, message , Toast.LENGTH_LONG).show();
+            if ( mFilename != null ){
+                String[] linebreak =  mActivity.getResources().getStringArray(R.array.LineBreak);
+                String name = new File(mFilename).getName();
+                String message = mActivity.getString(R.string.toast_opening_message ,mCharset , linebreak[mLinebreak] ,name );
+                Toast.makeText(mActivity, message , Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(mActivity, R.string.toast_open_via_content_provider , Toast.LENGTH_LONG).show();
+            }
         }else{
             Toast.makeText(mActivity, R.string.toast_open_failed, Toast.LENGTH_LONG).show();
         }

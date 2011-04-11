@@ -23,6 +23,7 @@ public class UndoBuffer implements Parcelable {
     }
 
     public void writeToParcel(Parcel out, int flags) {
+        out.writeInt( mBuffer.size() );
         for( TextChange item : mBuffer ){
             out.writeInt(item.start);
             out.writeString(item.oldtext.toString());
@@ -43,7 +44,8 @@ public class UndoBuffer implements Parcelable {
 
     private UndoBuffer(Parcel in) {
         this();
-        while( in.dataAvail() > 0 ){
+        int len = in.readInt();
+        while( in.dataAvail() > 0 && len-- > 0){
             TextChange item = new TextChange();
             item.start = in.readInt();
             item.oldtext = in.readString();
@@ -55,7 +57,7 @@ public class UndoBuffer implements Parcelable {
                 item.oldtext = "";
             }
             mBuffer.add(item);
-            mCurrentSize += item.newtext.length() + item.oldtext.length();;
+            mCurrentSize += item.newtext.length() + item.oldtext.length();
         }
     }
 
