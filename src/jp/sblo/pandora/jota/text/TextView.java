@@ -2598,6 +2598,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         }
         mUndoBuffer = ss.undoBuffer;// Jota Text Editor
         mRedoBuffer = ss.redoBuffer;// Jota Text Editor
+
+        // quick fix , I don't know why there is a case mRedoBuffer has a null pointer. 2011/04/16
+        if ( mRedoBuffer == null ){
+            mRedoBuffer = new UndoBuffer();
+            Log.e( "JotaTextEditor" , "Redobuffer recreated!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
+
         showIme( ss.imeShown );
     }
 
