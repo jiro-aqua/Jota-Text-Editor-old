@@ -1,383 +1,188 @@
-Jota Text Editor
+[2011/01/23 v.0.0.1Î±]
 
-Jota‚ÍA’·•¶ƒeƒLƒXƒg‚Ì•ÒWŒü‚¯‚ÉİŒv‚³‚ê‚½ƒeƒLƒXƒgƒGƒfƒBƒ^‚Å‚·B
-uƒCƒIƒ^v‚Æ“Ç‚ñ‚Å‚­‚¾‚³‚¢B
+å¤‰æ›´
+ãƒ»æ–°è¦ãƒ•ã‚¡ã‚¤ãƒ«ã‚»ãƒ¼ãƒ–æ™‚ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ•ã‚©ãƒ«ãƒ€ã‚’è¨­å®šå¯èƒ½ã«å¤‰æ›´
+ãƒ»åå‰ã‚’å¤‰ãˆã¦ä¿å­˜æ™‚ã«å…ƒãƒ•ã‚¡ã‚¤ãƒ«åã‚’è¡¨ç¤ºã™ã‚‹ã‚ˆã†ã«å¤‰æ›´
+ãƒ»ã‚ªãƒ¼ãƒ—ãƒ³æ™‚ã®å±¥æ­´ã®ä¸€ç•ªç›®ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚©ãƒ«ãƒ€ã‚’é–‹ãã‚ˆã†ã«å¤‰æ›´
+ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«é¸æŠç”»é¢ã§ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¨ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ä¸¡æ–¹è¡¨ç¤ºã™ã‚‹ã‚ˆã†ã«å¤‰æ›´
+ãƒ»ãƒ•ã‚©ãƒ³ãƒˆãƒ—ãƒ­ãƒãƒ¼ã‚·ãƒ§ãƒŠãƒ«ã€ãƒ¢ãƒã‚¹ãƒšãƒ¼ã‚¹ãƒ•ã‚©ãƒ³ãƒˆã‚’é¸æŠå¯èƒ½ã«å¤‰æ›´
+ãƒ»ãƒ•ã‚©ãƒ³ãƒˆã‚µã‚¤ã‚ºã‚’å¤‰æ›´ã§ãã‚‹ã‚ˆã†ã«å¤‰æ›´
+ãƒ»ã‚µãƒ ã®æ¨ªå¹…ã‚’å°‘ã—ç¸®ã‚ã‚‹
+ãƒ»ãƒ¡ãƒ¢ãƒªä½¿ç”¨é‡ã‚’å‰Šæ¸›
 
-šŒ»İƒ¿ƒeƒXƒg’†‚Å‚·BˆÈ‰º‚ÌğŒ‚Å\‚í‚È‚¢l‚¾‚¯ƒ_ƒEƒ“ƒ[ƒh‚µ‚Ä‚­‚¾‚³‚¢B
-E—‚¿‚Ä‚à‹ƒ‚©‚È‚¢
-EƒoƒO‚Á‚Û‚¢‹““®‚ğŒ©‚Â‚¯‚½‚çAìÒ‚É˜A—‚·‚é
-E—~‚µ‚¢‹@”\‚ª‚ ‚Á‚½‚çAìÒ‚É˜A—‚·‚é
-
-
-‹@”\
-
-E100–œ•¶š’ö“x‚Ü‚Å‚ÌƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚É‘Î‰(Alphabet‚Å1MBytes/ShiftJIS‚Å2MBytes)
-
-E•¶šƒR[ƒh©“®”»’èiˆÈ‰º‚Ì•¶šƒR[ƒh‚ğ©“®”»’èj
-  UTF-8
-  UTF-16BE
-  UTF-16LE
-  UTF-32BE
-  UTF-32LE
-  WINDOWS-1251
-  WINDOWS-1252
-  WINDOWS-1253
-  WINDOWS-1255
-  SHIFT_JIS
-  ISO-2022-JP
-  ISO-2022-CN
-  ISO-2022-KR
-  ISO-8859-5
-  ISO-8859-7
-  ISO-8859-8
-  BIG5
-  GB18030
-  EUC-JP
-  EUC-KR
-  EUC-TW
-  IBM855
-  IBM866
-  KOI8-R
-  MACCYRILLIC
-  HZ-GB-2312
-  X-ISO-10646-UCS-4-3412
-  X-ISO-10646-UCS-4-2143
-  (ÀÛ‚ÉƒfƒR[ƒh‰Â”\‚©‚Ç‚¤‚©‚ÍAAndroid‚ÌÀ‘•‚ÉˆË‘¶‚µ‚Ü‚·j
-
-E•¶šƒR[ƒh‚Ì•ÏX
-E‰üsƒR[ƒh©“®”»’èA•Û‘¶A•ÏX
-EƒJ[ƒ\ƒ‹ˆÊ’u‚Ì•Û‘¶
-Eƒtƒ@ƒCƒ‹—š—ğ
-Eƒtƒ@ƒCƒ‹“àŒŸõ(³‹K•\Œ»‘Î‰)
-
-EŠO•”ƒAƒvƒŠ˜AŒg
-  ƒ}ƒbƒVƒ…ƒ‹[ƒ€
-  ƒeƒLƒXƒg‚Ì‹¤—L
-  ŠO•”ƒAƒvƒŠ‚É‚æ‚éŒŸõ
-  ŠO•”ƒAƒvƒŠ‚ÅŠJ‚­
-
-  š”CˆÓ‚ÌƒAƒvƒŠ‚ğ’¼ÚŒÄ‚Ño‚·ƒ_ƒCƒŒƒNƒgƒCƒ“ƒeƒ“ƒg‹@”\‚ğ“‹Ú
-
-EƒTƒ€‚ğƒhƒ‰ƒbƒO‚·‚é‚±‚Æ‚É‚æ‚éƒtƒ@ƒCƒ‹“àˆÚ“®
-EƒtƒŠƒbƒN‚É‚æ‚é‚‘¬ƒXƒNƒ[ƒ‹
-EƒAƒ“ƒhƒD^ƒŠƒhƒD
-E¶‰EAlt/CtrlƒL[“¯‰Ÿ‚µ‚É‚æ‚éƒVƒ‡[ƒgƒJƒbƒgƒL[(ƒL[–ˆ‚ÉŠ„‚è“–‚Ä—L–³‚ğİ’è‰Â”\)
-EF‚ÌƒJƒXƒ^ƒ}ƒCƒY‘Î‰
-EƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚ÌƒVƒ‡[ƒgƒJƒbƒgƒAƒCƒRƒ“ì¬‹@”\
-Eƒtƒ@ƒCƒ‹ƒGƒNƒXƒvƒ[ƒ‰ŒnƒAƒvƒŠAƒRƒ“ƒeƒ“ƒcƒvƒƒoƒCƒ_ŒnƒAƒvƒŠ‚©‚ç‚ÌŒÄo‚É‘Î‰
-EƒeƒLƒXƒg‘I‘ğ—p‚Ìƒ}[ƒJ[‹@”\“‹Ú
-iƒeƒLƒXƒg‚ğ‘I‘ğ‚µ‚½ƒGƒŠƒA‚ğƒ^ƒbƒv‚·‚é‚±‚Æ‚Å•\¦‚³‚ê‚Ü‚·j
-Eƒ[ƒhƒ‰ƒbƒv‚ÌON/OFFİ’è‚¨‚æ‚ÑÜ‚è•Ô‚µ•¶š”İ’è
-Eƒ^ƒu•İ’è
-E‰{——ƒ‚[ƒh
-Es”Ô†•\¦
-E•¶š”Es”ƒJƒEƒ“ƒg‹@”\
-E‰¡‰æ–Ê•\¦‚É³®‚É‘Î‰‚µ‚Ü‚µ‚½B
-
-E‘Î‰OS Android 1.6/2.1/2.2/2.3
-  (IS01,HTC Desire,005SH,Nexus One ‚Å“®ìŠm”Fj
-
-E¡Œã‚àŠÜ‚ßA—L—¿‰»‚¨‚æ‚ÑL•t—^‚Ís‚¢‚Ü‚¹‚ñB
-EˆÀ’è‚µ‚½‚çƒI[ƒvƒ“ƒ\[ƒX‚Æ‚µ‚Ä”z•z‚·‚é—\’è‚Å‚·B
-
-
-’ˆÓ
-@RTLŒ¾Œê‚Ö‚Ì‘Î‰‚ğ”p~‚µ‚Ü‚µ‚½B
-
-
-š•s‹ï‡“™”­Œ©‚³‚ê‚½•ûA‚Ü‚½‚ÍAìÒ‚©‚ç‚Ì•Ô–‚ª•K—v‚È•û‚ÍAƒ[ƒ‹‚Ü‚½‚ÍTwitter(@jiro_aqua)‚É‚Ä‚²˜A—‚­‚¾‚³‚¢B
-ƒŒƒrƒ…[ƒRƒƒ“ƒg‚É‚ÍAŠî–{“I‚É•Ô–‚Å‚«‚Ü‚¹‚ñB¢‚Á‚½‚±‚Æ‚ª‚ ‚ê‚Îˆêl‚Å”[“¾‚µ‚È‚¢‚ÅìÒ‚É˜A—‚µ‚Ä‚­‚¾‚³‚¢B
-
-šgrep(ƒeƒLƒXƒgƒtƒ@ƒCƒ‹‚Ì‹øh‚µŒŸõ)‚ª•K—v‚È•û‚ÍAÙìuaGrepv‚à‚¨‚µ‚­‚¾‚³‚¢B
-
-šƒtƒ@ƒCƒ‹‚ª“Ç‚ß‚È‚­‚Ä¢‚Á‚Ä‚él‚ÍAìÒ‚Ü‚Åƒ[ƒ‹‚µ‚Ä‚­‚¾‚³‚¢I
-
-šGalaxyS‚Å’·‚¢ƒtƒ@ƒCƒ‹‚ª“r’†‚Å‘Å‚¿Ø‚ç‚ê‚éŒ»Û‚Í‰ğŒˆ‚µ‚Ü‚µ‚½B
-
---------------------------------------------------------------------------------
-Jota Text Editor
-
-Jota is a text editor designed for a long text file.
-It's pronouced as "i-o-ta".
-
-šJota is currently in Alpha-test phase. 
-Only in the case you can agreed below statement, you can use this.
-- Don't cry when Jota crashed and lost your text.
-- Mail me when you found a bug.
-- Mail me new feature you want.
-
-Functions
-ESupport until 1 million characters.
-
-EAuto-Detect multiple character codes.
-  UTF-8
-  UTF-16BE
-  UTF-16LE
-  UTF-32BE
-  UTF-32LE
-  WINDOWS-1251
-  WINDOWS-1252
-  WINDOWS-1253
-  WINDOWS-1255
-  SHIFT_JIS
-  ISO-2022-JP
-  ISO-2022-CN
-  ISO-2022-KR
-  ISO-8859-5
-  ISO-8859-7
-  ISO-8859-8
-  BIG5
-  GB18030
-  EUC-JP
-  EUC-KR
-  EUC-TW
-  IBM855
-  IBM866
-  KOI8-R
-  MACCYRILLIC
-  HZ-GB-2312
-  X-ISO-10646-UCS-4-3412
-  X-ISO-10646-UCS-4-2143
-  (Whether you can decode or not depends on Android's implementation.)
-
-EChange character codes.
-EAuto-Detect linebreak code.
-EChange linebreak code.
-EKeep linebreak code until saving a file.
-ESave position of the cursor with file.
-ESave history of recened files.
-
-ESearch a word in a file. (Support Regular Expression)
-
-EText sharing with external application.
-  Mushroom
-  Share (ACTION_SEND)
-  Search (ACTION_SEARCH)
-  Open (ACTION_VIEW)
-
-  šDirect Intent : You can launch any one application on menu item.
-
-EScroll with Thumb-drag.
-EScroll with Flick.
-EUndo/Redo
-ESupport a Shortcut key with ALT/CTRL Key.
-ECustomize colors.
-ECreate a shortcut icon on HOME app.
-ECustomizable shortcut key bind.
-EText selector like Gingerbread.
-(Double tap to select the word , then touch selected area to show marker.)
-EWord wrap ON/OFF and set word wrap width.
-ESet tab width.
-EViewer Mode.
-EShow Line numbers.
-EWord Counter.
-ESupport Landscape Mode correctly.
-
-ESupport Android OS 1.6 or later.
-ESupport both touch-screen device and qwerty-keyboard device.
-
-EForever FREE and NO-AD.
-EIn the future , source code will be opend unde Apache License.
-
-
-CAUTION
-  RTL-Language and bi-directional text is not supported.
-
-
-šIf you need a reply from me , DON'T put it in Market's Review .
-Instead please let me know by E-mail or Twiter(@jiro_aqua)
-You can send a message to me from Jota's Preferences Screen.
-
-šIf you need grep (search from multiple text files), try my app "aGrep".
-
-šLarge file is no longer truncated on GalaxyS.
-
---------------------------------------------------------------------------------
-[2011/01/23 v.0.0.1ƒ¿]
-
-•ÏX
-EV‹Kƒtƒ@ƒCƒ‹ƒZ[ƒu‚ÌƒfƒtƒHƒ‹ƒgƒtƒHƒ‹ƒ_‚ğİ’è‰Â”\‚É•ÏX
-E–¼‘O‚ğ•Ï‚¦‚Ä•Û‘¶‚ÉŒ³ƒtƒ@ƒCƒ‹–¼‚ğ•\¦‚·‚é‚æ‚¤‚É•ÏX
-EƒI[ƒvƒ“‚Ì—š—ğ‚Ìˆê”Ô–Ú‚Ìƒtƒ@ƒCƒ‹‚ÌƒtƒHƒ‹ƒ_‚ğŠJ‚­‚æ‚¤‚É•ÏX
-Eƒtƒ@ƒCƒ‹‘I‘ğ‰æ–Ê‚ÅƒfƒBƒŒƒNƒgƒŠ‚Æƒtƒ@ƒCƒ‹–¼‚ğ—¼•û•\¦‚·‚é‚æ‚¤‚É•ÏX
-EƒtƒHƒ“ƒgƒvƒƒ|[ƒVƒ‡ƒiƒ‹Aƒ‚ƒmƒXƒy[ƒXƒtƒHƒ“ƒg‚ğ‘I‘ğ‰Â”\‚É•ÏX
-EƒtƒHƒ“ƒgƒTƒCƒY‚ğ•ÏX‚Å‚«‚é‚æ‚¤‚É•ÏX
-EƒTƒ€‚Ì‰¡•‚ğ­‚µk‚ß‚é
-Eƒƒ‚ƒŠg—p—Ê‚ğíŒ¸
-
-ƒoƒOC³
-E—š—ğ‚OŒ‚Ì‚É—š—ğ‚ğŠJ‚­‚ÆƒNƒ‰ƒbƒVƒ…‚·‚éƒoƒO‚ğC³
-E‚OƒoƒCƒg‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚­‚ÆƒNƒ‰ƒbƒVƒ…‚·‚éƒoƒO‚ğC³
-E•¶šƒR[ƒh–¢Šm’è‚Ì‚É•Û‘¶‚Å¸”s‚·‚éƒoƒO‚ğC³
-Eƒhƒ‰ƒbƒO‘I‘ğ‚ğ‰æ–ÊŠO‚Ü‚Å‘±‚¯‚é‚ÆAƒLƒƒƒ“ƒZƒ‹‚³‚ê‚éƒoƒO‚ğC³
-E‰pŒê‚Ìƒ~ƒXƒXƒyƒ‹‚ğC³
+ãƒã‚°ä¿®æ­£
+ãƒ»å±¥æ­´ï¼ä»¶ã®æ™‚ã«å±¥æ­´ã‚’é–‹ãã¨ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»ï¼ãƒã‚¤ãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãã¨ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»æ–‡å­—ã‚³ãƒ¼ãƒ‰æœªç¢ºå®šã®æ™‚ã«ä¿å­˜ã§å¤±æ•—ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»ãƒ‰ãƒ©ãƒƒã‚°é¸æŠã‚’ç”»é¢å¤–ã¾ã§ç¶šã‘ã‚‹ã¨ã€ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»è‹±èªã®ãƒŸã‚¹ã‚¹ãƒšãƒ«ã‚’ä¿®æ­£
 
 Change
-Eadd the option to set the default folder when save a new file.
-Eshow original filename when Save As screen.
-Eshow the directory which 1st record of history when Open screen.
-Eshow both directory and filename in File Select Screen.
-Eadd the option to select the kind of font.(Normal/Monospace)
-Eadd the option to select the font size.
-EScroll thumb shorten a little smaller. ( In future it can be selected. )
-EReduced memory usage.
+ãƒ»add the option to set the default folder when save a new file.
+ãƒ»show original filename when Save As screen.
+ãƒ»show the directory which 1st record of history when Open screen.
+ãƒ»show both directory and filename in File Select Screen.
+ãƒ»add the option to select the kind of font.(Normal/Monospace)
+ãƒ»add the option to select the font size.
+ãƒ»Scroll thumb shorten a little smaller. ( In future it can be selected. )
+ãƒ»Reduced memory usage.
 
 BUG fix
-Efixed the bug that crashed when open the History in the case no history is recorded.
-Efixed the bug that crashed when open 0 bytes file.
-Efixed the bug that failed save file.
-Efixed the bug that selection is canceld when drag to the edge of the screen.
-Efixed miss-spell of English resources.
+ãƒ»fixed the bug that crashed when open the History in the case no history is recorded.
+ãƒ»fixed the bug that crashed when open 0 bytes file.
+ãƒ»fixed the bug that failed save file.
+ãƒ»fixed the bug that selection is canceld when drag to the edge of the screen.
+ãƒ»fixed miss-spell of English resources.
 
 
-’ˆÓ
-@‹ß‚¢«—ˆ‚Ìƒo[ƒWƒ‡ƒ“ƒAƒbƒv‚ÅRTLŒ¾Œê‚Ö‚Ì‘Î‰‚ğ”p~‚·‚é—\’è‚Å‚·B
+æ³¨æ„
+ã€€è¿‘ã„å°†æ¥ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚¢ãƒƒãƒ—ã§RTLè¨€èªã¸ã®å¯¾å¿œã‚’å»ƒæ­¢ã™ã‚‹äºˆå®šã§ã™ã€‚
 
 CAUTION
   At near future version, RTL-Language and bi-directional text won't be supported.
 
 
-[2011/02/11 v.0.0.3ƒ¿]
+[2011/02/11 v.0.0.3Î±]
 
-ƒoƒOC³
-EƒAƒvƒŠØ‘Ö‚ÉƒNƒ‰ƒbƒVƒ…‚·‚éƒoƒO‚ğC³
+ãƒã‚°ä¿®æ­£
+ãƒ»ã‚¢ãƒ—ãƒªåˆ‡æ›¿æ™‚ã«ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
 
-[2011/02/11 v.0.0.3ƒ¿]
+[2011/02/11 v.0.0.3Î±]
 BUG fix
-Efixed the bug that application switching cause a crash.
+ãƒ»fixed the bug that application switching cause a crash.
 
 
-[2011/02/20 v.0.0.4ƒ¿]
-•ÏX
-EDropbox‚©‚ç‚ÌV‹Kì¬‚É‘Î‰
-EƒVƒ‡[ƒgƒJƒbƒgƒL[‚Ì—LŒø–³Œø‚Ì‘I‘ğƒIƒvƒVƒ‡ƒ“’Ç‰Á
-EƒoƒbƒNƒAƒbƒvì¬—L–³‚Ì‘I‘ğƒIƒvƒVƒ‡ƒ“’Ç‰Á
-EƒAƒvƒŠ˜AŒg‚ÉACTION_VIEW‚ğ“Š‚°‚é‹@”\‚ğ’Ç‰Á
-EaGrep‚©‚çs”Ô†w’è‚ÅŠJ‚­‹@”\‚ğ’Ç‰Á
+[2011/02/20 v.0.0.4Î±]
+å¤‰æ›´
+ãƒ»Dropboxã‹ã‚‰ã®æ–°è¦ä½œæˆã«å¯¾å¿œ
+ãƒ»ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚­ãƒ¼ã®æœ‰åŠ¹ç„¡åŠ¹ã®é¸æŠã‚ªãƒ—ã‚·ãƒ§ãƒ³è¿½åŠ 
+ãƒ»ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ä½œæˆæœ‰ç„¡ã®é¸æŠã‚ªãƒ—ã‚·ãƒ§ãƒ³è¿½åŠ 
+ãƒ»ã‚¢ãƒ—ãƒªé€£æºæ™‚ã«ACTION_VIEWã‚’æŠ•ã’ã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»aGrepã‹ã‚‰è¡Œç•ªå·æŒ‡å®šã§é–‹ãæ©Ÿèƒ½ã‚’è¿½åŠ 
 
-ƒoƒOC³
-E•s³‚È³‹K•\Œ»‚ÅƒNƒ‰ƒbƒVƒ…‚·‚éƒoƒO‚ğC³
-E0ƒoƒCƒgƒtƒ@ƒCƒ‹‚ğƒZ[ƒu‚Å‚«‚È‚¢ƒoƒO‚ğC³
+ãƒã‚°ä¿®æ­£
+ãƒ»ä¸æ­£ãªæ­£è¦è¡¨ç¾ã§ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»0ãƒã‚¤ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚»ãƒ¼ãƒ–ã§ããªã„ãƒã‚°ã‚’ä¿®æ­£
 
 
-[2011/02/20 v.0.0.4ƒ¿]
+[2011/02/20 v.0.0.4Î±]
 Change
-ESupport for Dropbox's New menu.
-EAdd a option to select shortcut keys.
-EAdd a option to create backup file.
-EAdd a menu to send ACTION_VIEW.
-EAdd a feature to recieve line number from aGrep.
+ãƒ»Support for Dropbox's New menu.
+ãƒ»Add a option to select shortcut keys.
+ãƒ»Add a option to create backup file.
+ãƒ»Add a menu to send ACTION_VIEW.
+ãƒ»Add a feature to recieve line number from aGrep.
 
 Bug fix
-Efixed a bug that crashes on bad regular expression.
-Efixed a bug that couldn't save after 0-bytes file read.
+ãƒ»fixed a bug that crashes on bad regular expression.
+ãƒ»fixed a bug that couldn't save after 0-bytes file read.
 
 
-[2011/03/04 v.0.0.5ƒ¿]
-‹@”\’Ç‰Á^•ÏX
-EGMail/K9Mail‚Ì“Y•tƒtƒ@ƒCƒ‹‚ğŠJ‚­‹@”\‚ğ’Ç‰Á
-ESH»’[––‚ÌƒRƒ“ƒeƒ“ƒcƒ}ƒl[ƒWƒƒ‚©‚çŠJ‚­‹@”\‚ğ’Ç‰Á
-Eƒtƒ@ƒCƒ‹‚ğŠJ‚­‚É•¶šƒR[ƒh‚ğw’è‚·‚é‹@”\‚ğ’Ç‰Á
-Eƒtƒ@ƒCƒ‹‚ğ•Û‘¶‚·‚é‚ÉA•¶šƒR[ƒh^‰üsƒR[ƒh‚ğw’è‚·‚é‹@”\‚ğ’Ç‰Á
-EƒfƒtƒHƒ‹ƒg‚Ì•¶šƒR[ƒh^‰üsƒR[ƒh‚ğİ’è‚·‚é‹@”\‚ğ’Ç‰Á
-Eu‘}“üvƒƒjƒ…[‚Éƒ_ƒCƒŒƒNƒgƒCƒ“ƒeƒ“ƒg‚ğŠ„‚è“–‚Ä‚é‹@”\‚ğ’Ç‰Á
-EQVGA—p‚ÌƒAƒCƒRƒ“ƒŠƒ\[ƒX‚ğ’Ç‰Á
-Eƒz[ƒ€ƒAƒvƒŠ‚ÉƒVƒ‡[ƒgƒJƒbƒgƒAƒCƒRƒ“‚ğì¬‚·‚é‹@”\‚ğ’Ç‰Á
-Eƒtƒ@ƒCƒ‹—š—ğ‚ğ–¼‘O{ƒpƒX‚Ì“ñ’i\¬‚É•ÏX
-EA2SD‘Î‰
+[2011/03/04 v.0.0.5Î±]
+æ©Ÿèƒ½è¿½åŠ ï¼å¤‰æ›´
+ãƒ»GMail/K9Mailã®æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãæ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»SHè£½ç«¯æœ«ã®ã‚³ãƒ³ãƒ†ãƒ³ãƒ„ãƒãƒãƒ¼ã‚¸ãƒ£ã‹ã‚‰é–‹ãæ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ãæ™‚ã«æ–‡å­—ã‚³ãƒ¼ãƒ‰ã‚’æŒ‡å®šã™ã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¿å­˜ã™ã‚‹æ™‚ã«ã€æ–‡å­—ã‚³ãƒ¼ãƒ‰ï¼æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã‚’æŒ‡å®šã™ã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®æ–‡å­—ã‚³ãƒ¼ãƒ‰ï¼æ”¹è¡Œã‚³ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»ã€ŒæŒ¿å…¥ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«ãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆã‚¤ãƒ³ãƒ†ãƒ³ãƒˆã‚’å‰²ã‚Šå½“ã¦ã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»QVGAç”¨ã®ã‚¢ã‚¤ã‚³ãƒ³ãƒªã‚½ãƒ¼ã‚¹ã‚’è¿½åŠ 
+ãƒ»ãƒ›ãƒ¼ãƒ ã‚¢ãƒ—ãƒªã«ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚¢ã‚¤ã‚³ãƒ³ã‚’ä½œæˆã™ã‚‹æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»ãƒ•ã‚¡ã‚¤ãƒ«å±¥æ­´ã‚’åå‰ï¼‹ãƒ‘ã‚¹ã®äºŒæ®µæ§‹æˆã«å¤‰æ›´
+ãƒ»A2SDå¯¾å¿œ
 
-ƒoƒOC³
-Eƒ{ƒŠƒ…[ƒ€ƒ{ƒ^ƒ“‚ÌKEYUPƒCƒxƒ“ƒg‚Å‰¹‚ª–Â‚éƒoƒO‚ğC³
-EUTF-16/32‚ÅBOM‚ğo—Í‚µ‚È‚¢ƒoƒO‚ğC³
-E‰üsCR‚Ì‚ÉA—]Œv‚È•¶š‚ªo—Í‚³‚ê‚éƒoƒO‚ğC³
-E‚»‚Ì‘¼×‚©‚¢ƒoƒOC³
+ãƒã‚°ä¿®æ­£
+ãƒ»ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒœã‚¿ãƒ³ã®KEYUPã‚¤ãƒ™ãƒ³ãƒˆã§éŸ³ãŒé³´ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»UTF-16/32ã§BOMã‚’å‡ºåŠ›ã—ãªã„ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»æ”¹è¡ŒCRã®æ™‚ã«ã€ä½™è¨ˆãªæ–‡å­—ãŒå‡ºåŠ›ã•ã‚Œã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»ãã®ä»–ç´°ã‹ã„ãƒã‚°ä¿®æ­£
 
 
-[2011/03/04 v.0.0.5ƒ¿]
+[2011/03/04 v.0.0.5Î±]
 Change
-EAdded a support to open the attachment of GMail/K9Mail.
-EAdded an option to select a character code when open file.
-EAdded an option to select a character/linebreak code when save file.
-EAdded an option to set default character/linebreak code.
-EAdded an option to change "Insert" menu into Direct Intent.
-EAdded a menu to create shortcut icon on the home application.
-EAdded resources for QVGA devices.
-EAdded a support for A2SD.
-EChanged file-history to show a path of the file.
+ãƒ»Added a support to open the attachment of GMail/K9Mail.
+ãƒ»Added an option to select a character code when open file.
+ãƒ»Added an option to select a character/linebreak code when save file.
+ãƒ»Added an option to set default character/linebreak code.
+ãƒ»Added an option to change "Insert" menu into Direct Intent.
+ãƒ»Added a menu to create shortcut icon on the home application.
+ãƒ»Added resources for QVGA devices.
+ãƒ»Added a support for A2SD.
+ãƒ»Changed file-history to show a path of the file.
 
 Bug fix
-EFixed the bug that a beep sound is played when volume+/- key is released.
-EFixed the bug that BOM is not outputed in UTF-16/32.
-EFixed the bug that unnecessary character is outputed with CR.
-EFixed some minor bugs.
+ãƒ»Fixed the bug that a beep sound is played when volume+/- key is released.
+ãƒ»Fixed the bug that BOM is not outputed in UTF-16/32.
+ãƒ»Fixed the bug that unnecessary character is outputed with CR.
+ãƒ»Fixed some minor bugs.
 
 
-[2011/03/20 v.0.0.6ƒ¿]
+[2011/03/20 v.0.0.6Î±]
 
-ƒeƒLƒXƒg‘I‘ğ—p‚Ìƒ}[ƒJ[‚ğ’Ç‰Á
-ƒƒ‚ƒŠg—p—Ê‚ğíŒ¸
-×‚©‚¢ƒoƒOC³
-RTLŒ¾Œê‚Ì‘Î‰‚ğ”p~
+ãƒ†ã‚­ã‚¹ãƒˆé¸æŠç”¨ã®ãƒãƒ¼ã‚«ãƒ¼ã‚’è¿½åŠ 
+ãƒ¡ãƒ¢ãƒªä½¿ç”¨é‡ã‚’å‰Šæ¸›
+ç´°ã‹ã„ãƒã‚°ä¿®æ­£
+RTLè¨€èªã®å¯¾å¿œã‚’å»ƒæ­¢
 
-[2011/03/21 v.0.0.7ƒ¿]
-ƒNƒŠƒbƒvƒ{[ƒhEIntent‚ÌãŒÀ‚ğ99KB‚É‚·‚é‚æ‚¤‚É•ÏX
-•Û‘¶ˆ—‚ğ¬‚³‚¢ƒoƒbƒtƒ@‚Åˆ—‚·‚é‚æ‚¤‚ÉC³
-ƒ}[ƒJ[•\¦’†‚Éƒƒjƒ…[ƒL[‚ğ‰Ÿ‚·‚Æ‘I‘ğ‚ª‰ğœ‚³‚ê‚éƒoƒO‚ğC³
-ƒ^ƒCƒgƒ‹ƒo[‚ğ”ñ•\¦‚É‚·‚éİ’è‚ğ’Ç‰Á
-IS01/Lynx‚Ìƒ\ƒtƒgƒL[—Ìˆæ‚ğ”ñ•\¦‚É‚·‚éİ’è‚ğ’Ç‰Á
+[2011/03/21 v.0.0.7Î±]
+ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ãƒ»Intentã®ä¸Šé™ã‚’99KBã«ã™ã‚‹ã‚ˆã†ã«å¤‰æ›´
+ä¿å­˜å‡¦ç†ã‚’å°ã•ã„ãƒãƒƒãƒ•ã‚¡ã§å‡¦ç†ã™ã‚‹ã‚ˆã†ã«ä¿®æ­£
+ãƒãƒ¼ã‚«ãƒ¼è¡¨ç¤ºä¸­ã«ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚­ãƒ¼ã‚’æŠ¼ã™ã¨é¸æŠãŒè§£é™¤ã•ã‚Œã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã‚’éè¡¨ç¤ºã«ã™ã‚‹è¨­å®šã‚’è¿½åŠ 
+IS01/Lynxã®ã‚½ãƒ•ãƒˆã‚­ãƒ¼é ˜åŸŸã‚’éè¡¨ç¤ºã«ã™ã‚‹è¨­å®šã‚’è¿½åŠ 
 
-š‚à‚µ‚±‚ÌƒAƒvƒŠ‚ğ‹C‚É“ü‚Á‚Ä’¸‚¯‚½‚È‚çAkĞ”íŠQÒ‚Ì‚½‚ß‚É‰½‚©‚µ‚Ä’¸‚¯‚é‚ÆŠğ‚µ‚¢‚Å‚·B
+â˜…ã‚‚ã—ã“ã®ã‚¢ãƒ—ãƒªã‚’æ°—ã«å…¥ã£ã¦é ‚ã‘ãŸãªã‚‰ã€éœ‡ç½è¢«å®³è€…ã®ãŸã‚ã«ä½•ã‹ã—ã¦é ‚ã‘ã‚‹ã¨å¬‰ã—ã„ã§ã™ã€‚
 
 
-[2011/03/20 v.0.0.6ƒ¿]
+[2011/03/20 v.0.0.6Î±]
 added text selector.(2-floating-marker like Gingerbread)
 reduced memory usage.
 fixed minor bugs.
 no longer supports RTL languages.
 
-[2011/03/21 v.0.0.7ƒ¿]
+[2011/03/21 v.0.0.7Î±]
 added the limit of Clipboard and Intent text to 99KB.
 changed to use smaller buffer when a file is saved.
 fixed the bug that cancelled selection area when Menu key is pushed when selection marker is shown.
 added the option to hide title bar.
 
-šIf you liked this app, please do something for the earthquake victims in Japan.
+â˜…If you liked this app, please do something for the earthquake victims in Japan.
 
 
-[2011/03/27 v.0.0.8ƒ¿]
-ƒRƒ“ƒeƒLƒXƒgƒƒjƒ…[‚É‘I‘ğ‰ğœ‹@”\‚ğ’Ç‰Á
-ƒ[ƒhƒ‰ƒbƒv‚Ì—L–³İ’è‚ğ’Ç‰Á
-‰{——ƒ‚[ƒh‚Ìİ’è‚ğ’Ç‰Á
-LifeTouch NOTE‚ÌctrlƒL[‘Î‰‚ğ’Ç‰Á
-“ú–{Œê‚Ì‹Ö‘¥ˆ—‚ğC³
-ƒfƒBƒŒƒNƒgƒŠƒuƒ‰ƒEƒU‚Åaccess denied ‚ÌŒã‚Ì‹““®‚ğC³
-ƒeƒLƒXƒgŒŸõ‚ÌƒoƒO‚ğC³
-•Û‘¶¸”s‚ÌƒGƒ‰[ƒƒbƒZ[ƒW‚ğ•\¦
+[2011/03/27 v.0.0.8Î±]
+ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«é¸æŠè§£é™¤æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ¯ãƒ¼ãƒ‰ãƒ©ãƒƒãƒ—ã®æœ‰ç„¡è¨­å®šã‚’è¿½åŠ 
+é–²è¦§ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®šã‚’è¿½åŠ 
+LifeTouch NOTEã®ctrlã‚­ãƒ¼å¯¾å¿œã‚’è¿½åŠ 
+æ—¥æœ¬èªã®ç¦å‰‡å‡¦ç†ã‚’ä¿®æ­£
+ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãƒ–ãƒ©ã‚¦ã‚¶ã§access denied ã®å¾Œã®æŒ™å‹•ã‚’ä¿®æ­£
+ãƒ†ã‚­ã‚¹ãƒˆæ¤œç´¢æ™‚ã®ãƒã‚°ã‚’ä¿®æ­£
+ä¿å­˜å¤±æ•—æ™‚ã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤º
 
-š‚ª‚ñ‚Î‚ê“ú–{I
+â˜…ãŒã‚“ã°ã‚Œæ—¥æœ¬ï¼
 
-[2011/03/27 v.0.0.8ƒ¿]
+[2011/03/27 v.0.0.8Î±]
 added "Select Cancel" onto the context menu.
 added a option "Word Wrap".
 added the option "Viewer mode".(This is not read-only mode. This only hides IME.)
 Fixed minor bugs.
 
-šFrom Japan, we are with you !
+â˜…From Japan, we are with you !
 
 
 
-[2011/04/03 v.0.0.9ƒ¿]
-ELandscapeƒ‚[ƒh‚ÅIME‚ª‘S‰æ–Ê•\¦‚É‚È‚ç‚È‚¢‚æ‚¤‚ÉC³
-EÜ‚è•Ô‚µ•¶š”‚Ìİ’è‚ğ’Ç‰Á
-Eƒ^ƒu•‚Ìİ’è‚ğ’Ç‰Á
-Eƒ{ƒŠƒ…[ƒ€ƒL[‚Ì—LŒø–³Œøİ’è‚ğ’Ç‰Á
-EDPAD_CENTER‚Ì“®ì‚ğ‘I‘ğ‚·‚éİ’è‚ğ’Ç‰Á
-EƒVƒ‡[ƒgƒJƒbƒgƒL[‚ğ’Ç‰Á
-E‰æ–Ê‰ñ“]‚ÉƒNƒ‰ƒbƒVƒ…‚·‚é–â‘è‚ğC³
-E—š—ğ‚Ìƒ\[ƒg‚ª³‚µ‚­s‚í‚ê‚È‚¢–â‘è‚ğC³
+[2011/04/03 v.0.0.9Î±]
+ãƒ»Landscapeãƒ¢ãƒ¼ãƒ‰ã§IMEãŒå…¨ç”»é¢è¡¨ç¤ºã«ãªã‚‰ãªã„ã‚ˆã†ã«ä¿®æ­£
+ãƒ»æŠ˜ã‚Šè¿”ã—æ–‡å­—æ•°ã®è¨­å®šã‚’è¿½åŠ 
+ãƒ»ã‚¿ãƒ–å¹…ã®è¨­å®šã‚’è¿½åŠ 
+ãƒ»ãƒœãƒªãƒ¥ãƒ¼ãƒ ã‚­ãƒ¼ã®æœ‰åŠ¹ç„¡åŠ¹è¨­å®šã‚’è¿½åŠ 
+ãƒ»DPAD_CENTERã®å‹•ä½œã‚’é¸æŠã™ã‚‹è¨­å®šã‚’è¿½åŠ 
+ãƒ»ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚­ãƒ¼ã‚’è¿½åŠ 
+ãƒ»ç”»é¢å›è»¢æ™‚ã«ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹å•é¡Œã‚’ä¿®æ­£
+ãƒ»å±¥æ­´ã®ã‚½ãƒ¼ãƒˆãŒæ­£ã—ãè¡Œã‚ã‚Œãªã„å•é¡Œã‚’ä¿®æ­£
 
 
-[2011/04/03 v.0.0.9ƒ¿]
+[2011/04/03 v.0.0.9Î±]
 Officially supported landscape mode.
 Added a option to set wrap width.
 Added a option to set tab width.
@@ -387,23 +192,23 @@ Added shortcut keys.
 Fixed a bug that crashed when orientation changed.
 Fixed a bug of History sorting.
 
-[2011/04/05 v.0.0.10ƒ¿]
-GalaxyS‚Åƒtƒ@ƒCƒ‹“Ç‚ª“r’†‚Å‘Å‚¿Ø‚ç‚ê‚é–â‘è‚É‘Îˆ
+[2011/04/05 v.0.0.10Î±]
+GalaxySã§ãƒ•ã‚¡ã‚¤ãƒ«èª­è¾¼ãŒé€”ä¸­ã§æ‰“ã¡åˆ‡ã‚‰ã‚Œã‚‹å•é¡Œã«å¯¾å‡¦
 
-[2011/04/05 v.0.0.10ƒ¿]
+[2011/04/05 v.0.0.10Î±]
 Fixed the issue that long file was truncated on Galaxy S.
 
 
-[2011/04/10 v.0.0.11ƒ¿]
-EƒŠƒhƒD‹@”\‚ğ’Ç‰Á
-Es”Ô†•\¦‹@”\‚ğ’Ç‰Á
-Es”Ô†w’èƒWƒƒƒ“ƒv‹@”\‚ğ’Ç‰Á
-Eƒ[ƒhƒJƒEƒ“ƒ^‚ğ’Ç‰Á
-EƒL[ƒ{[ƒhƒVƒ‡[ƒgƒJƒbƒg’Ç‰Á
-E×‚©‚¢ƒoƒOC³
+[2011/04/10 v.0.0.11Î±]
+ãƒ»ãƒªãƒ‰ã‚¥æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»è¡Œç•ªå·è¡¨ç¤ºæ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»è¡Œç•ªå·æŒ‡å®šã‚¸ãƒ£ãƒ³ãƒ—æ©Ÿèƒ½ã‚’è¿½åŠ 
+ãƒ»ãƒ¯ãƒ¼ãƒ‰ã‚«ã‚¦ãƒ³ã‚¿ã‚’è¿½åŠ 
+ãƒ»ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆè¿½åŠ 
+ãƒ»ç´°ã‹ã„ãƒã‚°ä¿®æ­£
 
 
-[2011/04/10 v.0.0.11ƒ¿]
+[2011/04/10 v.0.0.11Î±]
 Added "Redo".
 Added a option to show line numbers.
 Added a dialog that jump by line number.
@@ -411,9 +216,26 @@ Added a word counter.
 Added some keyboard shortcuts.
 Fixed minor bugs.
 
-[2011/04/10 v.0.0.12ƒ¿]
-E”wŒi‚ª•’n‚Ì‚És”Ô†‚ªŒ©‚¦‚È‚¢ƒoƒO‚ğC³
+[2011/04/10 v.0.0.12Î±]
+ãƒ»èƒŒæ™¯ãŒé»’åœ°ã®æ™‚ã«è¡Œç•ªå·ãŒè¦‹ãˆãªã„ãƒã‚°ã‚’ä¿®æ­£
 
-[2011/04/10 v.0.0.12ƒ¿]
+[2011/04/10 v.0.0.12Î±]
 Fixed the bug that line number is hidden in black background.
+
+
+[2011/04/19 v.0.0.13Î±]
+ãƒ»å›½éš›åŒ–ï¼ˆãƒ‰ã‚¤ãƒ„èªï¼ãƒ•ãƒ©ãƒ³ã‚¹èªï¼‰
+ (Bastian Bringenbergã•ã‚“ã€Alainã•ã‚“ã€ã‚ã‚ŠãŒã¨ã†ï¼)
+ãƒ»ã‚¢ã‚¹ãƒˆãƒ­ã‹ã‚‰htmlã‚’é–‹ã„ãŸæ™‚ã«ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+ãƒ»ã‚¹ãƒªãƒ¼ãƒ—ã‹ã‚‰ã®å¾©å¸°æ™‚ã«ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ã™ã‚‹ãƒã‚°ã‚’ä¿®æ­£
+
+[2011/04/19 v.0.0.13Î±]
+Internationalization for German.
+ Thanks to Bastian Bringenberg!
+
+Internationalization for French.
+ Thanks to Alain!
+
+Fixed the bug that crashes when open html file from Astro file manager.
+Fixed the bug that crashes when resume from sleep state.
 

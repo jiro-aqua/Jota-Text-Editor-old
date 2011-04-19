@@ -1,0 +1,388 @@
+Jota Text Editor
+
+Jotaは、長文テキストの編集向けに設計されたテキストエディタです。
+「イオタ」と読んでください。
+
+★現在αテスト中です。以下の条件で構わない人だけダウンロードしてください。
+・落ちても泣かない
+・バグっぽい挙動を見つけたら、作者に連絡する
+・欲しい機能があったら、作者に連絡する
+
+
+機能
+
+・100万文字程度までのテキストファイルに対応(Alphabetで1MBytes/ShiftJISで2MBytes)
+
+・文字コード自動判定（以下の文字コードを自動判定）
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+  (実際にデコード可能かどうかは、Androidの実装に依存します）
+
+・文字コードの変更
+・改行コード自動判定、保存、変更
+・カーソル位置の保存
+・ファイル履歴
+・ファイル内検索(正規表現対応)
+
+・外部アプリ連携
+  マッシュルーム
+  テキストの共有
+  外部アプリによる検索
+  外部アプリで開く
+
+  ★任意のアプリを直接呼び出すダイレクトインテント機能を搭載
+
+・サムをドラッグすることによるファイル内移動
+・フリックによる高速スクロール
+・アンドゥ／リドゥ
+・左右Alt/Ctrlキー同時押しによるショートカットキー(キー毎に割り当て有無を設定可能)
+・色のカスタマイズ対応
+・テキストファイルのショートカットアイコン作成機能
+・ファイルエクスプローラ系アプリ、コンテンツプロバイダ系アプリからの呼出に対応
+・テキスト選択用のマーカー機能搭載
+（テキストを選択したエリアをタップすることで表示されます）
+・ワードラップのON/OFF設定および折り返し文字数設定
+・タブ幅設定
+・閲覧モード
+・行番号表示
+・文字数・行数カウント機能
+・横画面表示に正式に対応しました。
+
+・対応OS Android 1.6/2.1/2.2/2.3
+  (IS01,HTC Desire,005SH,Nexus One で動作確認）
+
+・今後も含め、有料化および広告付与は行いません。
+・安定したらオープンソースとして配布する予定です。
+
+
+注意
+　RTL言語への対応を廃止しました。
+
+
+★不具合等発見された方、または、作者からの返事が必要な方は、メールまたはTwitter(@jiro_aqua)にてご連絡ください。
+レビューコメントには、基本的に返事できません。困ったことがあれば一人で納得しないで作者に連絡してください。
+
+★grep(テキストファイルの串刺し検索)が必要な方は、拙作「aGrep」もお試しください。
+
+★ファイルが読めなくて困ってる人は、作者までメールしてください！
+
+★GalaxySで長いファイルが途中で打ち切られる現象は解決しました。
+
+--------------------------------------------------------------------------------
+Jota Text Editor
+
+Jota is a text editor designed for a long text file.
+It's pronouced as "i-o-ta".
+
+★Jota is currently in Alpha-test phase. 
+Only in the case you can agreed below statement, you can use this.
+- Don't cry when Jota crashed and lost your text.
+- Mail me when you found a bug.
+- Mail me new feature you want.
+
+Functions
+・Support until 1 million characters.
+
+・Auto-Detect multiple character codes.
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+  (Whether you can decode or not depends on Android's implementation.)
+
+・Change character codes.
+・Auto-Detect linebreak code.
+・Change linebreak code.
+・Keep linebreak code until saving a file.
+・Save position of the cursor with file.
+・Save history of recened files.
+
+・Search a word in a file. (Support Regular Expression)
+
+・Text sharing with external application.
+  Mushroom
+  Share (ACTION_SEND)
+  Search (ACTION_SEARCH)
+  Open (ACTION_VIEW)
+
+  ★Direct Intent : You can launch any one application on menu item.
+
+・Scroll with Thumb-drag.
+・Scroll with Flick.
+・Undo/Redo
+・Support a Shortcut key with ALT/CTRL Key.
+・Customize colors.
+・Create a shortcut icon on HOME app.
+・Customizable shortcut key bind.
+・Text selector like Gingerbread.
+(Double tap to select the word , then touch selected area to show marker.)
+・Word wrap ON/OFF and set word wrap width.
+・Set tab width.
+・Viewer Mode.
+・Show Line numbers.
+・Word Counter.
+・Support Landscape Mode correctly.
+
+・Support Android OS 1.6 or later.
+・Support both touch-screen device and qwerty-keyboard device.
+
+・Forever FREE and NO-AD.
+・In the future , source code will be opend unde Apache License.
+
+
+CAUTION
+  RTL-Language and bi-directional text is not supported.
+
+
+★If you need a reply from me , DON'T put it in Market's Review .
+Instead please let me know by E-mail or Twiter(@jiro_aqua)
+You can send a message to me from Jota's Preferences Screen.
+
+★If you need grep (search from multiple text files), try my app "aGrep".
+
+★Large file is no longer truncated on GalaxyS.
+
+--------------------------------------------------------------------------------
+Jota Text Editor
+
+Der Jota Texteditor wurde für längere Texte entwickelt.
+
+Es wird "i-o-ta" ausgesprochen.
+
+★Jota befindet sich derzeit in einer Alpha-Testphase.
+Benutze es nur, wenn du über folgendes im klaren bist:
+- Heul nicht rum, wenn Jota abstürzt und du deinen Text verlierst.
+- Schreibe mir eine Email, wenn du einen Fehler findest. ( Bitte auf Englisch )
+- Schreibe mir eine Email, wenn dir etwas im Programm fehlt. ( Bitte auf Englisch )
+
+Funktionen
+Unterstützt bis zu eine Missionen Zeichen..
+
+Automatische Erkennung mehrerer Zeichenkodierungen.
+UTF-8
+UTF-16BE
+UTF-16LE
+UTF-32BE
+UTF-32LE
+WINDOWS-1251
+WINDOWS-1252
+WINDOWS-1253
+WINDOWS-1255
+SHIFT_JIS
+ISO-2022-JP
+ISO-2022-CN
+ISO-2022-KR
+ISO-8859-5
+ISO-8859-7
+ISO-8859-8
+BIG5
+GB18030
+EUC-JP
+EUC-KR
+EUC-TW
+IBM855
+IBM866
+KOI8-R
+MACCYRILLIC
+HZ-GB-2312
+X-ISO-10646-UCS-4-3412
+X-ISO-10646-UCS-4-2143
+(Ob du Sie betrachten kannst oder nicht hängt von deinen Androideinstellungen ab.)
+
+・Ändere die Zeichenkodierung.
+Automatische Erkennung von Zeilenumbrüchen.・
+
+Ändern von Zeilenumbrüchen.
+
+Behalte Zeilenumbruchseinstellungen bis zum speichern.
+Speichere die Position des Zeigers mit der Datei.
+Speichere eine Historie der geöffneten Dateien.
+
+・Suche ein Wort in dem Text. (Unterstützt Reguläre Ausdrücke)
+
+・Text sharing with external application.
+Mushroom
+Teilen (ACTION_SEND)
+Suchen (ACTION_SEARCH)
+Öffnen (ACTION_VIEW)
+
+★Direktes Einbinden: Du kannst sofort jede Anwendung aus dem Menu starten.
+
+・Scrollen mit dem Daumen
+Rückgängig
+・Unterstützt Kurzwahl mit Alt/Strg Tasten.
+Anpassbare Farben.
+Erstelle eine Kurzwahltaste in der HOME app.
+・Anpassbare Kurzwahl Verknüpfungen.
+・Textauswahl wie Gingerbread.
+(Doppelter Druck um ein Wort auszuwählen, dann drücke auf die ausgewählten Bereiche um den Zeiger zu sehen.)
+・Wortumbruch an/aus und setzen des Abstands
+Setzen der Tabbreite.
+Betrachtungsmodi.
+Korrekte Unterstüzung des Quermodus.
+
+Unterstützt Android OS 1.6 oder neuer.
+・Unterstützt beides, sowohl TouchScreen als auch QWERTZ-Tastatur.
+
+Für immer KOSTENLOS und WERBEFREI.
+
+Zukünftig wird der Quellcode opensource unter der Apache License.
+
+WARNUNG
+RTL-Sprachen und  and Bi-direktionaler Text is nicht unterstützt.
+
+
+Wenn du eine Antwort von mir haben möchtest schreib deine Frage NICHT in die Bewertung vom Markt. 
+Schreib mir lieber eine Email oder schreib mir auf Twitter (@jiro_aqua)
+Du kannst mir aus dem Optionsmenu von Jota Emails schreiben.
+
+★Wenn du "grep" brauchst, also das Durchsuchen von mehrzeiligen Textdateien, schau dir meine app "aGrep" an.
+
+★Große Dateien werden nicht mehr abgeschnitten auf dem GalaxyS.
+
+--------------------------------------------------------------------------------
+Jota Text Editor
+
+Jota est un éditeur de texte conçu pour les grands fichiers texte.
+On prononce "i-o-ta".
+
+★Jota est actuellement en phase Alpha-test.
+Vous pouvez l'utiliser uniquement si vous êtes d'accord avec les points suivants :
+- Ne criez pas quand Jota se plante et perd votre texte.
+- Envoyez-moi un mail quand vous trouvez un bug.
+- Envoyez-moi un mail si vous souhaitez de nouvelles fonctionnalités.
+
+Fonctions
+·Accepte les fichiers jusqu'à 1 million de caractères.
+
+·Auto-détection de multiples jeux de caractères.
+UTF-8
+UTF-16BE
+UTF-16LE
+UTF-32BE
+UTF-32LE
+WINDOWS-1251
+WINDOWS-1252
+WINDOWS-1253
+WINDOWS-1255
+SHIFT_JIS
+ISO-2022-JP
+ISO-2022-CN
+ISO-2022-KR
+ISO-8859-5
+ISO-8859-7
+ISO-8859-8
+BIG5
+GB18030
+EUC-JP
+EUC-KR
+EUC-TW
+IBM855
+IBM866
+KOI8-R
+MACCYRILLIC
+HZ-GB-2312
+X-ISO-10646-UCS-4-3412
+X-ISO-10646-UCS-4-2143
+(Décodage/encodage dépendant de l'implémentation d'Android.)
+
+·Changement du jeu de caractères.
+·Auto-détection du code de fin de ligne.
+·Changement du code de fin de ligne.
+·Maintient du code de fin de ligne jusqu'à la sauvegarde du fichier.
+·Sauvegarde de la position du curseur avec le fichier.
+·Sauvegarde de l'historique des fichiers récemment ouverts.
+
+·Recherche d'un mot dans un fichier. (Support des expressions régulières)
+
+·Partage de texte avec des applications externes :
+Mushroom
+Partager (ACTION_SEND)
+Rechercher (ACTION_SEARCH)
+Ouvrir (ACTION_VIEW)
+
+?Direct Intent : Vous pouvez lancer chaque application du menu.
+
+·Défilement avec Thumb-drag.
+·Défilement avec Flick.
+·Annulation
+·Support des raccourcis avec la touche ALT/CTRL.
+·Choix des couleurs.
+·Création d'une icône de raccourci sur l'écran d'accueil.
+·Personnalisation des raccourcis.
+·Sélection de texte comme avec Gingerbread.
+(Double tap pour sélectionner un mot, puis appui sur la zone sélectionnée pour faire apparaître le marqueur)
+·Choix du retour à la ligne, avec largeur réglable.
+·Choix de la largeur de tabulation.
+·Mode lecteur.
+·Support correct du mode paysage.
+
+·Support d'Android OS 1.6 ou ultérieur.
+·Support de l'écran tactile et du clavier.
+
+·GRATUIT et SANS PUBLICITE pour toujours.
+·Dans le futur, le code source sera disponible sous License Apache.
+
+
+ATTENTION
+Langage RTL et textes bi-directionnels ne sont pas supportés.
+
+
+★Si vous voulez une réponse de ma part, n'utilisez pas l'Android Market.
+A la place, contactez-moi par E-mail ou Twiter(@jiro_aqua)
+Vous pouvez m'envoyer un message à partir de l'écran Préférences de Jota.
+
+★Si vous avez besoin d'une fonction "grep" (recherche dans de multiples fichiers texte), essayez mon application "aGrep".
+
+★les grands fichiers ne sont plus tronqués sur GalaxyS.
+
