@@ -820,10 +820,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 break;
             }
 
-            mInput = TextKeyListener.getInstance(autotext, cap);
+            mInput = JotaTextKeyListener.getInstance(autotext, cap);
             mInputType = inputType;
         } else if (editable) {
-            mInput = TextKeyListener.getInstance();
+            mInput = JotaTextKeyListener.getInstance();
             mInputType = EditorInfo.TYPE_CLASS_TEXT;
 			// port from gingerbread
             if (!singleLine) {
@@ -3103,7 +3103,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             } else {
                 cap = TextKeyListener.Capitalize.NONE;
             }
-            input = TextKeyListener.getInstance(autotext, cap);
+            input = JotaTextKeyListener.getInstance(autotext, cap);
         } else if (cls == EditorInfo.TYPE_CLASS_NUMBER) {
             input = DigitsKeyListener.getInstance(
                     (type & EditorInfo.TYPE_NUMBER_FLAG_SIGNED) != 0,
@@ -3123,7 +3123,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         } else if (cls == EditorInfo.TYPE_CLASS_PHONE) {
             input = DialerKeyListener.getInstance();
         } else {
-            input = TextKeyListener.getInstance();
+            input = JotaTextKeyListener.getInstance();
         }
         setRawInputType(type);
         if (direct) mInput = input;
@@ -8254,7 +8254,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
     // Jota Text Editor
-    public void setSHowLineNumbers( boolean show )
+    public void setShowLineNumbers( boolean show )
     {
         mShowLineNumber = show;
     }

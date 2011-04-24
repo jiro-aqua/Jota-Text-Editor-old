@@ -315,4 +315,9 @@ public class EditText extends TextView{
     {
         mDpadCenterFunction = function;
     }
+
+    public void setAutoIndent( boolean autoIndent )
+    {
+        JotaTextKeyListener.setAutoIndent(autoIndent);
+    }
 }

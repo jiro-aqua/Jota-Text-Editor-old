@@ -28,6 +28,7 @@ import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_TAB_CHAR                = "TAB_CHAR";
     private static final String KEY_TRACKBALL_BUTTON        = "TRACKBALL_BUTTON";
     private static final String KEY_SHOW_LINENUMBERS        = "SHOW_LINENUMBERS";
+    private static final String KEY_AUTO_SAVE               = "AUTO_SAVE";
+    private static final String KEY_AUTO_INDENT             = "AUTO_INDENT";
+    private static final String KEY_LINE_SPACE              = "LINE_SPACE";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -223,6 +227,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     cat.addPreference(pr);
                 }
                 {
+                    // Line Spacing
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_line_space);
+                    pr.setOnPreferenceClickListener(mProcLineSpace);
+                    cat.addPreference(pr);
+                }
+                {
                     // show underline
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_UNDERLINE);
@@ -360,6 +371,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     cat.addPreference(pr);
                     mPrefLinebreakSave = pr;
                 }
+                {
+                    // auto save
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_AUTO_SAVE);
+                    pr.setTitle(R.string.label_auto_save);
+                    pr.setSummary(R.string.summary_auto_save);
+                    cat.addPreference(pr);
+                }
             }
             {
                 // Direct Intent Category
@@ -481,6 +500,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final Preference pr = new Preference(this);
                     pr.setTitle(R.string.label_customize_shortcut);
                     pr.setOnPreferenceClickListener(mProcShortcutSettings);
+                    category.addPreference(pr);
+                }
+                {
+                    // auto indent
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_AUTO_INDENT);
+                    pr.setTitle(R.string.label_auto_indent);
                     category.addPreference(pr);
                 }
             }
@@ -744,6 +770,34 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         .show();
     }
 
+    private void showLineSpaceDialog( final String key , int title , int message )
+    {
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.linespace, null);
+
+        TextView msgText = (TextView)view.findViewById(R.id.message);
+        msgText.setText( message );
+
+        final SeekBar seekBar = (SeekBar)view.findViewById(R.id.seekbar);
+        seekBar.setProgress( sp.getInt(key,0) );
+
+
+        new AlertDialog.Builder(SettingsActivity.this)
+        .setTitle(title)
+        .setView( view )
+        .setPositiveButton( R.string.label_ok , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Editor editor = sp.edit();
+
+                int val = seekBar.getProgress();
+                editor.putInt(key, val);
+                editor.commit();
+            }
+        })
+        .setNegativeButton( R.string.label_cancel , null )
+        .show();
+    }
 
     private OnPreferenceClickListener mProcWrapWidthPortrait= new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
@@ -762,6 +816,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private OnPreferenceClickListener mProcTabWidthLandscape= new OnPreferenceClickListener(){
         public boolean onPreferenceClick(Preference preference) {
             showWrapWidthDialog(KEY_TAB_CHAR,KEY_TAB_WIDTH,R.string.label_tabwidth , R.string.comment_tabwidth ,1,99);
+            return true;
+        }
+    };
+
+    private OnPreferenceClickListener mProcLineSpace= new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            showLineSpaceDialog(KEY_LINE_SPACE,R.string.label_line_space , R.string.message_line_space);
             return true;
         }
     };
@@ -993,6 +1054,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         String TabChar;
         String TrackballButton;
         boolean showLineNumbers;
+        boolean autosave;
+        boolean autoIndent;
+        int lineSpace;
 	}
 
 	public static class BootSettings {
@@ -1069,6 +1133,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.TabChar =  sp.getString(KEY_TAB_CHAR, DEFAULT_WRAP_WIDTH_CHAR);
         ret.TrackballButton = sp.getString(KEY_TRACKBALL_BUTTON, TB_CENTERING);
         ret.showLineNumbers = sp.getBoolean( KEY_SHOW_LINENUMBERS, false);
+        ret.autosave = sp.getBoolean( KEY_AUTO_SAVE, false);
+        ret.autoIndent = sp.getBoolean( KEY_AUTO_INDENT, false);
+        ret.lineSpace = sp.getInt( KEY_LINE_SPACE , 0);
         sSettings = ret;
         return ret;
 	}
@@ -1156,6 +1223,11 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
                 if ( lastversion < 12 ){
                     editor.putBoolean(KEY_SHOW_LINENUMBERS, false );
+                }
+                if ( lastversion < 15 ){
+                    editor.putBoolean(KEY_AUTO_INDENT, false );
+                    editor.putBoolean(KEY_AUTO_SAVE, false );
+                    editor.putInt(KEY_LINE_SPACE, 0 );
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);

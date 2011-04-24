@@ -77,6 +77,15 @@ public class Main
 
     private static final int    PREF_MODE = MODE_WORLD_READABLE;
 
+    // SL4A
+    private static final String EXTRA_SCRIPT_PATH =
+        "com.googlecode.android_scripting.extra.SCRIPT_PATH";
+    private static final String EXTRA_SCRIPT_CONTENT =
+        "com.googlecode.android_scripting.extra.SCRIPT_CONTENT";
+    private static final String ACTION_EDIT_SCRIPT =
+        "com.googlecode.android_scripting.action.EDIT_SCRIPT";
+
+
     private jp.sblo.pandora.jota.text.EditText mEditor;
     private LinearLayout mLlSearch;
     private EditText mEdtSearchWord;
@@ -247,6 +256,7 @@ public class Main
                             }
                         }
                         catch( Exception e){
+                            path = data.toString();
                         }
                     }else{
                         path = data.toString();
@@ -271,6 +281,20 @@ public class Main
                 String text = extras.getString(Intent.EXTRA_TEXT);
                 if ( text != null ){
                     mEditor.setText(text);
+                }
+
+            }else if (it!=null && ACTION_EDIT_SCRIPT.equals(it.getAction())){
+                Bundle extras = it.getExtras();
+                String path = extras.getString(EXTRA_SCRIPT_PATH);
+
+                String contents = getIntent().getStringExtra(EXTRA_SCRIPT_CONTENT);
+                if (contents != null) {
+                    mEditor.setText(contents);
+                }else{
+                    if ( path != null ){
+                        mTask = new TextLoadTask( this , this , mLine);
+                        mTask.execute(path,mSettings.CharsetOpen);
+                    }
                 }
             }else if ( mSettings.rememberlastfile ) {
                 File[] fl = getHistory();
@@ -370,6 +394,10 @@ public class Main
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
+        if ( mInstanceState.filename != null & mSettings.autosave ){
+            save();
+        }
+
 //        Log.e(TAG,"onSaveInstanceState=========================================================>");
 //        mInstanceState.text = mEditor.getText().toString();
 //        mInstanceState.selstart = mEditor.getSelectionStart();
@@ -439,6 +467,7 @@ public class Main
                         }
                     }
                     catch( Exception e){
+                        mNewFilename = data.toString();
                     }
                 }else{
                     mNewFilename = data.toString();
@@ -478,8 +507,19 @@ public class Main
                 }
                 text.replace(startsel, endsel, inserttext);
             }
-        }
+        }else if (intent!=null && ACTION_EDIT_SCRIPT.equals(intent.getAction())){
+            Bundle extras = intent.getExtras();
+            mNewFilename = extras.getString(EXTRA_SCRIPT_PATH);
 
+            String contents = getIntent().getStringExtra(EXTRA_SCRIPT_CONTENT);
+            if (contents != null) {
+                mEditor.setText(contents);
+            }else{
+                if ( mNewFilename != null ){
+                    confirmSave(mProcReopen);
+                }
+            }
+        }
     }
 
     private int getOffsetOfLine( CharSequence text , int line)
@@ -571,39 +611,42 @@ public class Main
         if ( mEditor.isChanged() ){
             mProcAfterSaveConfirm = procAfterSaveConfirm;
 
-            String msg;
-            if ( mInstanceState.filename == null ){
-                msg = getString(R.string.confirmation_message_null);
+            if ( mInstanceState.filename != null & mSettings.autosave ){
+                save();
             }else{
-                msg = getString(R.string.confirmation_message, mInstanceState.filename);
-            }
+                String msg;
+                if ( mInstanceState.filename == null ){
+                    msg = getString(R.string.confirmation_message_null);
+                }else{
+                    msg = getString(R.string.confirmation_message, mInstanceState.filename);
+                }
 
-            new AlertDialog.Builder(this)
-            .setTitle(R.string.confirmation)
-            .setMessage( msg  )
-            .setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    save();
-               }
-            })
-            .setNeutralButton(R.string.label_no, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    if ( mProcAfterSaveConfirm!=null ){
-                        mProcAfterSaveConfirm.run();
+                new AlertDialog.Builder(this)
+                .setTitle(R.string.confirmation)
+                .setMessage( msg  )
+                .setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        save();
+                   }
+                })
+                .setNeutralButton(R.string.label_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if ( mProcAfterSaveConfirm!=null ){
+                            mProcAfterSaveConfirm.run();
+                        }
+                        mProcAfterSaveConfirm = null;
                     }
-                    mProcAfterSaveConfirm = null;
-                }
-            })
-            .setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    mProcAfterSaveConfirm = null;
-                }
-            })
-            .show();
-
+                })
+                .setNegativeButton(R.string.label_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        mProcAfterSaveConfirm = null;
+                    }
+                })
+                .show();
+            }
 
             return true;
         }else{
@@ -1724,7 +1767,9 @@ public class Main
         }else{
             mEditor.setDpadCenterFunction( jp.sblo.pandora.jota.text.EditText.FUNCTION_CENTERING );
         }
-        mEditor.setSHowLineNumbers(mSettings.showLineNumbers);
+        mEditor.setShowLineNumbers(mSettings.showLineNumbers);
+        mEditor.setAutoIndent(mSettings.autoIndent);
+        mEditor.setLineSpacing(0.0F , ( 100.0F + mSettings.lineSpace )/ 100.0F );
     }
     void applyBootSetting()
     {

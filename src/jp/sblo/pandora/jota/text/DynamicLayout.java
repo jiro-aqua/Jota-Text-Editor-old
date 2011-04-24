@@ -91,6 +91,7 @@ extends Layout
 
               paint, width, align, spacingmult, spacingadd);
 
+        boolean needMultiply = (spacingmult != 1 || spacingadd != 0);
         mBase = base;
         mDisplay = display;
 
@@ -143,6 +144,7 @@ extends Layout
 // Jota Text Editor
 //        Directions[] dirs = new Directions[] { DIRS_ALL_LEFT_TO_RIGHT };
 
+
         Paint.FontMetricsInt fm = paint.getFontMetricsInt();
         int asc = fm.ascent;
         int desc = fm.descent;
@@ -152,8 +154,22 @@ extends Layout
 //        start[TOP] = 0;
 //        start[DESCENT] = desc;
 //      start[TOP] = desc - asc;
-        mHeight = desc-asc;
-        mDescent = desc;
+
+        int extra;
+
+        if (needMultiply) {
+            double ex = (desc-asc) * (spacingmult - 1) + spacingadd;
+            if (ex >= 0) {
+                extra = (int)(ex + 0.5);
+            } else {
+                extra = -(int)(-ex + 0.5);
+            }
+        } else {
+            extra = 0;
+        }
+
+        mHeight = desc-asc + extra;
+        mDescent = desc + extra;
 
         mInts.insertAt(0, start);
         mInts.insertAt(1, start);
