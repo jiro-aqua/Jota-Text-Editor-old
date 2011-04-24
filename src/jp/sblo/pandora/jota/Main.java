@@ -1289,7 +1289,6 @@ public class Main
 
 
     private Runnable mProcProperty =  new Runnable() {
-        String[] items;
 
         public void run() {
             WordCounter.Result result = WordCounter.count(mEditor);
