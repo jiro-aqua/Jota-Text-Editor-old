@@ -239,3 +239,19 @@ Internationalization for French.
 Fixed the bug that crashes when open html file from Astro file manager.
 Fixed the bug that crashes when resume from sleep state.
 
+
+[2011/04/24 v.0.0.14α]
+自動保存の設定を追加
+自動インデントの設定を追加
+行間調整の設定を追加
+GMailの添付ファイルを開いた時にクラッシュする問題を修正
+SL4Aのエディタとして使用できる機能を追加
+
+
+[2011/04/24 v.0.0.14α]
+added autosave option.
+added autoondent option.
+added line spacing option.
+fixed the bug that crashes by opening from GMail attached file.
+support for opening as SL4A Script editor.
+
