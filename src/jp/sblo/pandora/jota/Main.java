@@ -394,8 +394,9 @@ public class Main
     @Override
     protected void onSaveInstanceState(Bundle outState)
     {
-        if ( mInstanceState.filename != null & mSettings.autosave ){
+        if ( mEditor.isChanged() &&  mInstanceState.filename != null & mSettings.autosave ){
             save();
+            mEditor.setChanged(false);
         }
 
 //        Log.e(TAG,"onSaveInstanceState=========================================================>");

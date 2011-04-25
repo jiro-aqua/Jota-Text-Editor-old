@@ -32,13 +32,19 @@ public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
         if ( mPreProc!= null ){
             mPreProc.run();
         }
-        mProgressDialog = new ProgressDialog(mActivity);
-        // mProgressDialog.setTitle(R.string.spinner_message);
-        mProgressDialog.setMessage(mActivity.getString(R.string.spinner_message));
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
+        try{
+            mProgressDialog = new ProgressDialog(mActivity);
+            // mProgressDialog.setTitle(R.string.spinner_message);
+            mProgressDialog.setMessage(mActivity.getString(R.string.spinner_message));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
+        catch(Exception e)
+        {
+            mProgressDialog = null;
+        }
     }
     @Override
     protected String doInBackground(CharSequence... params)
@@ -107,9 +113,13 @@ public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
     @Override
     protected void onPostExecute(String result)
     {
-        mProgressDialog.dismiss();
-        mProgressDialog = null;
-
+        if (mProgressDialog != null ){
+            try{
+                mProgressDialog.dismiss();
+            }
+            catch( Exception e){}
+            mProgressDialog = null;
+        }
         if ( result != null ){
             if ( mPostProc!= null ){
                 String name = new File(result).getName();
