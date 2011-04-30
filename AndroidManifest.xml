@@ -3,7 +3,7 @@
       package="jp.sblo.pandora.jota"
       android:versionCode="16"
       android:versionName="0.0.15"
-      android:installLocation="preferExternal"
+      android:installLocation="auto"
 >
     <application android:icon="@drawable/icon"
 		 android:name=".JotaTextEditor"
