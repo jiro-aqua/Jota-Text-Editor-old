@@ -930,6 +930,10 @@ public class Main
                 mEditor.onKeyShortcut( KeyEvent.KEYCODE_Z , new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_Z) );
             }
             return true;
+            case R.id.menu_edit_redo:{
+                mEditor.onKeyShortcut( KeyEvent.KEYCODE_Y , new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_Y) );
+            }
+            return true;
             case R.id.menu_edit_cut:{
                 mEditor.onKeyShortcut( KeyEvent.KEYCODE_X , new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_X) );
             }

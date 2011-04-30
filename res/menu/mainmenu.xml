@@ -63,7 +63,7 @@
 		android:title="@string/menu_edit_undo" 
 		android:alphabeticShortcut = "Z"
 	/>
-        <item android:id="@+id/menu_edit_undo" 	
+        <item android:id="@+id/menu_edit_redo" 	
 		android:title="@string/label_redo" 
 		android:alphabeticShortcut = "Y"
 	/>
