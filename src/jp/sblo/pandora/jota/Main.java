@@ -64,8 +64,6 @@ public class Main
         implements JotaDocumentWatcher,ShortcutListener , OnFileLoadListener  {
     private static final String TAG = "JotaTextEditor";
 
-    private static final String PREF_HISTORY = "history";   // .xml
-
     private static final int    REQUESTCODE_OPEN = 0;
     private static final int    REQUESTCODE_SAVEAS = 1;
     private static final int    REQUESTCODE_MUSHROOM =2;
@@ -74,8 +72,6 @@ public class Main
 
     private static final String DEF_CHARSET = "utf-8";
     private static final int    DEF_LINEBREAK = LineBreak.LF;
-
-    private static final int    PREF_MODE = MODE_WORLD_READABLE;
 
     // SL4A
     private static final String EXTRA_SCRIPT_PATH =
@@ -342,7 +338,7 @@ public class Main
             mEditor.setText(ss);
             mEditor.setChanged(false);
 
-            SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
+            SharedPreferences sp = getSharedPreferences(SettingsActivity.PREF_HISTORY,MODE_PRIVATE);
             String sel = sp.getString(filename, "-1,-1");
 
             if ( offset != -1 ){
@@ -553,7 +549,7 @@ public class Main
             int selstart = mEditor.getSelectionStart();
             int selend = mEditor.getSelectionEnd();
 
-            SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
+            SharedPreferences sp = getSharedPreferences(SettingsActivity.PREF_HISTORY,MODE_PRIVATE);
             Editor editor = sp.edit();
             editor.putString(mInstanceState.filename, String.format("%d,%d,%d", selstart , selend , System.currentTimeMillis() ));
             editor.commit();
@@ -1167,7 +1163,7 @@ public class Main
             long lastaccess;
         }
 
-        SharedPreferences sp = getSharedPreferences(PREF_HISTORY,PREF_MODE);
+        SharedPreferences sp = getSharedPreferences(SettingsActivity.PREF_HISTORY,MODE_PRIVATE);
         ArrayList<FileInfo> fl = new ArrayList<FileInfo>();
         fl.removeAll(fl);
         Map<String,?> map = sp.getAll();

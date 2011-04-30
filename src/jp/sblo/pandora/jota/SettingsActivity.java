@@ -110,6 +110,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     public static final String TB_ENTER = "ENTER";
     public static final String TB_CONTEXTMENU = "CONTEXTMENU";
 
+    public static final String PREF_HISTORY = "history";   // .xml
+
     private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
 
@@ -525,6 +527,12 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
                 {
                     final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_clear_history);
+                    pr.setOnPreferenceClickListener(mProcClearHisotry);
+                    category.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
                     pr.setTitle(R.string.label_help);
                     pr.setOnPreferenceClickListener(mProcHelp);
                     category.addPreference(pr);
@@ -668,6 +676,17 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
             })
             .show();
+            return false;
+        }
+
+    };
+    private OnPreferenceClickListener mProcClearHisotry = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+
+            SharedPreferences sp = getSharedPreferences(SettingsActivity.PREF_HISTORY , MODE_PRIVATE);
+            sp.edit().clear().commit();
+
+            Toast.makeText( SettingsActivity.this, R.string.toast_clear_history, Toast.LENGTH_LONG).show();
             return false;
         }
 
