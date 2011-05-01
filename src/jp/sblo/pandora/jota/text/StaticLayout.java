@@ -61,7 +61,7 @@ extends Layout
                         Alignment align,
                         float spacingmult, float spacingadd,
                         boolean includepad,
-                        TextUtils.TruncateAt ellipsize, int ellipsizedWidth) {
+                        TextUtils.TruncateAt ellipsize, int ellipsizedWidth){
         super((ellipsize == null)
                 ? source
                 : (source instanceof Spanned)
@@ -99,7 +99,8 @@ extends Layout
 
         generate(source, bufstart, bufend, paint, outerwidth, align,
                  spacingmult, spacingadd, includepad, includepad,
-                 ellipsize != null, ellipsizedWidth, ellipsize);
+                 ellipsize != null, ellipsizedWidth, ellipsize
+                 ,false);     // Jota Text Editor
 
         mChdirs = null;
         mChs = null;
@@ -123,7 +124,8 @@ extends Layout
                         float spacingmult, float spacingadd,
                         boolean includepad, boolean trackpad,
                         boolean breakOnlyAtSpaces,
-                        float ellipsizedWidth, TextUtils.TruncateAt where) {
+                        float ellipsizedWidth, TextUtils.TruncateAt where
+                        , boolean showTab ) {  // Jota Text Editor
         mLineCount = 0;
 
         int v = 0;
@@ -366,10 +368,13 @@ extends Layout
 //                    float before = w;
 
                     if (c == '\n') {
-                        ;
+                        tab = showTab;      // Jota Text Editor
                     } else if (c == '\t') {
                         w = Layout.nextTab(sub, start, end, w, null);
                         tab = true;
+// Jota Text Editor
+                    } else if (c == 0x3000) { // ideographic space ( for Japanese )
+                        tab = showTab;      // Jota Text Editor
                     } else if (c >= 0xD800 && c <= 0xDFFF && j + 1 < next) {
                         int emoji = Character.codePointAt(chs, j - start);
 

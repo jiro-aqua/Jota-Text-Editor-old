@@ -65,7 +65,7 @@ extends Layout
                          float spacingmult, float spacingadd,
                          boolean includepad) {
         this(base, display, paint, width, align, spacingmult, spacingadd,
-             includepad, null, 0);
+             includepad, null, 0 , false);
     }
 
     /**
@@ -80,7 +80,8 @@ extends Layout
                          int width, Alignment align,
                          float spacingmult, float spacingadd,
                          boolean includepad,
-                         TextUtils.TruncateAt ellipsize, int ellipsizedWidth) {
+                         TextUtils.TruncateAt ellipsize, int ellipsizedWidth
+                         ,boolean showTab) {    // Jota Text Editor
         super(
                 display,/* Jota Text Editor
                 (ellipsize == null)
@@ -109,6 +110,8 @@ extends Layout
 // Jota Text Editor
 //        mObjects = new PackedObjectVector<Directions>(1);
 
+         // Jota Text Editor
+        setShowTab(showTab);
         mIncludePad = includepad;
 
         /*
@@ -293,7 +296,8 @@ extends Layout
                                       getPaint(), getWidth(), getAlignment(),
                                       getSpacingMultiplier(), getSpacingAdd(),
                                       false, true, false,       // Jota Text Editor
-                                      mEllipsizedWidth, mEllipsizeAt);
+                                      mEllipsizedWidth, mEllipsizeAt
+                                      ,mShowTab);               // Jota Text Editor
         int n = reflowed.getLineCount();
 
         // If the new layout has a blank line at the end, but it is not

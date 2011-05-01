@@ -368,6 +368,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mLineNumberPaint.setTypeface(Typeface.MONOSPACE);
         mLineNumberPaint.setStrokeWidth(1);
 
+        // Jota Text Editor
+        mSpacePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mSpacePaint.setStrokeWidth(0.75F);
+        mSpacePaint.setStyle(Paint.Style.STROKE);
+
         mTransformation = null;
 
         TypedArray a =
@@ -1833,7 +1838,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     @android.view.RemotableViewMethod
     public void setTextColor(int color) {
         mTextColor = ColorStateList.valueOf(color);
-        mLineNumberPaint.setColor(color);
+        mLineNumberPaint.setColor(color);// Jota Text Editor
+        mSpacePaint.setColor(color);// Jota Text Editor
         updateTextColors();
     }
 
@@ -4255,7 +4261,8 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         int selLine = layout.getLineForOffset(selEnd);
 
 		// Jota Text Editor
-        layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText,selLine , mUnderLinePaint , mLineNumberWidth , mLineNumberPaint);
+        layout.draw(canvas, highlight, mHighlightPaint, voffsetCursor - voffsetText,selLine ,
+                mUnderLinePaint , mLineNumberWidth , mLineNumberPaint, mShowTab?mSpacePaint:null , mSpacePaths );
 
 // Jota Text Editor
 //        if (mMarquee != null && mMarquee.shouldDrawGhost()) {
@@ -5119,7 +5126,37 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
             mLayout = new DynamicLayout(mText, mTransformed, mTextPaint, w,
                     alignment, mSpacingMult,
                     mSpacingAdd, mIncludePad, mInput == null ? mEllipsize : null,
-                    ellipsisWidth);
+                    ellipsisWidth,mShowTab);// Jota Text Editor
+// Jota Text Editor
+            mIdeographicalSpacePath.reset();
+            {
+                float width = mTextPaint.measureText("\u3000");
+                float textHeight = - mTextPaint.descent() - mTextPaint.ascent();
+
+                mIdeographicalSpacePath.addRect(2 , -textHeight, width-2, 0, Path.Direction.CW );
+            }
+
+            mLineBreakPath.reset();
+            {
+                float width = mTextPaint.measureText("m");
+                float textHeight = - mTextPaint.descent() - mTextPaint.ascent() ;
+
+                mLineBreakPath.moveTo(width/4, - textHeight );
+                mLineBreakPath.lineTo(width/4, 0 );
+                mLineBreakPath.moveTo(width/4, -1 );
+                mLineBreakPath.lineTo(1      , - width/4-1 );
+                mLineBreakPath.moveTo(width/4, -1 );
+                mLineBreakPath.lineTo(width/2 -1, - width/4-1);
+            }
+            mTabPath.reset();
+            {
+                float textHeight = - mTextPaint.ascent() / 2;
+
+                mTabPath.moveTo(1, -textHeight);
+                mTabPath.lineTo(1 + textHeight/2, - textHeight/2);
+                mTabPath.lineTo(1, 0);
+            }
+
         } else {
 // Jota Text Editor
 //            if (boring == UNKNOWN_BORING) {
@@ -8155,7 +8192,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         int selEnd = Selection.getSelectionEnd(mText);
         int curLine = mLayout.getLineForOffset(selEnd);
 
-        int nextLine = curLine + linesOfPage * (up?-1:1);
+        int nextLine = curLine + (linesOfPage-1) * (up?-1:1);
 
         if ( nextLine < 0 ){
             nextLine = 0;
@@ -8259,7 +8296,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mShowLineNumber = show;
     }
 
-
+    // Jota Text Editor
+    public void setShowTab( boolean show )
+    {
+        mShowTab = show;
+    }
 
     /**
      * A CursorController instance can be used to control a cursor in the text.
@@ -9070,4 +9111,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private boolean mShowLineNumber=false;
     private int mLineNumberWidth=0;
     private Paint mLineNumberPaint;
+    private Paint mSpacePaint;
+    private boolean mShowTab=false;
+    private Path mIdeographicalSpacePath = new Path();
+    private Path mLineBreakPath = new Path();
+    private Path mTabPath = new Path();
+    private Path[] mSpacePaths = new Path[]{ mTabPath , mLineBreakPath , mIdeographicalSpacePath };
+
 }

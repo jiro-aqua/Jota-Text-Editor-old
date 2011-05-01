@@ -158,13 +158,13 @@ public abstract class Layout {
      */
     public void draw(Canvas c) {
 		// Jota Text Editor
-        draw(c, null, null, 0 , -1, null , 0 , null );
+        draw(c, null, null, 0 , -1, null , 0 , null ,null ,null );
     }
 
 	// Jota Text Editor
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
             int cursorOffsetVertical  ) {
-        draw(c, highlight, highlightPaint, cursorOffsetVertical , -1 , null, 0 , null);
+        draw(c, highlight, highlightPaint, cursorOffsetVertical , -1 , null, 0 , null ,null , null);
     }
 
     /**
@@ -180,7 +180,7 @@ public abstract class Layout {
 	// Jota Text Editor
     public void draw(Canvas c, Path highlight, Paint highlightPaint,
                      int cursorOffsetVertical , int selLine, Paint underlinePaint ,
-                     int lineNumWidth , Paint lineNumPaint) {
+                     int lineNumWidth , Paint lineNumPaint , Paint spacePaint , Path[] spacePaths) {
         int dtop, dbottom;
 
         synchronized (sTempRect) {
@@ -419,7 +419,7 @@ public abstract class Layout {
             } else {
                 drawText(c, buf, start, end, dir, directions,
                     x, ltop, lbaseline, lbottom, paint, mWorkPaint,
-                    hasTab, spans);
+                    hasTab, spans , spacePaint , spacePaths );	// Jota Text Editor
             }
 			// Jota Text Editor
             if ( lineNumWidth != 0 ){
@@ -1431,7 +1431,8 @@ public abstract class Layout {
                                  float x, int top, int y, int bottom,
                                  TextPaint paint,
                                  TextPaint workPaint,
-                                 boolean hasTabs, Object[] parspans) {
+                                 boolean hasTabs, Object[] parspans,
+                                 Paint spacePaint , Path[] spacePaths ) {// Jota Text Editor
         char[] buf;
         if (!hasTabs) {
             if (directions == DIRS_ALL_LEFT_TO_RIGHT) {
@@ -1462,10 +1463,41 @@ public abstract class Layout {
                                          start + segstart, start + j,
                                          dir, (i & 1) != 0, x + h,
                                          top, y, bottom, paint, workPaint,
-                                         start + j != end);
+                                         (start + j != end)||hasTabs);
 
-                    if (j != there && buf[j] == '\t')
+
+                    if (j != there && buf[j] == '\t'){
+                        // Jota Text Editor
+                        if ( spacePaint != null ){
+                            canvas.translate(x+h, y);
+                            canvas.drawPath(spacePaths[0], spacePaint);
+                            canvas.translate(-x-h, -y);
+                        }
                         h = dir * nextTab(text, start, end, h * dir, parspans);
+                    }
+                    // Jota Text Editor
+                    if ( spacePaint != null && j== there ){
+                        if ( end < text.length() && text.charAt(end)=='\n'){
+                            canvas.translate(x+h, y);
+                            canvas.drawPath(spacePaths[1], spacePaint);
+                            canvas.translate(-x-h, -y);
+                        }
+                    }
+                    segstart = j + 1;
+
+// Jota Text Editor
+                } else if ( spacePaint!=null && hasTabs && buf[j]==0x3000 ){    // Ideographic Space ( for Japanese charset )
+                    h += Styled.drawText(canvas, text,
+                            start + segstart, start + j,
+                            dir, (i & 1) != 0, x + h,
+                            top, y, bottom, paint, workPaint,
+                            start + j != end);
+
+                    float width = paint.measureText("\u3000");
+                    canvas.translate(x+h, y);
+                    canvas.drawPath(spacePaths[2], spacePaint);
+                    canvas.translate(-x-h, -y);
+                    h += width;
 
                     segstart = j + 1;
                 } else if (hasTabs && buf[j] >= 0xD800 && buf[j] <= 0xDFFF && j + 1 < there) {
@@ -1982,6 +2014,10 @@ public abstract class Layout {
     {
         TAB_INCREMENT = tabsize;
     }
+// Jota Text Editor
+    public void setShowTab(boolean show) {
+        mShowTab = show;
+    }
 
     private CharSequence mText;
     private TextPaint mPaint;
@@ -2018,5 +2054,6 @@ public abstract class Layout {
                                        new Directions(new short[] { 0, 32767 });
 
     final private static int VERY_WIDE = 16384*4;
+    protected boolean mShowTab;
 }
 

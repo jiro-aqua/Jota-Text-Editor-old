@@ -1770,6 +1770,7 @@ public class Main
         mEditor.setShowLineNumbers(mSettings.showLineNumbers);
         mEditor.setAutoIndent(mSettings.autoIndent);
         mEditor.setLineSpacing(0.0F , ( 100.0F + mSettings.lineSpace )/ 100.0F );
+        mEditor.setShowTab(mSettings.showTab);
     }
     void applyBootSetting()
     {

@@ -76,6 +76,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_AUTO_SAVE               = "AUTO_SAVE";
     private static final String KEY_AUTO_INDENT             = "AUTO_INDENT";
     private static final String KEY_LINE_SPACE              = "LINE_SPACE";
+    private static final String KEY_SHOW_TAB                = "SHOW_TAB";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -247,6 +248,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_SHOW_LINENUMBERS);
                     pr.setTitle(R.string.label_show_linenumbers);
+                    cat.addPreference(pr);
+                }
+                {
+                    // show tab
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_SHOW_TAB);
+                    pr.setTitle(R.string.label_show_tab);
                     cat.addPreference(pr);
                 }
                 {   // theme
@@ -1076,6 +1084,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         boolean autosave;
         boolean autoIndent;
         int lineSpace;
+        boolean showTab;
 	}
 
 	public static class BootSettings {
@@ -1155,6 +1164,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.autosave = sp.getBoolean( KEY_AUTO_SAVE, false);
         ret.autoIndent = sp.getBoolean( KEY_AUTO_INDENT, false);
         ret.lineSpace = sp.getInt( KEY_LINE_SPACE , 0);
+        ret.showTab = sp.getBoolean( KEY_SHOW_TAB, false);
         sSettings = ret;
         return ret;
 	}
@@ -1247,6 +1257,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     editor.putBoolean(KEY_AUTO_INDENT, false );
                     editor.putBoolean(KEY_AUTO_SAVE, false );
                     editor.putInt(KEY_LINE_SPACE, 0 );
+                }
+                if ( lastversion < 17 ){
+                    editor.putBoolean(KEY_SHOW_TAB, false );
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
