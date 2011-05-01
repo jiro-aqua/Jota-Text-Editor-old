@@ -113,6 +113,8 @@ public class Main
     private SettingsActivity.Settings mSettings;
     private SettingsActivity.BootSettings mBootSettings;
 
+    private String mSharedString = null;;
+
     class InstanceState {
         String  filename;
         String  charset;
@@ -494,15 +496,20 @@ public class Main
             Bundle extras = intent.getExtras();
             String inserttext = extras.getString(Intent.EXTRA_TEXT);
             if ( inserttext != null ){
-                Editable text = mEditor.getText();
-                int startsel = mEditor.getSelectionStart();
-                int endsel = mEditor.getSelectionEnd();
-                if ( endsel < startsel ){
-                    int temp = startsel ;
-                    startsel = endsel;
-                    endsel = temp;
+                if ( mSettings.actionShare.equals(SettingsActivity.AS_INSERT)){
+                    Editable text = mEditor.getText();
+                    int startsel = mEditor.getSelectionStart();
+                    int endsel = mEditor.getSelectionEnd();
+                    if ( endsel < startsel ){
+                        int temp = startsel ;
+                        startsel = endsel;
+                        endsel = temp;
+                    }
+                    text.replace(startsel, endsel, inserttext);
+                }else if (mSettings.actionShare.equals(SettingsActivity.AS_NEWFILE)){
+                    mSharedString = inserttext;
+                    confirmSave( mProcReceiveShare );
                 }
-                text.replace(startsel, endsel, inserttext);
             }
         }else if (intent!=null && ACTION_EDIT_SCRIPT.equals(intent.getAction())){
             Bundle extras = intent.getExtras();
@@ -1077,7 +1084,16 @@ public class Main
         }
     };
 
-
+    private Runnable mProcReceiveShare =  new Runnable() {
+        public void run() {
+            if ( mSharedString !=null && mSharedString.length() > 0){
+                mProcNew.run();
+                Editable text = mEditor.getText();
+                text.replace(0, 0, mSharedString);
+                mSharedString = null;
+            }
+        }
+    };
 
 
     abstract class PostProcess implements Runnable , DialogInterface.OnClickListener {}

@@ -77,6 +77,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_AUTO_INDENT             = "AUTO_INDENT";
     private static final String KEY_LINE_SPACE              = "LINE_SPACE";
     private static final String KEY_SHOW_TAB                = "SHOW_TAB";
+    private static final String KEY_ACTION_SHARE            = "ACTION_SAHRE";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -85,6 +86,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	public static final String  DI_SEARCH = "search";
     public static final String  DI_MUSHROOM = "mushroom";
     public static final String  DI_VIEW = "view";
+
+    public static final String  AS_INSERT = "insert";
+    public static final String  AS_NEWFILE = "newfile";
 
     public static final String  THEME_DEFAULT = "default";
     public static final String  THEME_BLACK   = "black";
@@ -124,6 +128,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private ListPreference mPrefDirectIntent;
     private ListPreference mPrefInsert;
     private ListPreference mPrefTrackball;
+    private ListPreference mPrefActionShare;
     private Preference mPrefWrapWidthP;
     private Preference mPrefWrapWidthL;
 
@@ -518,6 +523,24 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setKey(KEY_AUTO_INDENT);
                     pr.setTitle(R.string.label_auto_indent);
                     category.addPreference(pr);
+                }
+            }
+            {
+                // Misc Category
+                final PreferenceCategory category = new PreferenceCategory(this);
+                category.setTitle(R.string.label_miscllaneous);
+                mPs.addPreference(category);
+
+                {
+                    // ACTION SHARE
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey( KEY_ACTION_SHARE );
+                    pr.setTitle(R.string.label_action_share);
+                    pr.setSummary(R.string.summary_action_share);
+                    pr.setEntries(new String[]{ getString(R.string.label_action_share_insert) , getString(R.string.label_action_share_newfile) } );
+                    pr.setEntryValues( new CharSequence[] { AS_INSERT , AS_NEWFILE , } );
+                    category.addPreference(pr);
+                    mPrefActionShare = pr;
                 }
             }
 
@@ -1085,6 +1108,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         boolean autoIndent;
         int lineSpace;
         boolean showTab;
+        String actionShare;
 	}
 
 	public static class BootSettings {
@@ -1165,6 +1189,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.autoIndent = sp.getBoolean( KEY_AUTO_INDENT, false);
         ret.lineSpace = sp.getInt( KEY_LINE_SPACE , 0);
         ret.showTab = sp.getBoolean( KEY_SHOW_TAB, false);
+        ret.actionShare = sp.getString(KEY_ACTION_SHARE, AS_INSERT);
         sSettings = ret;
         return ret;
 	}
@@ -1260,6 +1285,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
                 if ( lastversion < 17 ){
                     editor.putBoolean(KEY_SHOW_TAB, false );
+                    editor.putString(KEY_ACTION_SHARE, AS_INSERT);
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
@@ -1337,6 +1363,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         entry = mPrefTrackball.getEntry();
         if ( entry != null ){
             mPrefTrackball.setSummary(entry);
+        }
+        entry = mPrefActionShare.getEntry();
+        if ( entry != null ){
+            mPrefActionShare.setSummary(entry);
         }
 
         mPrefWrapWidthP.setEnabled(sSettings.wordwrap);
