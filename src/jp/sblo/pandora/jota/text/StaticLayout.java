@@ -368,13 +368,13 @@ extends Layout
 //                    float before = w;
 
                     if (c == '\n') {
-                        tab = showTab;      // Jota Text Editor
+                        if ( !tab )tab = showTab;      // Jota Text Editor
                     } else if (c == '\t') {
                         w = Layout.nextTab(sub, start, end, w, null);
                         tab = true;
 // Jota Text Editor
                     } else if (c == 0x3000) { // ideographic space ( for Japanese )
-                        tab = showTab;      // Jota Text Editor
+                        if ( !tab ) tab = showTab;      // Jota Text Editor
                     } else if (c >= 0xD800 && c <= 0xDFFF && j + 1 < next) {
                         int emoji = Character.codePointAt(chs, j - start);
 

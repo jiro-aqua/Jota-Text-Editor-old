@@ -1,6 +1,8 @@
 cp Android.mk.release Android.mk
 
 perl -pi -e 's/android:debuggable=\"[^\"]*\"/android:debuggable=\"false\"/' AndroidManifest.xml
+perl -pi -e 's/app_name[^\"]*/app_name/' AndroidManifest.xml
+
 grep versionName AndroidManifest.xml
 grep versionCode AndroidManifest.xml
 grep debuggable AndroidManifest.xml
@@ -18,3 +20,6 @@ rm JotaTextEditor-unaligned.apk
 
 cp Android.mk.debug Android.mk
 perl -pi -e 's/android:debuggable=\"[^\"]*\"/android:debuggable=\"true\"/' AndroidManifest.xml
+perl -pi -e 's/app_name[^\"]*/app_name_debug/' AndroidManifest.xml
+
+
