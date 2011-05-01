@@ -576,3 +576,205 @@ Możesz wysłać mi wiadomość poprzez Ekran Preferencji programu Jota
 ★Duże plik nie jest już obicnany w Galaxy S
 
 (translated by Adam Maciorowski)
+
+--------------------------------------------------------------------------------
+zh-rCN
+Jota Text Editor
+
+Jota 是一个为超长文本文件设计的文本编辑器。
+她的发音为 "i-o-ta"。
+
+★Jota 目前还在 Alpha 测试阶段 
+只有您能同意以下声明，才能开始使用。
+- 当 Jota 崩溃，导致您的文件丢失时，不要过于伤心难过。
+- 当您发现 bug 时通过邮件告诉我。
+- 把您想要的新功能通过邮件告诉我。
+
+功能
+・支持长达 100 万个字符。
+
+・自动检测多种字符编码。
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+  (能否成功解码取决于 Android 系统的实现方式。)
+
+・更改字符编码。
+・自动检测换行符。
+・更改换行符。
+・保留换行符直至保存文件。
+・保存文件的同时保存光标位置。
+・保存近期文件的历史记录。
+
+・在文件中搜索单词。 (支持正则表达式)
+
+・使用外部应用程序分享。
+  Mushroom
+  分享 (ACTION_SEND)
+  搜索 (ACTION_SEARCH)
+  打开 (ACTION_VIEW)
+
+  ★Direct Intent : 您可以从 MENU 菜单中启动任意一个应用程序。
+
+・使用手指拖拽滚动。
+・轻击滚动。
+・撤销/重复。
+・支持与 ALT/CTRL 共同使用的快捷键。
+・自定义颜色。
+・在 HOME 应用中创建快捷图标。
+・自定义的快捷键绑定。
+・Gingerbread 风格的文本选择。
+(轻触两下选择单词，再次轻触选定区域可显示标记。)
+・自动换行开/关以及自动换行宽度设置。
+・设置制表符宽度。
+・查看模式。
+・显示行号。
+・单词计数器。
+・完美支持横屏模式。
+
+・支持 Android OS 1.6 及以上版本。
+・同时支持触摸屏设备与标准全键盘设备。
+
+・永久免费，并且没有广告。
+・不久以后，源代码将基于 Apache License 协议全部开放。
+
+
+警告
+  不支持从右向左书写的语言及双向文本。
+
+
+★如果您想得到我的回复，请务必不要提交信息到电子市场评论中。
+您应该通过 E-mail 或者 Twitter(@jiro_aqua) 告知我。
+您可以通过 Jota 的首选项界面给我发送消息。
+
+★如果您需要 grep (从多个文本文件中搜索)，可以试试我的应用 "aGrep"。
+
+★在 GalaxyS 上不会再有大文件被截断。
+
+(translated by Chen Ma)
+
+--------------------------------------------------------------------------------
+zh-rTW
+Jota Text Editor
+
+Jota 是一個為超長文本文件設計的文本編輯器。
+她的名字發音為 "i-o-ta"。
+
+★Jota 目前還處於 Alpha 測試
+只有您能同意以下聲明，才能開始使用。
+- 當 Jota 崩潰導致您的檔案丟失時，不要過於傷心難過。
+- 當您發現 bug 時，請通過 Email 告訴我。
+- 將您想要的新特性通過 Email 告訴我。
+
+特性
+・支援多達 100 萬個字符。
+
+・自動檢測多種字符編碼。
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+  (能否成功解碼取決於 Android 系統的實現方式。)
+
+・變更字符編碼。
+・自動檢測換行符。
+・變更換行符。
+・保留換行符直至保存檔案。
+・保存檔案的同時保存光標位置。
+・保存近期檔案的歷史記錄。
+
+・在檔案中搜索單詞。 (支援正則表達式)
+
+・使用外部應用程式分享。
+  Mushroom
+  分享 (ACTION_SEND)
+  搜索 (ACTION_SEARCH)
+  打開 (ACTION_VIEW)
+
+  ★Direct Intent : 您可以從 MENU 菜單中啟動任意一個應用程式。
+
+・使用手指拖拽滾動。
+・輕擊滾動。
+・撤銷/重複。
+・支援與 ALT/CTRL 共同使用的快捷鍵。
+・自定顏色。
+・在 HOME 應用中創建快捷圖標。
+・自定快捷鍵的綁定。
+・Gingerbread 樣式的文本選擇。
+(輕觸兩下選擇單詞，再次輕觸選定的區域可顯示標記。)
+・自動換行開/關以及自動換行寬度的設置。
+・設定製表符寬度。
+・查看模式。
+・顯示行號。
+・單詞計數器。
+・完美支援橫屏模式。
+
+・支援 Android OS 1.6 以及更新版本。
+・同時支援觸摸屏設備及標準全鍵盤設備。
+
+・永久免費，不含廣告。
+・不久之後，源代碼將在 Apache License 協議下全部開放。
+
+
+警告
+  不支援從右向左書寫的語言及雙向文本。
+
+
+★如果您想得到我的答復，請務必不要提交信息到 Market 評論中。
+您應該通過 E-mail 或者 Twitter(@jiro_aqua) 告訴我。
+您可以通過 Jota 首選項介面給我發送消息。
+
+★如果您需要 grep (從多個文本檔案中搜尋)，可以嘗試我的應用 "aGrep"。
+
+★在 GalaxyS 上不會再有大文件被截斷。
+
+(translated by Chen Ma)
