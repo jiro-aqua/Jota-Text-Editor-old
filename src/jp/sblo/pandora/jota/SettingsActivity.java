@@ -592,7 +592,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setSummary(R.string.label_tweet_summary);
                     category.addPreference(pr);
                 }
-                if ( Build.VERSION.SDK_INT >= 8 ){      // froyo or later
+                {      // donate
                     final Preference pr = new Preference(this);
                     pr.setTitle(R.string.label_donate);
                     pr.setSummary(R.string.summary_donate);

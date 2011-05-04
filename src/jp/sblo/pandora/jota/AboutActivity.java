@@ -94,7 +94,7 @@ public class AboutActivity extends Activity
                     String star = getString( R.string.label_no_star );
                     stars = star;
                 }
-                stars += "</br>";
+                stars += "<br />";
                 return stars;
             } else {
                 return "";
