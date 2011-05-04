@@ -139,7 +139,8 @@ public class Main
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         mEditor = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.textedit);
-        applySetting();
+
+       applySetting();
 
         mEditor.setDocumentChangedListener(this);
         mEditor.setShortcutListener(this);
@@ -1056,9 +1057,7 @@ public class Main
             mEditor.setText("");
             mEditor.setChanged(false);
             mEditor.setSelection(0,0);
-            if ( mBootSettings.viewerMode ){
-                mEditor.showIme( true );
-            }
+            mEditor.showIme( true );
 
             mLlSearch.setVisibility(View.GONE);
             mLlReplace.setVisibility(View.GONE);
@@ -1742,6 +1741,8 @@ public class Main
 
     void applySetting()
     {
+        mEditor.setAutoCapitalize(mBootSettings.autoCapitalize);
+
         mSettings = SettingsActivity.readSettings(Main.this);
         mEditor.setNameDirectIntent(mSettings.intentname);
         mEditor.setTypeface(mSettings.fontface);

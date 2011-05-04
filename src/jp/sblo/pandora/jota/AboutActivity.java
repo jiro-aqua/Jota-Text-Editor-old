@@ -3,19 +3,22 @@ package jp.sblo.pandora.jota;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.webkit.WebView;
 
 public class AboutActivity extends Activity
 {
 
-	final static String ABOUT_PAGE = "file:///android_asset/about.html";
+	protected String DEFAULT_PAGE = "file:///android_asset/about.html";
 	public final static String EXTRA_URL = "URL";
 	public final static String EXTRA_TITLE = "TITLE";
+    protected JsCallbackObj mjsobj;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -23,7 +26,7 @@ public class AboutActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
 
-		String url = ABOUT_PAGE;
+		String url = DEFAULT_PAGE;
 
 		Intent it = getIntent();
 		if ( it != null ){
@@ -46,8 +49,8 @@ public class AboutActivity extends Activity
 		WebView webview = (WebView)findViewById(R.id.WebView01);
 		webview.loadUrl( url );
 
-		final JsCallbackObj jsobj = new JsCallbackObj();
-		webview.addJavascriptInterface(jsobj, "jscallback");
+		mjsobj = new JsCallbackObj();
+		webview.addJavascriptInterface(mjsobj, "jscallback");
 
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.setFocusable(true);
@@ -56,32 +59,54 @@ public class AboutActivity extends Activity
 
 	public class JsCallbackObj
 	{
+	    public Runnable mProcBilling = null;
 
 		public JsCallbackObj()
 		{
 		}
 
-		public String getAboutStrings(String key)
-		{
-			if (key.equals("version")) {
+        public String getAboutStrings(String key)
+        {
+            if (key.equals("version")) {
 
-				String versionName = "-.-";
-				int versionCode = 0;
-				PackageManager pm = getPackageManager();
-				try {
-	                String pkgname = AboutActivity.this.getPackageName();
+                String versionName = "-.-";
+                int versionCode = 0;
+                PackageManager pm = getPackageManager();
+                try {
+                    String pkgname = AboutActivity.this.getPackageName();
                     PackageInfo info = pm.getPackageInfo(pkgname, 0);
-					versionName = info.versionName;
-					versionCode = info.versionCode;
-				} catch (NameNotFoundException e) {
-				}
-				return "Ver. " + String.format("%s (%d)", versionName, versionCode);
+                    versionName = info.versionName;
+                    versionCode = info.versionCode;
+                } catch (NameNotFoundException e) {
+                }
+                return "Ver. " + String.format("%s (%d)", versionName, versionCode);
 
-			} else {
-				return "";
-			}
-		}
+            } else if (key.equals("stars")) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(AboutActivity.this);
+                int count = prefs.getInt(DonateActivity.DONATION_COUNTER,0);
+                String stars = "";
+                if ( count >0 ){
+                    String star = getString( R.string.label_star );
+                    for( int i=0;i<count;i++ ){
+                        stars += star;
+                    }
+                }else{
+                    String star = getString( R.string.label_no_star );
+                    stars = star;
+                }
+                stars += "</br>";
+                return stars;
+            } else {
+                return "";
+            }
+        }
 
+        public void startBilling()
+        {
+            if ( mProcBilling != null ){
+                mProcBilling.run();
+            }
+        }
 
 		public void throwIntentByUrl( String url , int requestcode )
 		{

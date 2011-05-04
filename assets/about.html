@@ -27,6 +27,7 @@
 <body>
     <img alt="icon" src="icon.png" /><span style="font-size: 20pt">Jota Text Editor</span><br />
     <p id='version' ></p>
+	<p>
 	Jota is a text editor. <br />
 	It's pronouced as "i-o-ta".<br /><br />
 	<a href="http://sites.google.com/site/aquamarinepandora/home/jota-text-editor">Help Document</a><br /><br />
@@ -55,16 +56,6 @@
 
 	<a href="http://www.mozilla.org/projects/intl/UniversalCharsetDetection.html">UniversalChardet</a><br />
 	<a href="http://www.mozilla.org/MPL/">read License</a><br /><br />
-
-	<script type="text/javascript">
-	function setItem( key ){
-		document.getElementById( key ).appendChild(document.createTextNode( jscallback.getAboutStrings( key ) ));
-	}
-	function setTag( key ){
-		document.getElementById( key ).innerHTML =  jscallback.getAboutStrings( key ) ;
-	}
-		setItem('version');
-	</script>
 	<hr />
 	Special thanks.<br />
 	Icons and cover arts are illustrated by Satoshi Ida.<br />
@@ -74,5 +65,17 @@
     Translated to French by Alain.<br /><br />
     Translated to Polish by Adam Maciorowski.<br /><br />
     Translated to Chinese(cn/tw) by Chen Ma.<br /><br />
+    <span style="color: #ffff66" id='stars'></span>
+	</p>
+	<script type="text/javascript">
+	function setItem( key ){
+		document.getElementById( key ).appendChild(document.createTextNode( jscallback.getAboutStrings( key ) ));
+	}
+	function setTag( key ){
+		document.getElementById( key ).innerHTML =  jscallback.getAboutStrings( key ) ;
+	}
+	setItem('version');
+    setTag('stars');
+	</script>
 </body>
 </html>

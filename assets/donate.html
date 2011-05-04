@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>about Jota Text Editor</title>
+    <style type="text/css">
+    <!--
+    BODY{
+	background-color: #3B5F7B;
+	color: #CEDBDF;
+	font-family: Helvetica, Arial, Verdana, sans-serif;
+	line-height: 125%;
+    }
+	A:link {
+	    color:#00FFFF;
+	    font-style:normal;
+	    text-decoration:underline;
+	}
+	a:visited {
+   		color:#F04CF0;
+   		text-decoration:underline;
+   	}
+    -->
+    </style>
+</head>
+
+<body>
+    <img alt="icon" src="icon.png" /><span style="font-size: 20pt">Jota Text Editor</span><br />
+    <p id='version' ></p>
+    <span style="color: #ffff66" id='stars'></span>
+	
+	<p>
+	Thank you for using Jota Text Editor. From this page, you can donate to developer via Android Market.<br />
+    <br />
+    <strong><span style="font-size: 16pt; color: #ff0033">&lt;&lt;&lt;Important Notice&gt;&gt;&gt;<br />
+    </span></strong>- There is no Premium version for donator. (Donator get a Star for a donation.)<br />
+    - Both Donator and Free-user will be treated equally.<br />
+    - Google gets 30% of your donation.<br />
+    - You can't donate annonymous. Personal Informations are NOT used for any purpose.<br />
+    - You can donate multiple times you like. <br />
+    <br />
+
+	<button type="button" style="WIDTH: 100%; HEIGHT: 100px" onclick="startBilling()" >Donate</button>
+    <br />
+    <br />
+
+    Copyright (C) 2011, Jiro and Aquamarine Networks.<br />
+    <a href="http://pandora.sblo.jp">http://pandora.sblo.jp/</a><br />
+    </p>
+	<script type="text/javascript">
+	function setItem( key ){
+		document.getElementById( key ).appendChild(document.createTextNode( jscallback.getAboutStrings( key ) ));
+	}
+	function setTag( key ){
+		document.getElementById( key ).innerHTML =  jscallback.getAboutStrings( key ) ;
+	}
+	function startBilling( ){
+		jscallback.startBilling() ;
+	}
+    setItem('version');
+    setTag('stars');
+	</script>
+
+</body>
+</html>

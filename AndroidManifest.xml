@@ -59,16 +59,29 @@
                 android:finishOnCloseSystemDialogs="true">
         </activity>
 
-        <activity android:name="AboutActivity">
-        </activity>
-        <activity android:name="SettingsActivity">
-        </activity>
-        <activity android:name="SettingsShortcutActivity">
-        </activity>
+        <activity android:name="AboutActivity" />
+        <activity android:name="SettingsActivity"/>
+        <activity android:name="SettingsShortcutActivity"/>
+        <activity android:name="DonateActivity"/>
+
+	<!--- for donation -->
+        <service android:name="jp.sblo.pandora.billing.BillingService" />
+
+        <receiver android:name="jp.sblo.pandora.billing.BillingReceiver">
+            <intent-filter>
+                <action android:name="com.android.vending.billing.IN_APP_NOTIFY" />
+                <action android:name="com.android.vending.billing.RESPONSE_CODE" />
+                <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
     </application>
+
     <uses-sdk android:minSdkVersion="4" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <!-- Required permission to use in-app billing. -->
+    <uses-permission android:name="com.android.vending.BILLING" />
 
 </manifest>

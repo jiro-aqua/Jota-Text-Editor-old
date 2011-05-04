@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import jp.sblo.pandora.jota.text.EditText.ShortcutSettings;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.CheckBoxPreference;
@@ -77,7 +79,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_AUTO_INDENT             = "AUTO_INDENT";
     private static final String KEY_LINE_SPACE              = "LINE_SPACE";
     private static final String KEY_SHOW_TAB                = "SHOW_TAB";
-    private static final String KEY_ACTION_SHARE            = "ACTION_SAHRE";
+    private static final String KEY_ACTION_SHARE            = "ACTION_SHARE";
+    private static final String KEY_AUTO_CAPITALIZE         = "KEY_AUTO_CAPITALIZE";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -476,7 +479,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     category.addPreference(pr);
                 }
                 {
-                    // Font Typeface
+                    // Trackball Button
                     final ListPreference pr = new ListPreference(this);
                     pr.setKey( KEY_TRACKBALL_BUTTON );
                     pr.setTitle(R.string.label_trackball_button);
@@ -484,6 +487,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setEntryValues( new CharSequence[] { TB_CENTERING , TB_ENTER , TB_CONTEXTMENU } );
                     category.addPreference(pr);
                     mPrefTrackball = pr;
+                }
+                {   // AUto capitalize
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_AUTO_CAPITALIZE);
+                    pr.setTitle(R.string.label_auto_capitalize);
+                    pr.setSummary(R.string.summary_auto_capitalize);
+                    category.addPreference(pr);
                 }
                 {
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
@@ -580,6 +590,13 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setTitle(R.string.label_tweet);
                     pr.setOnPreferenceClickListener(mProcTweet);
                     pr.setSummary(R.string.label_tweet_summary);
+                    category.addPreference(pr);
+                }
+                if ( Build.VERSION.SDK_INT >= 8 ){      // froyo or later
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_donate);
+                    pr.setSummary(R.string.summary_donate);
+                    pr.setOnPreferenceClickListener(mProcDonate);
                     category.addPreference(pr);
                 }
                 {
@@ -760,6 +777,15 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             }catch(Exception e){}
             finish();
             return false;
+        }
+    };
+    private OnPreferenceClickListener mProcDonate = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent( SettingsActivity.this,DonateActivity.class);
+            intent.putExtra( AboutActivity.EXTRA_URL ,  getString( R.string.url_donate ) );
+            intent.putExtra( AboutActivity.EXTRA_TITLE ,  getString( R.string.label_donate ) );
+            startActivity(intent);
+            return true;
         }
     };
     private OnPreferenceClickListener mProcAbout = new OnPreferenceClickListener(){
@@ -1115,6 +1141,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         boolean hideTitleBar;
         boolean hideSoftkeyIS01;
         boolean viewerMode;
+        boolean autoCapitalize;
 	}
 
     private static Settings sSettings;
@@ -1202,6 +1229,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.hideTitleBar = sp.getBoolean(KEY_HIDETITLEBAR , false);
         ret.hideSoftkeyIS01 = sp.getBoolean(KEY_HIDESOFTKEY_IS01 , false);
         ret.viewerMode = sp.getBoolean(KEY_VIEWER_MODE, false);
+        ret.autoCapitalize = sp.getBoolean(KEY_AUTO_CAPITALIZE, false);
         sBootSettings = ret;
         return ret;
     }

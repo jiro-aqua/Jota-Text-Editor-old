@@ -8259,7 +8259,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     {
         InputMethodManager imm = InputMethodManager.peekInstance();
         if ( show ){
-            setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE );
+            int type = InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE;
+            if ( mAutoCapitalize ){
+                type |= EditorInfo.TYPE_TEXT_FLAG_CAP_SENTENCES ;
+            }
+            setInputType( type );
             if (imm != null){
                 imm.showSoftInput(this, 0);
             }
@@ -8272,6 +8276,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     }
 
  // Jota Text Editor
+    public void setAutoCapitalize( boolean cap )
+    {
+        mAutoCapitalize = cap;
+    }
+
+// Jota Text Editor
     public boolean isImeShown()
     {
         return mInputType != 0;
@@ -9117,5 +9127,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private Path mLineBreakPath = new Path();
     private Path mTabPath = new Path();
     private Path[] mSpacePaths = new Path[]{ mTabPath , mLineBreakPath , mIdeographicalSpacePath };
-
+    private boolean mAutoCapitalize=false;
 }
