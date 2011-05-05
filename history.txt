@@ -260,3 +260,35 @@ support for opening as SL4A Script editor.
 
 [2011/04/25 v.0.0.15α]
 fixed the bug that crashes when rotation with autosave.
+
+
+[2011/04/25 v.0.1.0]
+・Added a command to clear file history.
+・Added a option to show Tab/Linebreak.
+・Added a option to select Insert or Newfile when received "Share".
+・Added a option to capitalize the first of the sentence.
+・Added Polish string resource.
+  (Thanks to Adam Maciorowski!)
+・Added Chinese(cn/tw) string resource.
+  (Thanks to Chen Ma!)
+・fixed minor bugs.
+
+・Added a donation feature.
+  You can donate to the developer via Android Market.
+
+
+[2011/04/25 v.0.1.0]
+・履歴消去機能を追加
+・タブ／改行／全角スペース表示機能を追加
+・「共有」を受ける時に、挿入か新規作成を選択する設定を追加
+・文章の先頭を大文字にする設定を追加
+・ポーランド語リソースを追加
+  (Thanks to Adam Maciorowski!)
+・中国語リソースを追加
+  (Thanks to Chen Ma!)
+・細かいバグ修正
+
+・寄付機能を追加しました。
+  アプリ内からAndroid Market経由で作者に寄付できるようになりました。
+
+
