@@ -256,18 +256,18 @@ Erstelle eine Kurzwahltaste in der HOME app.
 Setzen der Tabbreite.
 Betrachtungsmodi.
 Korrekte Unterstüzung des Quermodus.
-- Auto save.
-- Auto Indent.
-- Show Tab/Linebreak.
-- Auto capitalize.
-- you can used as SL4A editor.
++ Auto save.
++ Auto Indent.
++ Show Tab/Linebreak.
++ Auto capitalize.
++ you can used as SL4A editor.
 
 Unterstützt Android OS 1.6 oder neuer.
 - Unterstützt beides, sowohl TouchScreen als auch QWERTZ-Tastatur.
 
 Für immer KOSTENLOS und WERBEFREI.
-This software is an Open Source Software under the Apache License.
-Donation is always welcomed. You can donate from Preference Screen.
++This software is an Open Source Software under the Apache License.
++Donation is always welcomed. You can donate from Preference Screen.
 
 WARNUNG
 RTL-Sprachen und  and Bi-direktionaler Text is nicht unterstützt.
@@ -350,18 +350,18 @@ Ouvrir (ACTION_VIEW)
 - Choix de la largeur de tabulation.
 - Mode lecteur.
 - Support correct du mode paysage.
-- Auto save.
-- Auto Indent.
-- Show Tab/Linebreak.
-- Auto capitalize.
-- you can used as SL4A editor.
++ Auto save.
++ Auto Indent.
++ Show Tab/Linebreak.
++ Auto capitalize.
++ you can used as SL4A editor.
 
 - Support d'Android OS 1.6 ou ultérieur.
 - Support de l'écran tactile et du clavier.
 
 - GRATUIT et SANS PUBLICITE pour toujours.
-- This software is an Open Source Software under the Apache License.
-- Donation is always welcomed. You can donate from Preference Screen.
++ This software is an Open Source Software under the Apache License.
++ Donation is always welcomed. You can donate from Preference Screen.
 
 
 ATTENTION
@@ -443,17 +443,17 @@ Open(ACTION_VIEW)
 - Указание ширины вкладок(табов)
 - Режим просмотра
 - Корректная поддержка Ландшафтного режима.
-- Auto save.
-- Auto Indent.
-- Show Tab/Linebreak.
-- Auto capitalize.
-- you can used as SL4A editor.
++ Auto save.
++ Auto Indent.
++ Show Tab/Linebreak.
++ Auto capitalize.
++ you can used as SL4A editor.
 
 - Поддержка Android 1.6 и выше
 - Поддержка сенсорных устройств и снабженных qwerty-клавиатурой.
 - Всегда будет бесплатной и без рекламы.
-- This software is an Open Source Software under the Apache License.
-- Donation is always welcomed. You can donate from Preference Screen.
++ This software is an Open Source Software under the Apache License.
++ Donation is always welcomed. You can donate from Preference Screen.
 
 Обратите внимание:
 Поддержка языков с написанием справа-на-лево и двунаправленного текста отсутствует
@@ -537,18 +537,18 @@ Funkcje
 - Numer wierszy
 - Licznik słów.
 - Poprawna obsługa trybu poziomego.
-- Auto save.
-- Auto Indent.
-- Show Tab/Linebreak.
-- Auto capitalize.
-- you can used as SL4A editor.
++ Auto save.
++ Auto Indent.
++ Show Tab/Linebreak.
++ Auto capitalize.
++ you can used as SL4A editor.
 
 - Działa na Androidzie 1.6 albo nowszym
 - Obsługiwane urządzenia z klawiaturą ekranową oraz sprzętową QWERTY.
 
 - Dożywotnio darmowy i bez reklam.
-- This software is an Open Source Software under the Apache License.
-- Donation is always welcomed. You can donate from Preference Screen.
++ This software is an Open Source Software under the Apache License.
++ Donation is always welcomed. You can donate from Preference Screen.
 
 
 OSTRZEŻENIE
@@ -638,18 +638,18 @@ Jota 是一个为超长文本文件设计的文本编辑器。
 - 显示行号。
 - 单词计数器。
 - 完美支持横屏模式。
-- Auto save.
-- Auto Indent.
-- Show Tab/Linebreak.
-- Auto capitalize.
-- you can used as SL4A editor.
++ Auto save.
++ Auto Indent.
++ Show Tab/Linebreak.
++ Auto capitalize.
++ you can used as SL4A editor.
 
 - 支持 Android OS 1.6 及以上版本。
 - 同时支持触摸屏设备与标准全键盘设备。
 
 - 永久免费，并且没有广告。
-- This software is an Open Source Software under the Apache License.
-- Donation is always welcomed. You can donate from Preference Screen.
++ This software is an Open Source Software under the Apache License.
++ Donation is always welcomed. You can donate from Preference Screen.
 
 
 警告
@@ -737,18 +737,18 @@ Jota 是一個為超長文本文件設計的文本編輯器。
 - 顯示行號。
 - 單詞計數器。
 - 完美支援橫屏模式。
-- Auto save.
-- Auto Indent.
-- Show Tab/Linebreak.
-- Auto capitalize.
-- you can used as SL4A editor.
++ Auto save.
++ Auto Indent.
++ Show Tab/Linebreak.
++ Auto capitalize.
++ you can used as SL4A editor.
 
 - 支援 Android OS 1.6 以及更新版本。
 - 同時支援觸摸屏設備及標準全鍵盤設備。
 
 - 永久免費，不含廣告。
-- This software is an Open Source Software under the Apache License.
-- Donation is always welcomed. You can donate from Preference Screen.
++ This software is an Open Source Software under the Apache License.
++ Donation is always welcomed. You can donate from Preference Screen.
 
 
 警告
