@@ -256,18 +256,18 @@ Erstelle eine Kurzwahltaste in der HOME app.
 Setzen der Tabbreite.
 Betrachtungsmodi.
 Korrekte Unterstüzung des Quermodus.
-+ Auto save.
-+ Auto Indent.
-+ Show Tab/Linebreak.
-+ Auto capitalize.
-+ you can used as SL4A editor.
+- Automatisches Speichern
+- Automatischer Austausch
+- Zeige Tab/Zeilenumbrüche
+- Automatisches Großschreiben
+- Als SL4A Editor nutzbar
 
 Unterstützt Android OS 1.6 oder neuer.
 - Unterstützt beides, sowohl TouchScreen als auch QWERTZ-Tastatur.
 
 Für immer KOSTENLOS und WERBEFREI.
-+This software is an Open Source Software under the Apache License.
-+Donation is always welcomed. You can donate from Preference Screen.
+Diese Software ist Open Source Software unter der Apache License.
+Spenden sind gern gesehen und können über den Einstellungsbildschirm getätigt werden.
 
 WARNUNG
 RTL-Sprachen und  and Bi-direktionaler Text is nicht unterstützt.
@@ -638,18 +638,18 @@ Jota 是一个为超长文本文件设计的文本编辑器。
 - 显示行号。
 - 单词计数器。
 - 完美支持横屏模式。
-+ Auto save.
-+ Auto Indent.
-+ Show Tab/Linebreak.
-+ Auto capitalize.
-+ you can used as SL4A editor.
+- 自动保存。
+- 自动缩进。
+- 显示制表符/换行符。
+- 首字母自动大写。
+- 您也可当作 SL4A 编辑器使用。
 
 - 支持 Android OS 1.6 及以上版本。
 - 同时支持触摸屏设备与标准全键盘设备。
 
 - 永久免费，并且没有广告。
-+ This software is an Open Source Software under the Apache License.
-+ Donation is always welcomed. You can donate from Preference Screen.
+- 本软件是基于 Apache License 发布的开源软件 (Open Source Software)。
+- 欢迎您的捐助。您可以通过“首选项”屏幕完成捐款操作。
 
 
 警告
@@ -712,12 +712,12 @@ Jota 是一個為超長文本文件設計的文本編輯器。
 - 保存檔案的同時保存光標位置。
 - 保存近期檔案的歷史記錄。
 
-- 在檔案中搜索單詞。 (支援正則表達式)
+- 在檔案中檢索單詞。 (支援正則表達式)
 
 - 使用外部應用程式分享。
   Mushroom
   分享 (ACTION_SEND)
-  搜索 (ACTION_SEARCH)
+  搜尋 (ACTION_SEARCH)
   打開 (ACTION_VIEW)
 
   ★Direct Intent : 您可以從 MENU 菜單中啟動任意一個應用程式。
@@ -737,18 +737,18 @@ Jota 是一個為超長文本文件設計的文本編輯器。
 - 顯示行號。
 - 單詞計數器。
 - 完美支援橫屏模式。
-+ Auto save.
-+ Auto Indent.
-+ Show Tab/Linebreak.
-+ Auto capitalize.
-+ you can used as SL4A editor.
+- 自動保存。
+- 自動縮進。
+- 顯示製表符/換行符。
+- 首字母自動大寫。
+- 您也可當作 SL4A 編輯器使用。
 
 - 支援 Android OS 1.6 以及更新版本。
 - 同時支援觸摸屏設備及標準全鍵盤設備。
 
 - 永久免費，不含廣告。
-+ This software is an Open Source Software under the Apache License.
-+ Donation is always welcomed. You can donate from Preference Screen.
+- 本軟體是基於 Apache License 發佈的開源軟體 (Open Source Software)。
+- 歡迎您的捐助。您可以自“首選項”屏幕完成捐助操作。
 
 
 警告

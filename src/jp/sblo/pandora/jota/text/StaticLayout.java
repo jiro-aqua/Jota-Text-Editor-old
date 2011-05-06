@@ -372,9 +372,6 @@ extends Layout
                     } else if (c == '\t') {
                         w = Layout.nextTab(sub, start, end, w, null);
                         tab = true;
-// Jota Text Editor
-                    } else if (c == 0x3000) { // ideographic space ( for Japanese )
-                        if ( !tab ) tab = showTab;      // Jota Text Editor
                     } else if (c >= 0xD800 && c <= 0xDFFF && j + 1 < next) {
                         int emoji = Character.codePointAt(chs, j - start);
 
@@ -406,6 +403,10 @@ extends Layout
                             w += widths[j - start + (end - start)];
                         }
                     } else {
+						// Jota Text Editor
+	                    if (c == 0x3000) { // ideographic space ( for Japanese )
+        	                if ( !tab ) tab = showTab;
+						}
                         w += widths[j - start + (end - start)];
                     }
 
