@@ -6,6 +6,7 @@
 		<item>UTF-16LE</item>
 		<item>UTF-32BE</item>
 		<item>UTF-32LE</item>
+		<item>WINDOWS-1250</item>
 		<item>WINDOWS-1251</item>
 		<item>WINDOWS-1252</item>
 		<item>WINDOWS-1253</item>
@@ -44,6 +45,7 @@
 		<item>UTF-16LE</item>
 		<item>UTF-32BE</item>
 		<item>UTF-32LE</item>
+		<item>WINDOWS-1250</item>
 		<item>WINDOWS-1251</item>
 		<item>WINDOWS-1252</item>
 		<item>WINDOWS-1253</item>
@@ -76,6 +78,7 @@
 		<item>UTF-16LE</item>
 		<item>UTF-32BE</item>
 		<item>UTF-32LE</item>
+		<item>WINDOWS-1250</item>
 		<item>WINDOWS-1251</item>
 		<item>WINDOWS-1252</item>
 		<item>WINDOWS-1253</item>

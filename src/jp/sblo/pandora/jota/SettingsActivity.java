@@ -194,8 +194,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setKey( KEY_FONT_SIZE);
 //                    pr.setSummary(sp.getString(pr.getKey(), ""));
                     pr.setTitle(R.string.label_font_size);
-                    pr.setEntries(new String[]     {"8", "10", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
-                    pr.setEntryValues(new String[] {"8", "10", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
+                    pr.setEntries(new String[]     {"8", "9", "10", "11", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
+                    pr.setEntryValues(new String[] {"8", "9", "10", "11", "12" ,"14", "16", "18", "20", "24", "30", "36",  });
                     catfont.addPreference(pr);
                     mPrefFontSize = pr;
                 }
@@ -552,6 +552,18 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     category.addPreference(pr);
                     mPrefActionShare = pr;
                 }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_clear_history);
+                    pr.setOnPreferenceClickListener(mProcClearHisotry);
+                    category.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_init);
+                    pr.setOnPreferenceClickListener(mProcInit);
+                    category.addPreference(pr);
+                }
             }
 
             {
@@ -560,18 +572,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 category.setTitle(R.string.label_help);
 
                 mPs.addPreference(category);
-                {
-                    final Preference pr = new Preference(this);
-                    pr.setTitle(R.string.label_init);
-                    pr.setOnPreferenceClickListener(mProcInit);
-                    category.addPreference(pr);
-                }
-                {
-                    final Preference pr = new Preference(this);
-                    pr.setTitle(R.string.label_clear_history);
-                    pr.setOnPreferenceClickListener(mProcClearHisotry);
-                    category.addPreference(pr);
-                }
                 {
                     final Preference pr = new Preference(this);
                     pr.setTitle(R.string.label_help);
