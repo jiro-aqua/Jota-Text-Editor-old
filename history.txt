@@ -299,4 +299,24 @@ fixed the bug that crashes when rotation with autosave.
 ・文言リソースをアップデート
 
 
+[2011/05/14 v.0.1.2]
+・ロシア語リソースを追加
+  (Thanks to Anton Sadovnichenko.)
+・文言リソースをアップデート
+・フォントサイズ追加(9pt,11pt)
+・Windows1250追加(ただし自動検出非対応）
+
+寄付機能が有効になっています。
+ Android Market経由で作者に寄付が出来ます。
+
+
+[2011/05/14 v.0.1.2]
+・Added Polish string resources.
+  (Thanks to Anton Sadovnichenko.)
+・Updated strings resources.
+・added a font size (9pt,11pt)
+・added a support of Windows1250 ( but can't detect automatically )
+
+Donation feature is now available!
+ You can donate to the developer via Android Market!
 
