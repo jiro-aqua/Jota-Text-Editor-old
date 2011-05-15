@@ -7971,6 +7971,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     clip.setText(mTransformed.subSequence(min, max));
                     ((Editable) mText).delete(min, max);
                     stopTextSelectionMode();
+                    MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
                 }
                 return true;
             case ID_COPY:
@@ -7980,6 +7981,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 }else{
                     clip.setText(mTransformed.subSequence(min, max));
                     stopTextSelectionMode();
+                    MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
                 }
                 return true;
             case ID_PASTE:
@@ -7992,6 +7994,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 //                    Selection.setSelection((Spannable) mText, max);
                     ((Editable) mText).replace(min, max, paste);
                     stopTextSelectionMode();
+                    MetaKeyKeyListener.stopSelecting(this, (Spannable) mText);
                 }
                 return true;
 
