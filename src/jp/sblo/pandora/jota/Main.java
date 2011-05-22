@@ -16,9 +16,11 @@ import jp.sblo.pandora.jota.TextLoadTask.OnFileLoadListener;
 import jp.sblo.pandora.jota.text.JotaDocumentWatcher;
 import jp.sblo.pandora.jota.text.Layout;
 import jp.sblo.pandora.jota.text.SpannableStringBuilder;
+import jp.sblo.pandora.jota.text.TextUtils;
 import jp.sblo.pandora.jota.text.EditText.ShortcutListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -33,6 +35,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -87,11 +90,11 @@ public class Main
     private EditText mEdtSearchWord;
     private ImageButton mBtnForward;
     private ImageButton mBtnBackward;
-    private CheckBox mChkReplace;
+    private Button mChkReplace;
     private ImageButton mBtnClose;
     private LinearLayout mLlReplace;
     private EditText mEdtReplaceWord;
-    private Button mBtnSkip;
+    private Button mBtnReplace;
     private Button mBtnReplaceAll;
     private String mNewFilename;
 
@@ -114,6 +117,9 @@ public class Main
     private SettingsActivity.BootSettings mBootSettings;
 
     private String mSharedString = null;;
+    private String mReplaceWord;
+
+    private boolean mChangeCancel=false;
 
     class InstanceState {
         String  filename;
@@ -151,10 +157,10 @@ public class Main
         mEdtSearchWord = (EditText ) findViewById(R.id.edtSearchWord);
         mBtnForward = (ImageButton )      findViewById(R.id.btnForward);
         mBtnBackward = (ImageButton )     findViewById(R.id.btnBackward);
-        mChkReplace = (CheckBox )    findViewById(R.id.chkReplace);
+        mChkReplace = (Button)    findViewById(R.id.chkReplace);
         mBtnClose = (ImageButton )        findViewById(R.id.btnClose);
         mEdtReplaceWord = (EditText )    findViewById(R.id.edtReplaceWord);
-        mBtnSkip = (Button )     findViewById(R.id.btnSkip);
+        mBtnReplace = (Button )     findViewById(R.id.btnReplace);
         mBtnReplaceAll = (Button )   findViewById(R.id.btnReplaceAll);
 
 
@@ -179,11 +185,40 @@ public class Main
                         && event.getAction() == KeyEvent.ACTION_UP ) {
                     if ( mBtnForward.isEnabled() ){
                         mBtnForward.performClick();
+                        return true;
                     }
                 }
                 return false;
             }
         });
+        mEdtSearchWord.setImeOptions(EditorInfo.IME_ACTION_DONE
+                |EditorInfo.IME_FLAG_NO_FULLSCREEN
+                |EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+
+        mEdtReplaceWord.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mEdtReplaceWord.setOnKeyListener(new OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                if ( (keyCode == KeyEvent.KEYCODE_ENTER  || keyCode == KeyEvent.KEYCODE_DPAD_CENTER )
+//                        && event.getAction() == KeyEvent.ACTION_UP ) {
+//                    if ( mBtnForward.isEnabled() ){
+//                        mBtnForward.performClick();
+//                        return true;
+//                    }
+//                }
+                return false;
+            }
+        });
+        mEdtReplaceWord.setImeOptions(EditorInfo.IME_ACTION_DONE
+                |EditorInfo.IME_FLAG_NO_FULLSCREEN
+                |EditorInfo.IME_FLAG_NO_EXTRACT_UI);
 
         mBtnForward.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -199,12 +234,14 @@ public class Main
                 doSearch( searchword );
             }
         });
-        mChkReplace.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if ( mLlSearch.getVisibility()==View.VISIBLE && isChecked ){
-                    mLlReplace.setVisibility(View.VISIBLE);
-                }else{
-                    mLlReplace.setVisibility(View.GONE);
+        mChkReplace.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                mLlReplace.setVisibility(View.VISIBLE);
+                mChkReplace.setVisibility(View.GONE);
+                mEdtReplaceWord.requestFocus();
+                if ( mSearchResult == null ){
+                    String searchword = mEdtSearchWord.getText().toString();
+                    doSearch(searchword);
                 }
             }
         });
@@ -212,14 +249,27 @@ public class Main
             public void onClick(View v) {
                 mLlSearch.setVisibility(View.GONE);
                 mLlReplace.setVisibility(View.GONE);
-                mChkReplace.setChecked(false);
+                mChkReplace.setVisibility(View.VISIBLE);
             }
         });
 //        edtReplaceWord
 //        btnSkip
 //        btnReplaceAll
 
-
+        mBtnReplace.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                String searchword = mEdtSearchWord.getText().toString();
+                mReplaceWord = mEdtReplaceWord.getText().toString();
+                doReplace(searchword);
+            }
+        });
+        mBtnReplaceAll.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                String searchword = mEdtSearchWord.getText().toString();
+                mReplaceWord= mEdtReplaceWord.getText().toString();
+                doReplaceAll(searchword);
+            }
+        });
 
         mProcNew.run();
 
@@ -570,6 +620,10 @@ public class Main
     //    @Override JotaDocumentWatcher#onChanged()
     public void onChanged()
     {
+        if ( mChangeCancel ){
+            return;
+        }
+
         boolean changed = mEditor.isChanged();
 
         mSearchResult = null;
@@ -1065,10 +1119,10 @@ public class Main
             mEdtSearchWord.setText("");
             mBtnForward.setEnabled(false);
             mBtnBackward.setEnabled(false);
-            mChkReplace.setChecked(false);
+            mChkReplace.setVisibility(View.VISIBLE);
             mEdtReplaceWord.setText("");
-            mBtnSkip.setEnabled(false);
-            mBtnReplaceAll.setEnabled(false);
+            mBtnReplace.setEnabled(true);
+            mBtnReplaceAll.setEnabled(true);
 
             mSearchResult = null;
 
@@ -1645,9 +1699,38 @@ public class Main
 
     private Runnable mProcSearch =  new Runnable() {
         public void run() {
-            mLlSearch.setVisibility(View.VISIBLE);
-            mChkReplace.setChecked(false);
-            mEdtSearchWord.requestFocus();
+            int v = mLlSearch.getVisibility();
+
+            if ( v != View.VISIBLE ){
+                mLlSearch.setVisibility(View.VISIBLE);
+                mChkReplace.setVisibility(View.VISIBLE);
+                mEdtSearchWord.requestFocus();
+
+
+                int startsel = mEditor.getSelectionStart();
+                int endsel = mEditor.getSelectionEnd();
+                Editable text = mEditor.getText();
+
+                String substr = "";
+                if ( startsel != endsel ){
+                    if ( endsel < startsel ){
+                        int temp = startsel ;
+                        startsel = endsel;
+                        endsel = temp;
+                    }
+                    if ( endsel - startsel < 256 ){
+                        substr = text.subSequence(startsel, endsel).toString();
+                        int cr = TextUtils.indexOf(substr, '\n');
+                        if ( cr != -1 ){
+                            substr = substr.subSequence(startsel, endsel).toString();
+                        }
+                        mEdtSearchWord.setText(substr);
+                    }
+                }
+
+            }else{
+                mChkReplace.performClick();
+            }
        }
     };
 
@@ -1660,8 +1743,154 @@ public class Main
         new Search(this, searchword, mEditor.getText(), mSettings.re , mSettings.ignorecase, mProcOnSearchResult);
     }
 
+    private void doReplace( String searchword  ) {
+        if ( mSearchResult != null ){
+            mProcReplace.run();
+            return;
+        }
+        new Search(this, searchword, mEditor.getText(), mSettings.re , mSettings.ignorecase, mProcOnSearchResult);
+    }
+
+    private Runnable mProcReplace =  new Runnable() {
+
+        public void run() {
+            int cursor = mEditor.getSelectionStart();
+            int cursorend = mEditor.getSelectionEnd();
+
+            Record cursorRecord  = new Record();
+            cursorRecord.start = cursor;
+
+            int cursorpos = Collections.binarySearch(mSearchResult , cursorRecord , new Comparator<Record>(){
+                public int compare(Record object1, Record object2) {
+                    return object1.start - object2.start;
+                }
+            });
+
+            if ( cursorpos >= 0 ){       // on the word
+                Record r = mSearchResult.get(cursorpos);
+
+                if ( r.start == cursor && r.end == cursorend ){
+
+                    String replaceword = mReplaceWord;
+                    int difflen = replaceword.length() - (r.end - r.start);
+
+                    mEditor.getEditableText().replace(r.start , r.end , replaceword );
+
+                    if ( mSearchResult!= null ){
+                        mSearchResult.remove(r);
+                        for( int i=cursorpos ;i< mSearchResult.size();i++){
+                            Record adjustr = mSearchResult.get(i);
+                            adjustr.start += difflen;
+                            adjustr.end   += difflen;
+                        }
+                    }
+                }
+
+
+            }else{                      // not on the word
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if ( mSearchForward ){
+                        mBtnForward.performClick();
+                    }else{
+                        mBtnBackward.performClick();
+                    }
+                }
+            });
+        }
+    };
+
+
+    private void doReplaceAll( String searchword  ) {
+        new Search(this, searchword, mEditor.getText(), mSettings.re , mSettings.ignorecase, mProcOnReplaceAllResult);
+    }
+
     abstract class PostSearchProcess implements  OnSearchFinishedListener {
         abstract public void search();
+    }
+
+    private OnSearchFinishedListener mProcOnReplaceAllResult =  new OnSearchFinishedListener() {
+        public void onSearchFinished(ArrayList<Record> data) {
+            mSearchResult = null;
+
+            Editable text = mEditor.getEditableText();
+            CharSequence replaceword = mReplaceWord ;
+            mChangeCancel = true;
+
+            if ( data.size() > 100 ){
+                mEditor.enableUndo(false);
+            }
+            for( int i=data.size()-1 ;i >=0 ;i--  ){
+                Record record = data.get(i);
+                text.replace( record.start , record.end , replaceword );
+            }
+            mChangeCancel = false;
+            onChanged();
+            mEditor.enableUndo(true);
+        }
+    };
+
+    public class ReplaceAllTask extends AsyncTask<Integer ,Integer , Integer>
+    {
+        private Activity mParent;
+        private Editable mText;
+        private CharSequence mReplaceWord;
+
+        private ProgressDialog mProgressDialog;
+        ArrayList<Record> mData;
+
+        public ReplaceAllTask(Activity parent , Editable text , CharSequence replaceword , ArrayList<Record> data) {
+            super();
+            mParent = parent;
+            mText = text;
+            mReplaceWord = replaceword;
+            mData = data;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mProgressDialog = new ProgressDialog(mParent);
+            mProgressDialog.setTitle(R.string.spinner_message);
+//            mProgressDialog.setMessage(R.string.spinner_message);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
+            mProgressDialog.show();
+            mChangeCancel = true;
+            mParent = null;
+        }
+
+        @Override
+        protected Integer doInBackground(Integer ... params) {
+            Editable text = mText;
+            CharSequence replaceword = mReplaceWord;
+            ArrayList<Record> data = mData;
+            for( int i=data.size()-1 ;i >=0 ;i--  ){
+                Record record = data.get(i);
+                text.replace( record.start , record.end , replaceword );
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+            mData = null;
+            mChangeCancel = false;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
     }
 
     private PostSearchProcess mProcOnSearchResult =  new PostSearchProcess() {
@@ -1725,7 +1954,7 @@ public class Main
 //            Editable text = mEditor.getText();
             Record r = mSearchResult.get(pos);
             mEditor.setSelection(r.start , r.end);
-            mEditor.requestFocus();
+//            mEditor.requestFocus();
 //            text.setSpan(bgspan, r.start, r.end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 //            text.setSpan(fgspan, r.start, r.end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 

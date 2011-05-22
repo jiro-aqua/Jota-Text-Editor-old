@@ -147,8 +147,6 @@ public class EditText extends TextView{
     public boolean dispatchKeyEventPreIme(KeyEvent event) {
 //        Log.e( "dispatch=","keycode="+event.getKeyCode() );
 
-        Editable cs = getText();
-
         int keycode = event.getKeyCode();
         // ALT + KEYDOWN
         int meta = (int)event.getMetaState();

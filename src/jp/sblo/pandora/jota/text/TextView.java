@@ -964,50 +964,66 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         prepareCursorControllers();
 
 		// Jota Text Editor
+        enableUndo(true);
+
+    }
+
+    // Jota Text Editor
+    public void enableUndo(boolean enable){
+        if ( enable == mUndoEnabled ){
+            return;
+        }
         mUndoBuffer.removeAll();
         mRedoBuffer.removeAll();
+        if ( enable ){
+            addTextChangedListener(mUndoWatcher);
+        }else{
+            removeTextChangedListener(mUndoWatcher);
+        }
+        mUndoEnabled = enable;
+    }
 
-        addTextChangedListener(new TextWatcher() {
-            TextChange lastChange;
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if ( lastChange !=null ){
-                    if ( count < UndoBuffer.MAX_SIZE ){
-                        lastChange.newtext = s.subSequence(start, start + count);
-                        if ( start == lastChange.start &&
-                             (lastChange.oldtext.length() > 0 || lastChange.newtext.length() > 0 ) &&
-                             !equalsCharSequence(lastChange.newtext ,lastChange.oldtext ) )
-                         {
-                            mUndoBuffer.push(lastChange);
-                            mRedoBuffer.removeAll();
-    //                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
-                        }
-                    }else{
-                        mUndoBuffer.removeAll();
+    // Jota Text Editor
+    private TextWatcher mUndoWatcher = new TextWatcher() {
+        TextChange lastChange;
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if ( lastChange !=null ){
+                if ( count < UndoBuffer.MAX_SIZE ){
+                    lastChange.newtext = s.subSequence(start, start + count);
+                    if ( start == lastChange.start &&
+                         (lastChange.oldtext.length() > 0 || lastChange.newtext.length() > 0 ) &&
+                         !equalsCharSequence(lastChange.newtext ,lastChange.oldtext ) )
+                     {
+                        mUndoBuffer.push(lastChange);
                         mRedoBuffer.removeAll();
+//                        Log.e( TAG , "===========================push> " + lastChange.start + ":" + lastChange.oldtext + ":" + lastChange.newtext );
                     }
+                }else{
+                    mUndoBuffer.removeAll();
+                    mRedoBuffer.removeAll();
+                }
+                lastChange = null;
+            }
+        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if ( mUndoRedo ){
+                mUndoRedo = false;
+            }else{
+                if ( count < UndoBuffer.MAX_SIZE ){
+                    lastChange = new TextChange();
+                    lastChange.start = start;
+                    lastChange.oldtext = s.subSequence(start, start + count);
+                }else{
+                    mUndoBuffer.removeAll();
+                    mRedoBuffer.removeAll();
                     lastChange = null;
                 }
             }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if ( mUndoRedo ){
-                    mUndoRedo = false;
-                }else{
-                    if ( count < UndoBuffer.MAX_SIZE ){
-                        lastChange = new TextChange();
-                        lastChange.start = start;
-                        lastChange.oldtext = s.subSequence(start, start + count);
-                    }else{
-                        mUndoBuffer.removeAll();
-                        mRedoBuffer.removeAll();
-                        lastChange = null;
-                    }
-                }
-            }
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        }
+        public void afterTextChanged(Editable s) {
+        }
+    };
 
-    }
 
     private boolean equalsCharSequence( CharSequence s1 , CharSequence s2)
     {
@@ -4163,7 +4179,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         //  the cursor.
         //  XXX This is not strictly true -- a program could set the
         //  selection manually if it really wanted to.
-        if (mMovement != null && (isFocused() || isPressed())) {
+        if (mMovement != null /*&& (isFocused() || isPressed())*/) {
             selStart = getSelectionStart();
             selEnd = getSelectionEnd();
 
@@ -9131,4 +9147,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private Path mTabPath = new Path();
     private Path[] mSpacePaths = new Path[]{ mTabPath , mLineBreakPath , mIdeographicalSpacePath };
     private boolean mAutoCapitalize=false;
+    private boolean mUndoEnabled = true;
+
 }
