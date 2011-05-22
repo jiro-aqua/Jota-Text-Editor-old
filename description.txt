@@ -44,7 +44,7 @@ Functions
 - Save position of the cursor with file.
 - Save history of recened files.
 
-- Search a word in a file. (Support Regular Expression)
+- Search/Replace (Support Regular Expression)
 
 - Text sharing with external application.
   Mushroom
@@ -234,7 +234,7 @@ Behalte Zeilenumbruchseinstellungen bis zum speichern.
 Speichere die Position des Zeigers mit der Datei.
 Speichere eine Historie der geöffneten Dateien.
 
-- Suche ein Wort in dem Text. (Unterstützt Reguläre Ausdrücke)
++ Search/Replace (Support Regular Expression)
 
 - Text sharing with external application.
 Mushroom
@@ -327,7 +327,7 @@ X-ISO-10646-UCS-4-2143
 - Sauvegarde de la position du curseur avec le fichier.
 - Sauvegarde de l'historique des fichiers récemment ouverts.
 
-- Recherche d'un mot dans un fichier. (Support des expressions régulières)
++ Search/Replace (Support Regular Expression)
 
 - Partage de texte avec des applications externes :
 Mushroom
@@ -420,7 +420,7 @@ X-ISO-10646-UCS-4-2143
 - Сохранение символов новой строки до сохранения файла.
 - Сохранение положения курсора в файле.
 - Сохранение истории открываемых файлов.
-- Поиск слова в файле. (Поддержка регулярных выражений)
++ Search/Replace (Support Regular Expression)
 - Возможность поделиться текстом с помощью внешнего приложения
 
 Mushroom
@@ -512,7 +512,7 @@ Funkcje
 - Zapisywanie pozycji kursora wraz z plikiem.
 - Zapisanie historii ostatnio otwartych plików.
 
-- Szukanie słowa w pliku. (Wspierane wyrażenia regularne)
++ Search/Replace (Support Regular Expression)
 
 - Wspóldzielenie tekstu z zewnętrznymi aplikacjami.
   Mushroom
@@ -613,7 +613,7 @@ Jota 是一个为超长文本文件设计的文本编辑器。
 - 保存文件的同时保存光标位置。
 - 保存近期文件的历史记录。
 
-- 在文件中搜索单词。 (支持正则表达式)
++ Search/Replace (Support Regular Expression)
 
 - 使用外部应用程序分享。
   Mushroom
@@ -712,7 +712,7 @@ Jota 是一個為超長文本文件設計的文本編輯器。
 - 保存檔案的同時保存光標位置。
 - 保存近期檔案的歷史記錄。
 
-- 在檔案中檢索單詞。 (支援正則表達式)
++ Search/Replace (Support Regular Expression)
 
 - 使用外部應用程式分享。
   Mushroom
