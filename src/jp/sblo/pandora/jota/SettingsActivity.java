@@ -120,6 +120,14 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
     public static final String PREF_HISTORY = "history";   // .xml
 
+    public static final String EXTRA_CATEGORY = "category";
+    public static final String CAT_SEARCH = "search";
+    public static final String CAT_FONT = "font";
+    public static final String CAT_VIEW = "view";
+    public static final String CAT_INPUT = "input";
+    public static final String CAT_FILE = "file";
+    public static final String CAT_MISC = "misc";
+
     private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
 
@@ -141,18 +149,21 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 		mPm = getPreferenceManager();
 
-		createDictionaryPreference();
+		Intent it = getIntent();
+		String category = it.getStringExtra(EXTRA_CATEGORY);
+
+		createDictionaryPreference(category);
 	}
 
 
-    private void createDictionaryPreference() {
+    private void createDictionaryPreference(String categ) {
         // new PreferenceScreen
         mPs = mPm.createPreferenceScreen(this);
 
         {
 //            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
-            {
+            if ( CAT_SEARCH.equals(categ) ){
                 // Search Category
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_search);
@@ -172,7 +183,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
             }
 
-            {
+            if ( CAT_FONT.equals(categ) ){
                 // Font Category
                 final PreferenceCategory catfont = new PreferenceCategory(this);
                 catfont.setTitle(R.string.label_font);
@@ -200,7 +211,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     mPrefFontSize = pr;
                 }
             }
-            {
+            if ( CAT_VIEW.equals(categ) ){
                 // View Category
                 final PreferenceCategory cat = new PreferenceCategory(this);
                 cat.setTitle(R.string.label_view);
@@ -323,7 +334,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
             }
 
-            {
+            if ( CAT_FILE.equals(categ) ){
                 // File Category
                 final PreferenceCategory cat = new PreferenceCategory(this);
                 cat.setTitle(R.string.label_file);
@@ -398,7 +409,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     cat.addPreference(pr);
                 }
             }
-            {
+            if ( CAT_MISC.equals(categ) ){
                 // Direct Intent Category
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_direct_intent);
@@ -457,7 +468,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     mPrefInsert = pr;
                 }
             }
-            {
+            if ( CAT_INPUT.equals(categ) ){
                 // Input Category
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_input);
@@ -535,7 +546,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     category.addPreference(pr);
                 }
             }
-            {
+            if ( CAT_MISC.equals(categ) ){
                 // Misc Category
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_miscllaneous);
@@ -566,7 +577,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
             }
 
-            {
+            if ( CAT_MISC.equals(categ) ){
                 // Help Category
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_help);
@@ -1135,6 +1146,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         int lineSpace;
         boolean showTab;
         String actionShare;
+        int donateCounter;
 	}
 
 	public static class BootSettings {
@@ -1217,6 +1229,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.lineSpace = sp.getInt( KEY_LINE_SPACE , 0);
         ret.showTab = sp.getBoolean( KEY_SHOW_TAB, false);
         ret.actionShare = sp.getString(KEY_ACTION_SHARE, AS_INSERT);
+        ret.donateCounter = sp.getInt(DonateActivity.DONATION_COUNTER,0);
         sSettings = ret;
         return ret;
 	}
@@ -1344,62 +1357,80 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 	    sSettings = readSettings(this);
 
-	    if ( sSettings.directintent != null ){
-    	    entry = mPrefDirectIntent.getEntry();
-    	    intentname = sSettings.intentname;
-    	    if ( entry != null ){
-                if ( intentname != null ){
-                    mPrefDirectIntent.setSummary(entry+" : " +intentname);
-                }else{
-                    mPrefDirectIntent.setSummary(entry );
-                }
+	    if ( mPrefDirectIntent != null ){
+    	    if ( sSettings.directintent != null ){
+        	    entry = mPrefDirectIntent.getEntry();
+        	    intentname = sSettings.intentname;
+        	    if ( entry != null ){
+                    if ( intentname != null ){
+                        mPrefDirectIntent.setSummary(entry+" : " +intentname);
+                    }else{
+                        mPrefDirectIntent.setSummary(entry );
+                    }
+        	    }
+    	    }else{
+    	        mPrefDirectIntent.setSummary(null);
     	    }
-	    }else{
-	        mPrefDirectIntent.setSummary(null);
 	    }
-
-        entry = mPrefInsert.getEntry();
-        intentname = sSettings.intentname2;
-        if ( entry != null ){
-            if ( intentname != null ){
-                mPrefInsert.setSummary(entry+" : " +intentname);
-            }else{
-                mPrefInsert.setSummary(entry );
+	    if ( mPrefInsert!= null ){
+            entry = mPrefInsert.getEntry();
+            intentname = sSettings.intentname2;
+            if ( entry != null ){
+                if ( intentname != null ){
+                    mPrefInsert.setSummary(entry+" : " +intentname);
+                }else{
+                    mPrefInsert.setSummary(entry );
+                }
+            }
+	    }
+	    if ( mPrefCharsetOpen != null ){
+            entry = mPrefCharsetOpen.getEntry();
+            if ( entry != null ){
+                mPrefCharsetOpen.setSummary(entry);
+            }
+	    }
+	    if ( mPrefCharsetSave != null ){
+	        entry = mPrefCharsetSave.getEntry();
+	        if ( entry != null ){
+	            mPrefCharsetSave.setSummary(entry);
+	        }
+	    }
+        if ( mPrefLinebreakSave != null ){
+            entry = mPrefLinebreakSave.getEntry();
+            if ( entry != null ){
+                mPrefLinebreakSave.setSummary(entry);
             }
         }
-
-        entry = mPrefCharsetOpen.getEntry();
-        if ( entry != null ){
-            mPrefCharsetOpen.setSummary(entry);
+        if ( mPrefFont != null ){
+            entry = mPrefFont.getEntry();
+            if ( entry != null ){
+                mPrefFont.setSummary(entry);
+            }
         }
-        entry = mPrefCharsetSave.getEntry();
-        if ( entry != null ){
-            mPrefCharsetSave.setSummary(entry);
+        if ( mPrefFontSize != null ){
+            entry = mPrefFontSize.getEntry();
+            if ( entry != null ){
+                mPrefFontSize.setSummary(entry);
+            }
         }
-        entry = mPrefLinebreakSave.getEntry();
-        if ( entry != null ){
-            mPrefLinebreakSave.setSummary(entry);
+        if ( mPrefTrackball != null ){
+            entry = mPrefTrackball.getEntry();
+            if ( entry != null ){
+                mPrefTrackball.setSummary(entry);
+            }
         }
-        entry = mPrefFont.getEntry();
-        if ( entry != null ){
-            mPrefFont.setSummary(entry);
+        if ( mPrefActionShare != null ){
+            entry = mPrefActionShare.getEntry();
+            if ( entry != null ){
+                mPrefActionShare.setSummary(entry);
+            }
         }
-        entry = mPrefFontSize.getEntry();
-        if ( entry != null ){
-            mPrefFontSize.setSummary(entry);
+        if ( mPrefWrapWidthP != null ){
+            mPrefWrapWidthP.setEnabled(sSettings.wordwrap);
         }
-        entry = mPrefTrackball.getEntry();
-        if ( entry != null ){
-            mPrefTrackball.setSummary(entry);
+        if ( mPrefWrapWidthL != null ){
+            mPrefWrapWidthL.setEnabled(sSettings.wordwrap);
         }
-        entry = mPrefActionShare.getEntry();
-        if ( entry != null ){
-            mPrefActionShare.setSummary(entry);
-        }
-
-        mPrefWrapWidthP.setEnabled(sSettings.wordwrap);
-        mPrefWrapWidthL.setEnabled(sSettings.wordwrap);
-
 	}
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

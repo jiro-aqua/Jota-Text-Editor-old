@@ -120,22 +120,33 @@
 		android:id="@+id/menu_preferences"
 		android:icon = "@drawable/ic_menu_preferences"
 >
-
-</item>
-<!---
-<item android:title="@string/menu_help" 
-		android:id="@+id/menu_help"
-		android:icon = "@drawable/ic_menu_help" >
     <menu>
-        <item android:id="@+id/menu_help_help" 		
-		android:title="@string/menu_help_help" 
+	<item android:id="@+id/menu_pref_search"
+		android:title="@string/menu_pref_search" 
 	/>
-        <item android:id="@+id/menu_help_about"		
-		android:title="@string/menu_help_about" 
+	<item android:id="@+id/menu_pref_font"
+		android:title="@string/menu_pref_font" 
+	/>
+	<item android:id="@+id/menu_pref_view"
+		android:title="@string/menu_pref_view" 
+	/>
+	<item android:id="@+id/menu_pref_file"
+		android:title="@string/menu_pref_file" 
+	/>
+	<item android:id="@+id/menu_pref_input"
+		android:title="@string/menu_pref_input" 
+	/>
+	<item android:id="@+id/menu_pref_misc"
+		android:title="@string/label_miscllaneous" 
+	/>
+	<item android:id="@+id/menu_help_donate" 		
+		android:title="@string/label_donate" 
+	/>
+	<item android:id="@+id/menu_help_about"		
+		android:title="@string/about_title" 
 	/>
     </menu>
 
 </item>
--->
 
 </menu>

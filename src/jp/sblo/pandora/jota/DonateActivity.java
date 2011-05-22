@@ -1,5 +1,7 @@
 package jp.sblo.pandora.jota;
 
+import java.net.URLEncoder;
+
 import jp.sblo.pandora.billing.BillingService;
 import jp.sblo.pandora.billing.Consts;
 import jp.sblo.pandora.billing.PurchaseObserver;
@@ -12,14 +14,19 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class DonateActivity extends AboutActivity  {
 
@@ -68,7 +75,7 @@ public class DonateActivity extends AboutActivity  {
 
         @Override
         public void onPurchaseStateChange(PurchaseState purchaseState, String itemId,
-                int quantity, long purchaseTime, String developerPayload) {
+                final String orderId, long purchaseTime, String developerPayload) {
             if (Consts.DEBUG) {
                 Log.i(TAG, "onPurchaseStateChange() itemId: " + itemId + " " + purchaseState);
             }
@@ -87,12 +94,40 @@ public class DonateActivity extends AboutActivity  {
                 edit.putInt(DONATION_COUNTER, count+1);
                 edit.commit();
 
+                View view = getLayoutInflater().inflate(R.layout.subscribe, null);
+                final EditText edtnickname = (EditText)view.findViewById(R.id.nickname);
+
                 new AlertDialog.Builder(DonateActivity.this)
+                .setView( view )
                 .setIcon(R.drawable.icon)
                 .setTitle(R.string.app_name)
-                .setMessage(R.string.label_thankyou)
+//                .setMessage(R.string.label_thankyou)
                 .setCancelable(true)
-                .setPositiveButton(R.string.label_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.label_subscribe, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String nickname = edtnickname.getText().toString();
+
+                        if ( nickname.length()>0 ){
+
+                            Intent it = new Intent();
+                            it.setAction(Intent.ACTION_SENDTO );
+                            int mill = (int)(System.currentTimeMillis() / 1000 / 60 /60 );
+                            try{
+                                it.setData(Uri.parse("mailto:" + getString(R.string.label_mail_summary)
+                                        + "?subject=Subcribe Jota Text Editor(" + orderId + ")"
+                                        + "&body=nickname:%20" + URLEncoder.encode(nickname, "utf-8")
+                                        ));
+                                startActivity(it);
+                                Toast.makeText(DonateActivity.this , R.string.toast_send_mail, Toast.LENGTH_LONG).show();
+
+                            }catch(Exception e){}
+                            finish();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.label_close, new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

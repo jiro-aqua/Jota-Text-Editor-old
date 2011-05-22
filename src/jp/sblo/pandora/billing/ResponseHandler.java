@@ -121,7 +121,7 @@ public class ResponseHandler {
                 synchronized(ResponseHandler.class) {
                     if (sPurchaseObserver != null) {
                         sPurchaseObserver.postPurchaseStateChange(
-                                purchaseState, productId, 1, purchaseTime, developerPayload);
+                                purchaseState, productId, orderId, purchaseTime, developerPayload);
                     }
                 }
             }
