@@ -1,12 +1,16 @@
 package jp.sblo.pandora.jota;
 
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -96,6 +100,20 @@ public class AboutActivity extends Activity
                 }
                 stars += "<br />";
                 return stars;
+            } else if (key.equals("donators")) {
+                String list="";
+                AssetManager as = getResources().getAssets();
+                try{
+                    String line;
+                    BufferedReader br = new BufferedReader( new InputStreamReader(as.open("donator.txt"),"utf-8") );
+                    while( (line = br.readLine()) != null ){
+                        list += line + "<br/>";
+                    }
+                    br.close();
+                }
+                catch(Exception e)
+                {}
+                return list;
             } else {
                 return "";
             }

@@ -329,7 +329,7 @@ Android Market経由で作者に寄付が出来ます。
 継続してお使いの方は、寄付をお願いします。
 
 
-[2011/05/14 v.0.1.2]
+[2011/05/22 v.0.1.3]
 ・Added "REPLACE" function. (experimental)
 ・Restruct Preference Menu.
 ・fixed minor bugs.
