@@ -486,6 +486,12 @@ implements MovementMethod
         return handled;
     }
 
+    public static void selectWord( Spannable buffer , int off ){
+        Selection.setSelection(buffer,
+                findWordStart(buffer, off),
+                findWordEnd(buffer, off));
+    }
+
     private static class DoubleTapState implements NoCopySpan {
         long mWhen;
     }

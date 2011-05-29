@@ -7925,8 +7925,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 return true;
 
             case ID_START_SELECTING_TEXT:
-                MetaKeyKeyListener.startSelecting(this, (Spannable) mText);
-
+                if ( mHasNavigationDevice ){
+                    MetaKeyKeyListener.startSelecting(this, (Spannable) mText);
+                }else{
+                    int start = Selection.getSelectionStart((Spannable)mText);
+                    ArrowKeyMovementMethod.selectWord((Spannable)mText, start);
+                    startTextSelectionMode();
+                }
 //                startTextSelectionMode();
 //                getSelectionController().show();
                 return true;
@@ -9024,6 +9029,12 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         return mInBatchEditControllers;
     }
 
+    public void setNavigationDevice( boolean value )
+    {
+        mHasNavigationDevice = value;
+    }
+
+
     @ViewDebug.ExportedProperty
     private CharSequence            mText;
     private CharSequence            mTransformed;
@@ -9147,6 +9158,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private Path mTabPath = new Path();
     private Path[] mSpacePaths = new Path[]{ mTabPath , mLineBreakPath , mIdeographicalSpacePath };
     private boolean mAutoCapitalize=false;
-    private boolean mUndoEnabled = true;
+    private boolean mUndoEnabled = false;
+    private boolean mHasNavigationDevice;
 
 }

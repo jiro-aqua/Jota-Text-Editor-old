@@ -121,6 +121,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     public static final String PREF_HISTORY = "history";   // .xml
 
     public static final String EXTRA_CATEGORY = "category";
+    public static final String CAT_TOP = "top";
     public static final String CAT_SEARCH = "search";
     public static final String CAT_FONT = "font";
     public static final String CAT_VIEW = "view";
@@ -163,8 +164,48 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         {
 //            final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
+            if ( CAT_TOP.equals(categ) ){
+                setTitle(R.string.menu_preferences);
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.menu_pref_search);
+                    pr.setOnPreferenceClickListener(mProcPrefSearch);
+                    mPs.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.menu_pref_font);
+                    pr.setOnPreferenceClickListener(mProcPrefFont);
+                    mPs.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.menu_pref_view);
+                    pr.setOnPreferenceClickListener(mProcPrefView);
+                    mPs.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.menu_pref_file);
+                    pr.setOnPreferenceClickListener(mProcPrefFile);
+                    mPs.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.menu_pref_input);
+                    pr.setOnPreferenceClickListener(mProcPrefInput);
+                    mPs.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_miscllaneous);
+                    pr.setOnPreferenceClickListener(mProcPrefMisc);
+                    mPs.addPreference(pr);
+                }
+            }
             if ( CAT_SEARCH.equals(categ) ){
                 // Search Category
+                setTitle(R.string.menu_pref_search);
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_search);
 
@@ -185,6 +226,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
             if ( CAT_FONT.equals(categ) ){
                 // Font Category
+                setTitle(R.string.menu_pref_font);
                 final PreferenceCategory catfont = new PreferenceCategory(this);
                 catfont.setTitle(R.string.label_font);
                 mPs.addPreference(catfont);
@@ -213,6 +255,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             }
             if ( CAT_VIEW.equals(categ) ){
                 // View Category
+                setTitle(R.string.menu_pref_view);
                 final PreferenceCategory cat = new PreferenceCategory(this);
                 cat.setTitle(R.string.label_view);
                 mPs.addPreference(cat);
@@ -336,6 +379,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
             if ( CAT_FILE.equals(categ) ){
                 // File Category
+                setTitle(R.string.menu_pref_file);
                 final PreferenceCategory cat = new PreferenceCategory(this);
                 cat.setTitle(R.string.label_file);
                 mPs.addPreference(cat);
@@ -411,6 +455,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             }
             if ( CAT_MISC.equals(categ) ){
                 // Direct Intent Category
+                setTitle(R.string.label_miscllaneous);
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_direct_intent);
 
@@ -470,6 +515,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             }
             if ( CAT_INPUT.equals(categ) ){
                 // Input Category
+                setTitle(R.string.menu_pref_input);
                 final PreferenceCategory category = new PreferenceCategory(this);
                 category.setTitle(R.string.label_input);
 
@@ -616,6 +662,22 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     pr.setOnPreferenceClickListener(mProcAbout);
                     category.addPreference(pr);
                 }
+            }
+            if ( CAT_TOP.equals(categ) ){
+                if ( sSettings.donateCounter == 0 ){      // donate
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_donate);
+                    pr.setSummary(R.string.summary_donate);
+                    pr.setOnPreferenceClickListener(mProcDonate);
+                    mPs.addPreference(pr);
+                }
+                {
+                    final Preference pr = new Preference(this);
+                    pr.setTitle(R.string.label_about);
+                    pr.setOnPreferenceClickListener(mProcAbout);
+                    mPs.addPreference(pr);
+                }
+
             }
         }
         setPreferenceScreen(mPs);
@@ -806,6 +868,57 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             return true;
         }
     };
+
+    private OnPreferenceClickListener mProcPrefSearch = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_SEARCH);
+            startActivity(intent);
+            return true;
+        }
+    };
+    private OnPreferenceClickListener mProcPrefFont = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_FONT);
+            startActivity(intent);
+            return true;
+        }
+    };
+    private OnPreferenceClickListener mProcPrefView = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_VIEW);
+            startActivity(intent);
+            return true;
+        }
+    };
+    private OnPreferenceClickListener mProcPrefInput = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_INPUT);
+            startActivity(intent);
+            return true;
+        }
+    };
+    private OnPreferenceClickListener mProcPrefFile = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_FILE);
+            startActivity(intent);
+            return true;
+        }
+    };
+    private OnPreferenceClickListener mProcPrefMisc = new OnPreferenceClickListener(){
+        public boolean onPreferenceClick(Preference preference) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_MISC);
+            startActivity(intent);
+            return true;
+        }
+    };
+
+
 
     private void showWrapWidthDialog( final String chrkey ,final String numkey , int title , int message , final int min, final int max)
     {

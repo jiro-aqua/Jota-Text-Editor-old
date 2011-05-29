@@ -37,6 +37,7 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -927,8 +928,8 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         menuitem = menu.findItem(R.id.menu_file_shortcut);
         menuitem.setEnabled(mInstanceState.filename != null);
 
-        menuitem = menu.findItem(R.id.menu_help_donate);
-        menuitem.setVisible( mSettings.donateCounter == 0 );
+//        menuitem = menu.findItem(R.id.menu_help_donate);
+//        menuitem.setVisible( mSettings.donateCounter == 0 );
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -944,13 +945,14 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
             case R.id.menu_search: {
                 mProcSearch.run();
             }
-                return true;
-                // case R.id.menu_preferences: {
-                // Intent intent = new Intent(this,SettingsActivity.class);
-                // startActivity(intent);
-                // }
-                // return true;
-            case R.id.menu_file_history: {
+            return true;
+            case R.id.menu_preferences: {
+                Intent intent = new Intent(this,SettingsActivity.class);
+                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_TOP);
+                startActivity(intent);
+            }
+            return true;
+            case R.id.menu_file_history:{
                 confirmSave(mProcHistory);
             }
                 return true;
@@ -1036,54 +1038,54 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
                 mProcDirect.run();
             }
                 return true;
-            case R.id.menu_pref_search: {
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_SEARCH);
-                startActivity(intent);
-            }
-                return true;
-            case R.id.menu_pref_view: {
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_VIEW);
-                startActivity(intent);
-            }
-                return true;
-            case R.id.menu_pref_font: {
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_FONT);
-                startActivity(intent);
-            }
-                return true;
-            case R.id.menu_pref_file: {
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_FILE);
-                startActivity(intent);
-            }
-                return true;
-            case R.id.menu_pref_input: {
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_INPUT);
-                startActivity(intent);
-            }
-                return true;
-            case R.id.menu_pref_misc: {
-                Intent intent = new Intent(this, SettingsActivity.class);
-                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_MISC);
-                startActivity(intent);
-            }
-                return true;
-            case R.id.menu_help_donate: {
-                Intent intent = new Intent( Main.this,DonateActivity.class);
-                intent.putExtra( AboutActivity.EXTRA_URL ,  getString( R.string.url_donate ) );
-                intent.putExtra( AboutActivity.EXTRA_TITLE ,  getString( R.string.label_donate ) );
-                startActivity(intent);
-            }
-            return true;
-            case R.id.menu_help_about: {
-                Intent intent = new Intent( Main.this,AboutActivity.class);
-                startActivity(intent);
-            }
-                return true;
+//            case R.id.menu_pref_search: {
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_SEARCH);
+//                startActivity(intent);
+//            }
+//                return true;
+//            case R.id.menu_pref_view: {
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_VIEW);
+//                startActivity(intent);
+//            }
+//                return true;
+//            case R.id.menu_pref_font: {
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_FONT);
+//                startActivity(intent);
+//            }
+//                return true;
+//            case R.id.menu_pref_file: {
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_FILE);
+//                startActivity(intent);
+//            }
+//                return true;
+//            case R.id.menu_pref_input: {
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_INPUT);
+//                startActivity(intent);
+//            }
+//                return true;
+//            case R.id.menu_pref_misc: {
+//                Intent intent = new Intent(this, SettingsActivity.class);
+//                intent.putExtra( SettingsActivity.EXTRA_CATEGORY, SettingsActivity.CAT_MISC);
+//                startActivity(intent);
+//            }
+//                return true;
+//            case R.id.menu_help_donate: {
+//                Intent intent = new Intent( Main.this,DonateActivity.class);
+//                intent.putExtra( AboutActivity.EXTRA_URL ,  getString( R.string.url_donate ) );
+//                intent.putExtra( AboutActivity.EXTRA_TITLE ,  getString( R.string.label_donate ) );
+//                startActivity(intent);
+//            }
+//            return true;
+//            case R.id.menu_help_about: {
+//                Intent intent = new Intent( Main.this,AboutActivity.class);
+//                startActivity(intent);
+//            }
+//                return true;
 
         }
         // // Intent intent = new Intent();
@@ -2073,6 +2075,9 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         mEditor.setAutoIndent(mSettings.autoIndent);
         mEditor.setLineSpacing(0.0F, (100.0F + mSettings.lineSpace) / 100.0F);
         mEditor.setShowTab(mSettings.showTab);
+
+        mEditor.setNavigationDevice( getResources().getConfiguration().navigation != Configuration.NAVIGATION_NONAV && Build.VERSION.SDK_INT < 11 );
+
     }
 
     void applyBootSetting() {
