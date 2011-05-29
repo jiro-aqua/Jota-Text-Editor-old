@@ -337,3 +337,21 @@ Android Market経由で作者に寄付が出来ます。
 You can donate to the developer via Android Market.
 Please doneate to support future development.
 
+
+[2011/05/29 v.0.1.4]
+・設定メニューの構成を変更
+・「アンドゥ」が出来ないバグを修正
+・「テキストを選択」メニューがAndroid3.0で動作しないバグを修正
+
+Android Market経由で作者に寄付が出来ます。
+継続してお使いの方は、寄付をお願いします。
+
+
+[2011/05/29 v.0.1.4]
+- Restructed Preference Menu.
+- fixed the bug "Undo" was disabled.
+- fixed the bug "Select Text" did nothing in Honeycomb.
+
+You can donate to the developer via Android Market.
+Please donate if you continue to use Jota.
+
