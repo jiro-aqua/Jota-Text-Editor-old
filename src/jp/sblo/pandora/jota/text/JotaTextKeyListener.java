@@ -2,6 +2,7 @@ package jp.sblo.pandora.jota.text;
 
 import android.text.Editable;
 import android.text.Selection;
+import android.text.TextUtils;
 import android.text.method.TextKeyListener;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,7 +12,7 @@ public class JotaTextKeyListener extends TextKeyListener {
         new TextKeyListener[Capitalize.values().length * 2];
 
     private static boolean sAutoIndent=false;
-
+    private static int KEYCODE_FORWARD_DEL  = 112;      // honeycomb's keycode
 
     public JotaTextKeyListener(Capitalize cap, boolean autotext) {
         super(cap, autotext);
@@ -58,11 +59,65 @@ public class JotaTextKeyListener extends TextKeyListener {
                 }
             }
         }
+        if (keyCode == KEYCODE_FORWARD_DEL) {
+            forwardDelete(view, content, keyCode, event);
+            return true;
+        }
+
         return result;
     }
     static public void setAutoIndent( boolean autoIndent )
     {
         sAutoIndent = autoIndent;
+    }
+    static public void setForwardDelKeycode( int keycode )
+    {
+        KEYCODE_FORWARD_DEL = keycode;
+    }
+    static public int  getForwardDelKeycode(  )
+    {
+        return KEYCODE_FORWARD_DEL ;
+    }
+
+    /**
+     * Performs the action that happens when you press the DEL key in
+     * a TextView.  If there is a selection, deletes the selection;
+     * otherwise, DEL alone deletes the character before the cursor,
+     * if any;
+     * ALT+DEL deletes everything on the line the cursor is on.
+     *
+     * @return true if anything was deleted; false otherwise.
+     */
+    public boolean forwardDelete(View view, Editable content, int keyCode,
+                             KeyEvent event) {
+        int selStart, selEnd;
+        boolean result = true;
+
+        {
+            int a = Selection.getSelectionStart(content);
+            int b = Selection.getSelectionEnd(content);
+
+            selStart = Math.min(a, b);
+            selEnd = Math.max(a, b);
+        }
+
+        if (selStart != selEnd) {
+            content.delete(selStart, selEnd);
+        } else {
+            int to = TextUtils.getOffsetAfter(content, selEnd);
+
+            if (to != selEnd) {
+                content.delete(Math.min(to, selEnd), Math.max(to, selEnd));
+            }
+            else {
+                result = false;
+            }
+        }
+
+        if (result)
+            adjustMetaAfterKeypress(content);
+
+        return result;
     }
 
 }

@@ -53,7 +53,7 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         R.string.label_redo,
         R.string.trackball_contextmenu,
         R.string.menu_edit_jump,
-
+        R.string.label_forward_del,
     };
 
     public String getFunctionName(int func)
@@ -101,6 +101,7 @@ public class SettingsShortcutActivity extends PreferenceActivity  {
         new DefineShortcut( KeyEvent.KEYCODE_8 ,"8" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_9 ,"9" , false , EditText.FUNCTION_NONE ),
         new DefineShortcut( KeyEvent.KEYCODE_0 ,"0" , false , EditText.FUNCTION_NONE ),
+        new DefineShortcut( KeyEvent.KEYCODE_DEL ,"Del" , true , EditText.FUNCTION_FORWARD_DEL ),
     };
 
     private PreferenceScreen mPs = null;

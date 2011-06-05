@@ -11,8 +11,8 @@ LOCAL_PACKAGE_NAME := jota-text-editor
 
 LOCAL_JNI_SHARED_LIBRARIES := libuniversalchardet
 
-#LOCAL_PROGUARD_ENABLED:= full
-#LOCAL_PROGUARD_FLAGS := -include $(LOCAL_PATH)/proguard.flags
+LOCAL_PROGUARD_ENABLED:= full
+LOCAL_PROGUARD_FLAGS := -include $(LOCAL_PATH)/proguard.flags
 
 include $(BUILD_PACKAGE)
 

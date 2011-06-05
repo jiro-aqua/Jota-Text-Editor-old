@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 public class EditText extends TextView{
 
@@ -31,6 +32,7 @@ public class EditText extends TextView{
     public final static int FUNCTION_REDO=14;
     public final static int FUNCTION_CONTEXTMENU=15;
     public final static int FUNCTION_JUMP=16;
+    public final static int FUNCTION_FORWARD_DEL=17;
 
 
     private JotaTextWatcher mTextWatcher;
@@ -38,6 +40,7 @@ public class EditText extends TextView{
     private int mShortcutMetaKey = 0;
     private HashMap<Integer,ShortcutSettings> mShortcuts;;
     private int mDpadCenterFunction = FUNCTION_CENTERING;
+
 
     public EditText(Context context) {
         this(context, null);
@@ -166,6 +169,17 @@ public class EditText extends TextView{
     }
 
     public boolean doFunction( int function ){
+        boolean result = doFunction_( function );
+        if ( result )
+        {
+            InputMethodManager imm = InputMethodManager.peekInstance();
+            if (imm != null) imm.restartInput(this);
+        }
+        return result;
+    }
+
+
+    public boolean doFunction_( int function ){
         ShortcutListener sl = mShortcutListener.get();
 
         switch ( function) {
@@ -206,7 +220,11 @@ public class EditText extends TextView{
                 return onKeyDown(KeyEvent.KEYCODE_TAB ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_TAB));
             case FUNCTION_DEL:
                 return onKeyDown(KeyEvent.KEYCODE_DEL ,new KeyEvent(KeyEvent.ACTION_DOWN,KeyEvent.KEYCODE_DEL));
-
+            case FUNCTION_FORWARD_DEL:
+            {
+                int key = JotaTextKeyListener.getForwardDelKeycode();
+                return onKeyDown( key ,new KeyEvent(KeyEvent.ACTION_DOWN,key));
+            }
             case FUNCTION_CENTERING:
                 return centerCursor();
 
@@ -317,5 +335,9 @@ public class EditText extends TextView{
     public void setAutoIndent( boolean autoIndent )
     {
         JotaTextKeyListener.setAutoIndent(autoIndent);
+    }
+    public void setForwardDelKeycode( int keycode )
+    {
+        JotaTextKeyListener.setForwardDelKeycode(keycode);
     }
 }

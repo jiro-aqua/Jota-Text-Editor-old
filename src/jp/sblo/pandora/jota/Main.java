@@ -2037,8 +2037,7 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         mEditor.setShortcutMetaKey((mSettings.shortcutaltleft ? KeyEvent.META_ALT_LEFT_ON : 0)
                 | (mSettings.shortcutaltright ? KeyEvent.META_ALT_RIGHT_ON : 0)
                 | (mSettings.shortcutctrl ? 8 : 0) // ctrl key on Dynabook AZ
-                | (mSettings.shortcutctrlltn ? 0x1000 : 0) // ctrl key on
-                                                           // Lifetouch Note
+                | 0x1000                            // ctrl key on Honeycomb and Lifetouch Note
         );
         mEditor.setHorizontallyScrolling(!mSettings.wordwrap);
 
@@ -2077,7 +2076,9 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         mEditor.setShowTab(mSettings.showTab);
 
         mEditor.setNavigationDevice( getResources().getConfiguration().navigation != Configuration.NAVIGATION_NONAV && Build.VERSION.SDK_INT < 11 );
-
+        if ( mSettings.shortcutctrlltn ){
+            mEditor.setForwardDelKeycode(111);
+        }
     }
 
     void applyBootSetting() {
