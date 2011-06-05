@@ -14,7 +14,7 @@ rm JotaTextEditor-unaligned.apk
 rm JotaTextEditor.apk
 
 cp $MYDROID/out/target/product/generic/obj/APPS/jota-text-editor_intermediates/package.apk.unsigned ./JotaTextEditor-unaligned.apk
-jarsigner -keystore ../sign/mysign  JotaTextEditor-unaligned.apk "aquamarine networks."
+jarsigner -keystore ../sign/mysign  JotaTextEditor-unaligned.apk "aquamarine networks." < ../sign/password
 $MYDROID/prebuilt/sdk/tools/linux/zipalign -v 4 JotaTextEditor-unaligned.apk JotaTextEditor.apk
 rm JotaTextEditor-unaligned.apk
 

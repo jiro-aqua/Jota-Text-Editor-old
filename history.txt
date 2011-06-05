@@ -355,7 +355,7 @@ Android Market経由で作者に寄付が出来ます。
 You can donate to the developer via Android Market.
 Please donate if you continue to use Jota.
 
-[2011/06/05 v.0.1.5]
+[2011/06/05 v.0.1.05]
 ・「Delete」キーに対応(次文字削除)
   ALT/FN + Delキー
     ※入力設定-ショートカット設定-Del のチェックを有効にしてください。
@@ -367,7 +367,7 @@ Android Market経由で作者に寄付が出来ます。
 継続してお使いの方は、寄付をお願いします。
 
 
-[2011/06/05 v.0.1.5]
+[2011/06/05 v.0.1.05]
 - Supported Forward-Del funtion.
   ALT/FN + DEL key
    * You need to check [InputSettings]-[Customize shortcut]-[Del]
