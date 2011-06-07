@@ -762,3 +762,102 @@ Jota 是一個為超長文本文件設計的文本編輯器。
 ★如果您需要 grep (從多個文本檔案中搜尋)，可以嘗試我的應用 "aGrep"。
 
 (translated by Chen Ma)
+
+--------------------------------------------------------------------------------
+Jota Text Editor (Dutch)
+
+Jota is een tekst editor ontworpen voor lange tekstbestanden.
+De naam wordt uitgesproken als "i-o-ta".
+
+Functies
+- Ondersteunt tot 1 miljoen karakters.
+
+- Auto-detectie van diverse karaktercodes.
+  UTF-8
+  UTF-16BE
+  UTF-16LE
+  UTF-32BE
+  UTF-32LE
+  WINDOWS-1251
+  WINDOWS-1252
+  WINDOWS-1253
+  WINDOWS-1255
+  SHIFT_JIS
+  ISO-2022-JP
+  ISO-2022-CN
+  ISO-2022-KR
+  ISO-8859-5
+  ISO-8859-7
+  ISO-8859-8
+  BIG5
+  GB18030
+  EUC-JP
+  EUC-KR
+  EUC-TW
+  IBM855
+  IBM866
+  KOI8-R
+  MACCYRILLIC
+  HZ-GB-2312
+  X-ISO-10646-UCS-4-3412
+  X-ISO-10646-UCS-4-2143
+  (Het al dan niet decoderen wordt bepaald door de Android-implementatie)
+
+- Wijzigen van karaktercodes.
+- Auto-detectie van lijnafbreek-code ('linebreak').
+- Wijzigen van lijnafbreek-code.
+- Behoudt lijnafbreek-code tot het bewaren van het bestand.
+- Bewaart de positie van de cursor met het bestand.
+- Bewaart de historiek van recent geopende bestanden.
+
+- Zoek/Vervang (ondersteunt Reguliere Expressies)
+
+- Delen van tekst met externe applicaties.
+  Mushroom
+  Delen (ACTION_SEND)
+  Zoeken (ACTION_SEARCH)
+  Openen (ACTION_VIEW)
+
+  ★Direct Intent : Je kan om het even welke applicatie openen via de menu.
+
+- Ondersteunt scrollen met Thumb-drag.
+- Ondersteunt scrollen met Flick.
+- Ondersteunt Undo/Redo
+- Ondersteunt een Shortcut-toets met de ALT/CTRL-toets.
+- Ondersteunt de aanpassing van kleuren.
+- Ondersteunt de creatie van een shortcut-icoon op HOME app.
+- Ondersteunt zelfgekozen shortcut-toets-binding.
+- Tekst-selector zoals Gingerbread.
+  (Dubbele tap om een woord te selecteren, dan het geselecteerde gebied 
+  aantikken om de cursor te tonen)
+- Ondersteunt word-wrap ON/OFF en zet word-wrap-breedte.
+- Zet tab-breedte.
+- Viewer modus.
+- Toon lijnnumers.
+- Woordenteller.
+- Ondersteunt landschapsmodus correct.
+- Automatisch bewaren.
+- Automatisch indenteren.
+- Toon Tab/Linebreak.
+- Automatisch in hoofdletters omzetten.
+- Te gebruiken als SL4A-editor.
+
+- Ondersteunt Android OS 1.6 of later.
+- Ondersteunt touch-screen-toestel en qwerty-toetsenbord.
+
+- Voor altijd GRATIS en GEEN ADVERTENTIES.
+- Deze software is Open Source Software onder Apache License.
+- Donaties zijn altijd welkom. U kan schenken vanaf het scherm Voorkeuren.
+
+OPGELET
+  RTL-Language en bi-directionele tekst wordt niet ondersteund.
+
+
+★Als je een antwoord van mij wenst, plaats de vraag NIET in Market's Review.
+ Stuur liever een e-mail of Twiter(@jiro_aqua)
+ Je kan een bericht aan mij sturen vanaf het scherm Voorkeuren van Jota.
+
+★Als je grep nodig hebt (zoeken binnen meerdere tekstbestanden),
+ gebruik mijn app "aGrep".
+
+(translated by Jean Marc Lietaer)
