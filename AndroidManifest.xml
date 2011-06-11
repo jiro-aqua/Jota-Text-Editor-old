@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="jp.sblo.pandora.jota"
-      android:versionCode="25"
-      android:versionName="0.1.05"
+      android:versionCode="26"
+      android:versionName="0.1.06"
       android:installLocation="auto"
 >
     <application android:icon="@drawable/icon"
-		 android:name=".JotaTextEditor"
+		 android:name="jp.sblo.pandora.jota.JotaTextEditor"
                  android:label="@string/app_name_debug"
                  android:debuggable="true"
         >
-        <activity android:name=".Main"
+        <activity android:name="jp.sblo.pandora.jota.Main"
                   android:label="@string/app_name_debug"
 		  android:theme="@style/Theme.Normal"
 		  android:launchMode="singleTask">
@@ -41,7 +41,7 @@
 	    </intent-filter>
 
         </activity>
-        <activity android:name=".MainForResult"
+        <activity android:name="jp.sblo.pandora.jota.MainForResult"
                   android:label="@string/app_name_debug"
 		  android:launchMode="standard">
             <intent-filter>
@@ -50,19 +50,19 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name="FileSelectorActivity">
+        <activity android:name="jp.sblo.pandora.jota.FileSelectorActivity">
         </activity>
 
-        <activity android:name="ActivityPicker"
+        <activity android:name="jp.sblo.pandora.jota.ActivityPicker"
                 android:label="@string/activity_picker_label"
                 android:theme="@*android:style/Theme.Dialog.Alert"
                 android:finishOnCloseSystemDialogs="true">
         </activity>
 
-        <activity android:name="AboutActivity" />
-        <activity android:name="SettingsActivity"/>
-        <activity android:name="SettingsShortcutActivity"/>
-        <activity android:name="DonateActivity"/>
+        <activity android:name="jp.sblo.pandora.jota.AboutActivity" />
+        <activity android:name="jp.sblo.pandora.jota.SettingsActivity"/>
+        <activity android:name="jp.sblo.pandora.jota.SettingsShortcutActivity"/>
+        <activity android:name="jp.sblo.pandora.jota.DonateActivity"/>
 
 	<!--- for donation -->
         <service android:name="jp.sblo.pandora.billing.BillingService" />
@@ -77,7 +77,8 @@
 
     </application>
 
-    <uses-sdk android:minSdkVersion="4" />
+    <uses-sdk android:minSdkVersion="4"
+			  android:targetSdkVersion="9" />
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

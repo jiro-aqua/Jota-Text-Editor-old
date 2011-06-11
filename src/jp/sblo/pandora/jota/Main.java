@@ -2075,7 +2075,7 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         mEditor.setLineSpacing(0.0F, (100.0F + mSettings.lineSpace) / 100.0F);
         mEditor.setShowTab(mSettings.showTab);
 
-        mEditor.setNavigationDevice( getResources().getConfiguration().navigation != Configuration.NAVIGATION_NONAV && Build.VERSION.SDK_INT < 11 );
+        mEditor.setNavigationDevice( mSettings.shortcutctrl || (getResources().getConfiguration().navigation != Configuration.NAVIGATION_NONAV && Build.VERSION.SDK_INT < 11) );
         if ( mSettings.shortcutctrlltn ){
             mEditor.setForwardDelKeycode(111);
         }
