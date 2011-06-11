@@ -377,3 +377,18 @@ Android Market経由で作者に寄付が出来ます。
 You can donate to the developer via Android Market.
 Please donate if you continue to use Jota.
 
+[2011/06/11 v.0.1.06]
+・オランダ語リソースを追加
+  (Thanks to Jean Marc Lietaer - www.jmlietaer.com)
+・Dynabook AZでIME有効時にカーソルキーで範囲選択できない問題を修正
+
+Android Market経由で作者に寄付が出来ます。
+継続してお使いの方は、寄付をお願いします。
+
+
+[2011/06/11 v.0.1.06]
+- Added Dutch localization.
+  (Thanks to Jean Marc Lietaer - www.jmlietaer.com)
+
+You can donate to the developer via Android Market.
+Please donate if you continue to use Jota.
