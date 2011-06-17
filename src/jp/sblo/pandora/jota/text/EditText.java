@@ -161,6 +161,11 @@ public class EditText extends TextView{
 //                if ( altstate == 1 ){
 //                    TextKeyListener.clearMetaKeyState(cs,KeyEvent.META_ALT_ON);
 //                }
+                if ( (meta & KeyEvent.META_ALT_LEFT_ON )!=0 || (meta & KeyEvent.META_ALT_RIGHT_ON )!=0 )
+                {
+                    InputMethodManager imm = InputMethodManager.peekInstance();
+                    if (imm != null) imm.restartInput(this);
+                }
                 return true;
             }
 
@@ -170,11 +175,6 @@ public class EditText extends TextView{
 
     public boolean doFunction( int function ){
         boolean result = doFunction_( function );
-        if ( result )
-        {
-            InputMethodManager imm = InputMethodManager.peekInstance();
-            if (imm != null) imm.restartInput(this);
-        }
         return result;
     }
 
