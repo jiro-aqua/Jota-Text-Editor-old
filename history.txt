@@ -389,6 +389,34 @@ Android Market経由で作者に寄付が出来ます。
 [2011/06/11 v.0.1.06]
 - Added Dutch localization.
   (Thanks to Jean Marc Lietaer - www.jmlietaer.com)
+- Fixed minor bugs.
 
 You can donate to the developer via Android Market.
 Please donate if you continue to use Jota.
+
+
+[2011/06/18 v.0.1.07]
+- ペルシャ語リソースを追加
+  (Thanks to Jalil Faalkhah http://phdi-co.com)
+
+  注意:JotaではRTL言語はサポートされません。
+
+- フォントサイズ追加 48,64,72,96
+- バグ修正
+
+Android Market経由で作者に寄付が出来ます。
+継続してお使いの方は、寄付をお願いします。
+
+
+[2011/06/18 v.0.1.07]
+- Added Persian localize.
+  (Thanks to Jalil Faalkhah http://phdi-co.com)
+
+  CAUTION: Jota doesn't support RTL Language today!)
+
+- Added font size 48,64,72,96.
+- Fixed minor bugs.
+
+You can donate to the developer via Android Market.
+Please donate if you continue to use Jota.
+
