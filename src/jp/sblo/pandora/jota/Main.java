@@ -297,7 +297,10 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
 
         if (savedInstanceState == null) {
             Intent it = getIntent();
-            if (it != null && Intent.ACTION_VIEW.equals(it.getAction())) {
+            if (it != null &&
+                    (Intent.ACTION_VIEW.equals(it.getAction())
+                  || Intent.ACTION_EDIT.equals(it.getAction()) )
+            ) {
                 mLine = -1;
                 Uri data = it.getData();
                 String scheme = data.getScheme();
@@ -518,7 +521,10 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction())) {
+        if (intent != null &&
+                ( Intent.ACTION_VIEW.equals(intent.getAction())
+                ||Intent.ACTION_EDIT.equals(intent.getAction()) )
+            ) {
             mLine = -1;
             Uri data = intent.getData();
             String scheme = data.getScheme();
