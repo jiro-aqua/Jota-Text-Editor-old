@@ -420,3 +420,17 @@ Android Market経由で作者に寄付が出来ます。
 You can donate to the developer via Android Market.
 Please donate if you continue to use Jota.
 
+
+[2011/06/26 v.0.1.08]
+- ACTION_EDIT intentへの対応を追加
+  (for Ghost Commander's edit command)
+
+Android Market経由で作者に寄付が出来ます。
+継続してお使いの方は、寄付をお願いします。
+
+[2011/06/26 v.0.1.08]
+- added support for ACTION_EDIT intent
+  (for Ghost Commander's edit command)
+
+You can donate to the developer via Android Market.
+Please donate if you continue to use Jota.
