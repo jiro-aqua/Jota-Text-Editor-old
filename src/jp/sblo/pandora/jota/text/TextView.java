@@ -966,6 +966,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
 
 		// Jota Text Editor
         enableUndo(true);
+        mUnderLinePaint.setColor(0);
 
     }
 
@@ -4189,7 +4190,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     mHighlightPath = new Path();
 
                 if (selStart == selEnd) {
-                    if ((SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
+                    if (isFocused() && (SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
                         if (mHighlightPathBogus) {
                             mHighlightPath.reset();
                             mLayout.getCursorPath(selStart, mHighlightPath, mText);

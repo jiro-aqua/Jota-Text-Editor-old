@@ -93,7 +93,7 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
 
     private LinearLayout mLlSearch;
 
-    private EditText mEdtSearchWord;
+    private jp.sblo.pandora.jota.text.EditText mEdtSearchWord;
 
     private ImageButton mBtnForward;
 
@@ -105,7 +105,7 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
 
     private LinearLayout mLlReplace;
 
-    private EditText mEdtReplaceWord;
+    private jp.sblo.pandora.jota.text.EditText mEdtReplaceWord;
 
     private Button mBtnReplace;
 
@@ -167,22 +167,24 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
 
         mEditor = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.textedit);
 
-        applySetting();
-
         mEditor.setDocumentChangedListener(this);
         mEditor.setShortcutListener(this);
         mEditor.setChanged(false);
         mLlSearch = (LinearLayout)findViewById(R.id.search);
         mLlReplace = (LinearLayout)findViewById(R.id.replace);
 
-        mEdtSearchWord = (EditText)findViewById(R.id.edtSearchWord);
+        mEdtSearchWord = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.edtSearchWord);
+        mEdtSearchWord.setShortcutListener(null);
         mBtnForward = (ImageButton)findViewById(R.id.btnForward);
         mBtnBackward = (ImageButton)findViewById(R.id.btnBackward);
         mChkReplace = (Button)findViewById(R.id.chkReplace);
         mBtnClose = (ImageButton)findViewById(R.id.btnClose);
-        mEdtReplaceWord = (EditText)findViewById(R.id.edtReplaceWord);
+        mEdtReplaceWord = (jp.sblo.pandora.jota.text.EditText)findViewById(R.id.edtReplaceWord);
+        mEdtReplaceWord.setShortcutListener(null);
         mBtnReplace = (Button)findViewById(R.id.btnReplace);
         mBtnReplaceAll = (Button)findViewById(R.id.btnReplaceAll);
+
+        applySetting();
 
         mEdtSearchWord.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -1021,6 +1023,11 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
             case R.id.menu_edit_paste: {
                 mEditor.onKeyShortcut(KeyEvent.KEYCODE_V, new KeyEvent(KeyEvent.ACTION_DOWN,
                         KeyEvent.KEYCODE_V));
+            }
+                return true;
+            case R.id.menu_edit_select_all: {
+                mEditor.onKeyShortcut(KeyEvent.KEYCODE_A, new KeyEvent(KeyEvent.ACTION_DOWN,
+                        KeyEvent.KEYCODE_A));
             }
                 return true;
             case R.id.menu_edit_jump: {
@@ -2040,11 +2047,17 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         mEditor.setNameDirectIntent(mSettings.intentname);
         mEditor.setTypeface(mSettings.fontface);
         mEditor.setTextSize(mSettings.fontsize);
-        mEditor.setShortcutMetaKey((mSettings.shortcutaltleft ? KeyEvent.META_ALT_LEFT_ON : 0)
-                | (mSettings.shortcutaltright ? KeyEvent.META_ALT_RIGHT_ON : 0)
-                | (mSettings.shortcutctrl ? 8 : 0) // ctrl key on Dynabook AZ
-                | 0x1000                            // ctrl key on Honeycomb and Lifetouch Note
-        );
+
+        int metakey = (mSettings.shortcutaltleft ? KeyEvent.META_ALT_LEFT_ON : 0)
+        | (mSettings.shortcutaltright ? KeyEvent.META_ALT_RIGHT_ON : 0)
+        | (mSettings.shortcutctrl ? 8 : 0) // ctrl key on Dynabook AZ
+        | 0x1000                            // ctrl key on Honeycomb and Lifetouch Note;
+        ;
+
+        mEditor.setShortcutMetaKey( metakey );
+        mEdtSearchWord.setShortcutMetaKey(metakey);
+        mEdtReplaceWord.setShortcutMetaKey(metakey);
+
         mEditor.setHorizontallyScrolling(!mSettings.wordwrap);
 
         mEditor.setTextColor(mSettings.textcolor);
@@ -2057,8 +2070,13 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         }
 
         mEditor.enableUnderline(mSettings.underline);
+        mEdtSearchWord.enableUnderline(false);
+        mEdtReplaceWord.enableUnderline(false);
         mEditor.setUnderlineColor(mSettings.underlinecolor);
         mEditor.setShortcutSettings(mSettings.shortcuts);
+        mEdtSearchWord.setShortcutSettings(mSettings.shortcuts);
+        mEdtReplaceWord.setShortcutSettings(mSettings.shortcuts);
+
         mEditor.setUseVolumeKey(mSettings.useVolumeKey);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -2084,8 +2102,12 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         mEditor.setNavigationDevice( mSettings.shortcutctrl || (getResources().getConfiguration().navigation != Configuration.NAVIGATION_NONAV && Build.VERSION.SDK_INT < 11) );
         if ( mSettings.shortcutctrlltn ){
             mEditor.setForwardDelKeycode(111);
+            mEdtSearchWord.setForwardDelKeycode(111);
+            mEdtReplaceWord.setForwardDelKeycode(111);
         }
         mEditor.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
+        mEdtSearchWord.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
+        mEdtSearchWord.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
     }
 
     void applyBootSetting() {

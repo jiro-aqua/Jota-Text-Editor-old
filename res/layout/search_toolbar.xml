@@ -8,7 +8,7 @@
 	    android:layout_height="wrap_content"
 	    android:visibility="gone"
 	>
-		<EditText
+		<jp.sblo.pandora.jota.text.EditText
 		    android:id="@+id/edtSearchWord"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
