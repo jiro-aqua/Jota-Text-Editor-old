@@ -2085,6 +2085,7 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         if ( mSettings.shortcutctrlltn ){
             mEditor.setForwardDelKeycode(111);
         }
+        mEditor.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
     }
 
     void applyBootSetting() {

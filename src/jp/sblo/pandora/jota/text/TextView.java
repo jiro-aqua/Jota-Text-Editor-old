@@ -31,6 +31,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
@@ -4629,9 +4630,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 if (mOnClickListener == null) {
                     if (mMovement != null && mText instanceof Editable
                             && mLayout != null && onCheckIsTextEditor()) {
-                        InputMethodManager imm = (InputMethodManager)
-                                getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(this, 0);
+
+                        // Jota Text Editor
+                        // patch by matthias.gruenewald@googlemail.com
+                        if ( !mDontUseSoftkeyWithHardkey || getResources().getConfiguration().hardKeyboardHidden==Configuration.HARDKEYBOARDHIDDEN_YES ){
+                            InputMethodManager imm = (InputMethodManager)
+                                    getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.showSoftInput(this, 0);
+                        }
                     }
                 }
 // Jota Text Editor
@@ -4756,9 +4762,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 outAttrs.initialSelEnd = getSelectionEnd();
                 outAttrs.initialCapsMode = ic.getCursorCapsMode(mInputType);
 
-                InputMethodManager imm = InputMethodManager.peekInstance();
-                if (imm != null){
-                    imm.showSoftInput(this, 0);
+                // Jota Text Editor
+                // patch by matthias.gruenewald@googlemail.com
+                if ( !mDontUseSoftkeyWithHardkey || getResources().getConfiguration().hardKeyboardHidden==Configuration.HARDKEYBOARDHIDDEN_YES ){
+                    InputMethodManager imm = InputMethodManager.peekInstance();
+                    if (imm != null){
+                        imm.showSoftInput(this, 0);
+                    }
                 }
 
                 return ic;
@@ -7112,7 +7122,11 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                         csr = new CommitSelectionReceiver(oldSelStart, oldSelEnd);
                     }
 
-                    handled |= imm.showSoftInput(this, 0, csr) && (csr != null);
+                    // Jota Text Editor
+                    // patch by matthias.gruenewald@googlemail.com
+                    if ( !mDontUseSoftkeyWithHardkey || getResources().getConfiguration().hardKeyboardHidden==Configuration.HARDKEYBOARDHIDDEN_YES ){
+                        handled |= imm.showSoftInput(this, 0, csr) && (csr != null);
+                    }
 
                 }
             }
@@ -8282,6 +8296,13 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     public void showIme( boolean show )
     {
         InputMethodManager imm = InputMethodManager.peekInstance();
+        // patch by matthias.gruenewald@googlemail.com
+        // On HTC DesireZ, soft input may not be shown if hardware keyboard is visible
+        // It will break the FN keys on HTC's DesireZ
+        if ( !mDontUseSoftkeyWithHardkey || getResources().getConfiguration().hardKeyboardHidden==Configuration.HARDKEYBOARDHIDDEN_YES ){
+        }else{
+            show = false;
+        }
         if ( show ){
             int type = InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE;
             if ( mAutoCapitalize ){
@@ -9034,6 +9055,10 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mHasNavigationDevice = value;
     }
 
+    // Jota Text Editor
+    public void setDontUseSoftkeyWithHardkey(boolean value ) {
+        mDontUseSoftkeyWithHardkey = value;
+    }
 
     @ViewDebug.ExportedProperty
     private CharSequence            mText;
@@ -9160,5 +9185,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private boolean mAutoCapitalize=false;
     private boolean mUndoEnabled = false;
     private boolean mHasNavigationDevice;
-
+    private boolean mDontUseSoftkeyWithHardkey=false;
 }
