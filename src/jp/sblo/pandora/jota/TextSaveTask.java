@@ -2,6 +2,7 @@ package jp.sblo.pandora.jota;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
@@ -57,15 +58,36 @@ public     class TextSaveTask extends AsyncTask<CharSequence, Integer, String>{
 
         File f = new File(filename);
 
-        if ( f.exists() ){
-            if ( createBackup ){
-                File backup = new File( filename + "~" );
-                if ( backup.exists()) {
+        if (f.exists()) {
+            if (createBackup) {
+                File backup = new File(filename + "~");
+                if (backup.exists()) {
                     backup.delete();
                 }
-                f.renameTo(backup);
-            }else{
-                f.delete();
+
+                // patch by matthias.gruenewald@googlemail.com
+                // Renaming breaks tasker's file modified event feature
+                // So we copy the file instead
+                // f.renameTo(backup);
+                try {
+                    FileInputStream in = new FileInputStream(f);
+                    FileOutputStream out = new FileOutputStream(backup);
+                    byte[] buf = new byte[1024];
+                    int i = 0;
+                    while ((i = in.read(buf)) != -1) {
+                        out.write(buf, 0, i);
+                    }
+                    in.close();
+                    out.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            } else {
+                // patch by matthias.gruenewald@googlemail.com
+                // Deleting the file before writing it breaks tasker's file
+                // modified event, so just override the file contents
+                // f.delete();
             }
         }
 
