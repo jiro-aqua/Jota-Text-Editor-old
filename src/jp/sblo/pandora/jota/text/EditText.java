@@ -1,12 +1,14 @@
 package jp.sblo.pandora.jota.text;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import jp.sblo.pandora.jota.R;
 import android.content.Context;
 import android.text.Editable;
 import android.text.Spannable;
+import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -164,7 +166,21 @@ public class EditText extends TextView{
                 if ( (meta & KeyEvent.META_ALT_LEFT_ON )!=0 || (meta & KeyEvent.META_ALT_RIGHT_ON )!=0 )
                 {
                     InputMethodManager imm = InputMethodManager.peekInstance();
-                    if (imm != null) imm.restartInput(this);
+                    if (imm != null){
+                        // for IS01 w/iWnn
+                        // iWnn eats ALT key so we needs to reset ime.
+                        try {
+                            Class<?> c = imm.getClass();
+                            Field f = c.getDeclaredField("mCurId");
+                            f.setAccessible(true);
+                            String immId = (String)f.get(imm);
+                            if ( "jp.co.omronsoft.iwnnime/.iWnnIME".equals(immId) ){
+                                imm.restartInput(this);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                    TextKeyListener.resetMetaState((Spannable)getEditableText());
                 }
                 return true;
             }
@@ -340,4 +356,5 @@ public class EditText extends TextView{
     {
         JotaTextKeyListener.setForwardDelKeycode(keycode);
     }
+
 }
