@@ -434,3 +434,33 @@ Android Market経由で作者に寄付が出来ます。
 
 You can donate to the developer via Android Market.
 Please donate if you continue to use Jota.
+
+
+[2011/07/03 v.0.1.09]
+- added "select all" to menu. (menu-L)
+- change textboxes of search/replace to jota's textview
+- fixed the issue alt-shortcut with ATOK/iWnn on IS01.
+- fixed the issue DesireZ FN-key didin't work.
+　Thanks for a patch by Matthias Gruenewald!
+- fixed the issue with co-working Tasker.
+　Thanks for a patch by Matthias Gruenewald!
+- updated polish resource. Thanks adam!
+  Thanks Adam!
+
+You can donate to the developer via Android Market.
+Please donate if you continue to use Jota.
+
+[2011/07/03 v.0.1.09]
+・select-allをメニューに追加(menu-L)
+・検索/置換用のテキストボックスでショートカットが使えるように修正
+・DesireZのfn-keyが使えない問題に対応
+　Thanks for a patch by Matthias Gruenewald!
+・Taskerでファイル追跡が出来ない問題に対応
+　Thanks for a patch by Matthias Gruenewald!
+・IS01でATOKを使用する時のaltキーの挙動を修正
+・ポーランド語リソースを更新
+　Thanks Adam!
+
+Android Market経由で作者に寄付が出来ます。
+継続してお使いの方は、寄付をお願いします。
+
