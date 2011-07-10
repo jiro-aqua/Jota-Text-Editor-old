@@ -447,6 +447,10 @@ Please donate if you continue to use Jota.
 - updated polish resource. Thanks adam!
   Thanks Adam!
 
+[2011/07/10 v.0.1.10]
+- Updated Russian resources.
+  Thanks Anton!
+
 You can donate to the developer via Android Market.
 Please donate if you continue to use Jota.
 
@@ -461,6 +465,11 @@ Please donate if you continue to use Jota.
 ・ポーランド語リソースを更新
 　Thanks Adam!
 
+[2011/07/10 v.0.1.10]
+・ロシア語リソースを更新
+  Thanks Anton!
+
 Android Market経由で作者に寄付が出来ます。
 継続してお使いの方は、寄付をお願いします。
+
 
