@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.media.AudioManager;
@@ -67,78 +68,44 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 public class Main extends Activity implements JotaDocumentWatcher, ShortcutListener,
         OnFileLoadListener {
     private static final String TAG = "JotaTextEditor";
-
     private static final int REQUESTCODE_OPEN = 0;
-
     private static final int REQUESTCODE_SAVEAS = 1;
-
     private static final int REQUESTCODE_MUSHROOM = 2;
-
     private static final int REQUESTCODE_SEARCHBYINTENT = 3;
-
     private static final int REQUESTCODE_APPCHOOSER = 4;
-
     private static final String DEF_CHARSET = "utf-8";
-
     private static final int DEF_LINEBREAK = LineBreak.LF;
-
     // SL4A
     private static final String EXTRA_SCRIPT_PATH = "com.googlecode.android_scripting.extra.SCRIPT_PATH";
-
     private static final String EXTRA_SCRIPT_CONTENT = "com.googlecode.android_scripting.extra.SCRIPT_CONTENT";
-
     private static final String ACTION_EDIT_SCRIPT = "com.googlecode.android_scripting.action.EDIT_SCRIPT";
-
     private jp.sblo.pandora.jota.text.EditText mEditor;
-
     private LinearLayout mLlSearch;
-
     private jp.sblo.pandora.jota.text.EditText mEdtSearchWord;
-
     private ImageButton mBtnForward;
-
     private ImageButton mBtnBackward;
-
     private Button mChkReplace;
-
     private ImageButton mBtnClose;
-
     private LinearLayout mLlReplace;
-
     private jp.sblo.pandora.jota.text.EditText mEdtReplaceWord;
-
     private Button mBtnReplace;
-
     private Button mBtnReplaceAll;
-
     private String mNewFilename;
-
     private TextLoadTask mTask;
-
     // private String mSearchWord;
     private int mLine;
-
     private Intent mReservedIntent;
-
     private int mReservedRequestCode;
-
     private Runnable mProcAfterSaveConfirm = null;
-
     private InstanceState mInstanceState = new InstanceState();
-
     private ArrayList<Search.Record> mSearchResult;
-
     private boolean mSearchForward;
-
     private SettingsActivity.Settings mSettings;
-
     private SettingsActivity.BootSettings mBootSettings;
-
     private String mSharedString = null;;
-
     private String mReplaceWord;
-
     private boolean mChangeCancel = false;
+    private boolean mSharedPreferenceChanged=false;
 
     class InstanceState {
         String filename;
@@ -2036,11 +2003,13 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
 
     private OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener = new OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            applySetting();
+            //applySetting();
+            mSharedPreferenceChanged=true;
         }
     };
 
     void applySetting() {
+        mSharedPreferenceChanged=false;
         mEditor.setAutoCapitalize(mBootSettings.autoCapitalize);
 
         mSettings = SettingsActivity.readSettings(Main.this);
@@ -2107,7 +2076,8 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
         }
         mEditor.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
         mEdtSearchWord.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
-        mEdtSearchWord.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
+        mEdtReplaceWord.setDontUseSoftkeyWithHardkey( mSettings.specialkey_desirez );
+        mEditor.enableBlinkCursor(mSettings.blinkCursor);
     }
 
     void applyBootSetting() {
@@ -2117,11 +2087,21 @@ public class Main extends Activity implements JotaDocumentWatcher, ShortcutListe
             setTheme(R.style.Theme_NoTitleBar);
         }
 
+        if (mBootSettings.screenOrientation.equals(SettingsActivity.ORI_AUTO)){
+            // Do nothing
+        }else if (mBootSettings.screenOrientation.equals(SettingsActivity.ORI_PORTRAIT)){
+            setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
+        }else if (mBootSettings.screenOrientation.equals(SettingsActivity.ORI_LANDSCAPE)){
+            setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE );
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mSharedPreferenceChanged ){
+            applySetting();
+        }
         if (mBootSettings.hideSoftkeyIS01) {
             IS01FullScreen.setFullScreenOnIS01();
         }

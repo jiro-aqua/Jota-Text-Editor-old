@@ -4190,7 +4190,9 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     mHighlightPath = new Path();
 
                 if (selStart == selEnd) {
-                    if (isFocused() && (SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK) {
+                    if (isFocused() &&
+                            ( (SystemClock.uptimeMillis() - mShowCursor) % (2 * BLINK) < BLINK ) || !isBlinkCursorEnabled()
+                            ) {
                         if (mHighlightPathBogus) {
                             mHighlightPath.reset();
                             mLayout.getCursorPath(selStart, mHighlightPath, mText);
@@ -7175,7 +7177,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
      * @return True iff this TextView contains a text that can be edited.
      */
     private boolean isTextEditable() {
-        return mText instanceof Editable && onCheckIsTextEditor() && isEnabled();
+        return mText instanceof Editable /*&& onCheckIsTextEditor()*/ && isEnabled();
     }
 
     /**
@@ -7235,7 +7237,6 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     if (tv.mLayout != null) {
                         tv.invalidateCursorPath();
                     }
-
                     postAtTime(this, SystemClock.uptimeMillis() + BLINK);
                 }
             }
@@ -9061,6 +9062,16 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         mDontUseSoftkeyWithHardkey = value;
     }
 
+    // Jota Text Editor
+    public void enableBlinkCursor(boolean value ) {
+        mBlinkCursorEnabled = value;
+    }
+
+    // Jota Text Editor
+    public boolean isBlinkCursorEnabled() {
+        return mBlinkCursorEnabled;
+    }
+
     @ViewDebug.ExportedProperty
     private CharSequence            mText;
     private CharSequence            mTransformed;
@@ -9187,4 +9198,5 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
     private boolean mUndoEnabled = false;
     private boolean mHasNavigationDevice;
     private boolean mDontUseSoftkeyWithHardkey=false;
+    private boolean mBlinkCursorEnabled;
 }

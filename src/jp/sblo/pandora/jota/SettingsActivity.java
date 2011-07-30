@@ -82,6 +82,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private static final String KEY_SHOW_TAB                = "SHOW_TAB";
     private static final String KEY_ACTION_SHARE            = "ACTION_SHARE";
     private static final String KEY_AUTO_CAPITALIZE         = "KEY_AUTO_CAPITALIZE";
+    private static final String KEY_BLINK_CURSOR            = "KEY_BLINK_CURSOR";
+    private static final String KEY_ORIENTATION             = "KEY_ORIENTATION";
 
 	public static final String KEY_LASTVERSION = "LastVersion";
 
@@ -130,6 +132,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     public static final String CAT_FILE = "file";
     public static final String CAT_MISC = "misc";
 
+    public static final String ORI_AUTO="auto";
+    public static final String ORI_PORTRAIT="portrait";
+    public static final String ORI_LANDSCAPE="landscape";
+
     private PreferenceScreen mPs = null;
 	private PreferenceManager mPm = getPreferenceManager();
 
@@ -142,6 +148,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
     private ListPreference mPrefInsert;
     private ListPreference mPrefTrackball;
     private ListPreference mPrefActionShare;
+    private ListPreference mPrefOrientation;
     private Preference mPrefWrapWidthP;
     private Preference mPrefWrapWidthL;
 
@@ -361,12 +368,41 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                     cat.addPreference(pr);
                 }
                 {
+                    // blink cursor
+                    final CheckBoxPreference pr = new CheckBoxPreference(this);
+                    pr.setKey(KEY_BLINK_CURSOR);
+                    pr.setTitle(R.string.label_blink_cursor);
+                    cat.addPreference(pr);
+                }
+                {
                     // hide titlebar
                     final CheckBoxPreference pr = new CheckBoxPreference(this);
                     pr.setKey(KEY_HIDETITLEBAR );
                     pr.setTitle(R.string.label_hide_titlebar);
                     pr.setSummary(R.string.summary_need_restart);
                     cat.addPreference(pr);
+                }
+                {
+                    // screen orientation
+                    final ListPreference pr = new ListPreference(this);
+                    pr.setKey(KEY_ORIENTATION);
+                    pr.setDialogTitle(R.string.label_orientation);
+                    pr.setTitle(R.string.label_orientation);
+
+                    pr.setEntries(new String[] {
+                            getResources().getString(R.string.label_orientation_auto),
+                            getResources().getString(R.string.label_orientation_portrait),
+                            getResources().getString(R.string.label_orientation_landscape),
+                    });
+
+                    final String[] values = new String[] {
+                            ORI_AUTO,
+                            ORI_PORTRAIT,
+                            ORI_LANDSCAPE,
+                    };
+                    pr.setEntryValues(values);
+                    cat.addPreference(pr);
+                    mPrefOrientation = pr;
                 }
                 if ( IS01FullScreen.isIS01orLynx() ){
                     // hide softkey
@@ -1269,6 +1305,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         String actionShare;
         int donateCounter;
         boolean specialkey_desirez;
+        boolean blinkCursor;
 	}
 
 	public static class BootSettings {
@@ -1276,6 +1313,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         boolean hideSoftkeyIS01;
         boolean viewerMode;
         boolean autoCapitalize;
+        String screenOrientation;
 	}
 
     private static Settings sSettings;
@@ -1353,6 +1391,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.showTab = sp.getBoolean( KEY_SHOW_TAB, false);
         ret.actionShare = sp.getString(KEY_ACTION_SHARE, AS_INSERT);
         ret.donateCounter = sp.getInt(DonateActivity.DONATION_COUNTER,0);
+        ret.blinkCursor = sp.getBoolean(KEY_BLINK_CURSOR, true);
         sSettings = ret;
         return ret;
 	}
@@ -1366,6 +1405,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
         ret.hideSoftkeyIS01 = sp.getBoolean(KEY_HIDESOFTKEY_IS01 , false);
         ret.viewerMode = sp.getBoolean(KEY_VIEWER_MODE, false);
         ret.autoCapitalize = sp.getBoolean(KEY_AUTO_CAPITALIZE, false);
+        ret.screenOrientation = sp.getString(KEY_ORIENTATION, ORI_AUTO);
         sBootSettings = ret;
         return ret;
     }
@@ -1453,6 +1493,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
                 }
                 if ( lastversion < 29 ){
                     editor.putBoolean(KEY_SPECIAL_KEY_DESIREZ, false );
+                }
+                if ( lastversion < 31 ){
+                    editor.putBoolean(KEY_BLINK_CURSOR, true );
+                    editor.putString(KEY_ORIENTATION, ORI_AUTO );
                 }
                 editor.commit();
                 SettingsShortcutActivity.writeDefaultShortcuts(ctx);
@@ -1549,6 +1593,12 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
             entry = mPrefActionShare.getEntry();
             if ( entry != null ){
                 mPrefActionShare.setSummary(entry);
+            }
+        }
+        if ( mPrefOrientation != null ){
+            entry = mPrefOrientation.getEntry();
+            if ( entry != null ){
+                mPrefOrientation.setSummary(entry + "\n" + getString(R.string.summary_need_restart));
             }
         }
         if ( mPrefWrapWidthP != null ){

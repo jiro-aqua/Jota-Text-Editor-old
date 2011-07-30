@@ -473,3 +473,20 @@ Android Market経由で作者に寄付が出来ます。
 継続してお使いの方は、寄付をお願いします。
 
 
+[2011/07/30 v.0.1.11]
+- improve the response of preference screen.
+- added an option to disable cursor blinking.
+- added an option to set orientation mode.
+
+You can donate to the developer via Android Market.
+Please donate if you continue to use Jota.
+
+[2011/07/30 v.0.1.11]
+- 設定画面のレスポンスを改善
+- カーソル点滅の設定を追加
+- 画面の方向の設定を追加
+
+Android Market経由で作者に寄付が出来ます。
+継続してお使いの方は、寄付をお願いします。
+
+
